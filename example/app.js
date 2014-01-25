@@ -21,10 +21,7 @@ app.use(express.static(path.join(app.get('ROOT PATH'), 'public')));
 http.createServer(app).listen(
     app.get('NODE PORT'), app.get('NODE HOST'), function() {
   
-  // TODO: Add More checks, but in a more elegant fashion.
-  if (!app.get('SITE OWNER')) {
-    throw 'The owner of this site MUST be specified';
-  }
+  // TODO: Add checks for Site Variables....
   
   console.log('Express server listening on port ' + app.get('NODE PORT') +
       ' in the `' + app.get('NODE ENVIRONMENT') +

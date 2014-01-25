@@ -16,7 +16,7 @@ module.exports = function(app) {
   app.set('ROOT URL', process.env[env + '_ROOT_URL']);
   app.set('COOKIE SECRET', process.env[env + '_COOKIE_SECRET']);
   app.set('REDIS SECRET', process.env[env + '_REDIS_SECRET']);
-  app.set('SITE OWNER', process.env.SITE_OWNER);
+  app.set('SITE OWNERS', process.env.SITE_OWNERS);
 
   // TODO: IS THIS NECESSARY? IF THIS IS BEHIND NGINX????
   app.use(express.static(app.root + '/public', {
@@ -35,15 +35,23 @@ module.exports = function(app) {
 
   app.use(express.methodOverride());
 
-  // TODO: Is this needed in this version???
+
   app.use(express.cookieParser(app.get('COOKIE SECRET')));
   app.use(express.session({
     store: new RedisStore(),
     secret: app.get('REDIS SECRET')
   }));
-  app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
+
+  /**
+   * Expose Flash Middleware to Views.
+   */
+  app.use(flash());
+  app.use(function(req, res, next) {
+    res.locals.messages = req.flash();
+    next();
+  });
 
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
