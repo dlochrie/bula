@@ -8,35 +8,26 @@ html(lang="en")
       include ../partials/head
 
   body
-    <!--Begin Top-Nav-->
-    block top-nav
-      include ../partials/top-nav
+    .container
+      <!--Begin Top-Nav-->
+      block top-nav
+        include ../partials/top-nav
 
-    <!--Begin Content Container-->
-    .container#main
-      <!--Begin Header-->
-      block header
-        .row: .col-md-12
-          .page-header
-            h1= title
-              small.pull-right Subtitle
-
-      <!--Begin Alerts-->
-      include ../partials/alerts
+      block top-dateline
+        include ../partials/top-dateline
 
       <!--Begin Main Content-->
-      .row
-        .col-md-8
-          <!--Begin Body Content-->
-          h2#title= title
-          block body
-        .col-md-4
-          <!--Begin Sidebar-->
-          p.date.text-info.hidden-tablet.hidden-phone Date
-          block sidebar
-            include ../partials/side-nav-links
-            include ../partials/side-nav-tags
-            include ../partials/side-nav-archives
+      #main
+
+        <!--Begin Alerts-->
+        include ../partials/alerts
+
+        <!--Begin Main Content-->
+        .row
+          .col-md-12
+            <!--Begin Body Content-->
+            h2#title= title
+            block body
 
       <!--Begin Footer-->
       block footer

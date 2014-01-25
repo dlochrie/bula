@@ -15,6 +15,8 @@ require('../init')(app);
 
 /** Override for sake of example, please don't do this. */
 app.set('views', app.get('ROOT PATH') + '/app/views');
+app.use(express.static(path.join(app.get('ROOT PATH'), 'public')));
+
 
 http.createServer(app).listen(
     app.get('NODE PORT'), app.get('NODE HOST'), function() {

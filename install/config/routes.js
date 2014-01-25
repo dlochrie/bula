@@ -1,12 +1,9 @@
 /**
  * Main router module.
- *
- * It is recommended that you set your routes here.
- * See https://github.com/visionmedia/express-resource for more information on
- * the format for adding resourceful-routes.
+ * Add your routes here.
  */
 module.exports = function(app) {
-  var dir = app.get('ROOT PATH') + 'app',
+  var dir = app.get('ROOT PATH') + 'app/controllers/',
     main = require(dir + 'main'),
     admin = require(dir + 'admin');
 
@@ -14,6 +11,8 @@ module.exports = function(app) {
    * Public Routes.
    */
   app.get('/', main.index);
+  app.get('/about', main.about);
+  app.get('/contact', main.contact);
   app.get('/login', main.login);
 
   /**
@@ -22,11 +21,11 @@ module.exports = function(app) {
    * TODO(dlochrie) This is a temporary admin check, but it needs to be
    * expanded on and refactored.
    */
-  app.all('/admin*', admin.authenticate);
+  //app.all('/admin*', admin.authenticate);
 
   /**
    * Admin Routes.
    * Should be protected by authentication middleware above.
    */
-  app.resource('admin', admin);
+  //app.resource('admin', admin);
 };
