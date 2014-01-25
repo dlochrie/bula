@@ -17,13 +17,13 @@ function Mongo(app) {
 
   MongoClient.connect(Mongo.CONNECTION_STRING_, function(err, db) {
     // TODO: DO NOT CONTINUE IF ERROR!!!!!!!!!!!!
-    if(err) throw err;
+    if (err) throw err;
 
     var collection = db.collection('test_insert');
-    collection.insert({a:2}, function(err, docs) {
+    collection.insert({a: 2}, function(err, docs) {
 
       collection.count(function(err, count) {
-        console.log(format("count = %s", count));
+        console.log(format('count = %s', count));
       });
 
       // Locate all the entries using find
@@ -33,8 +33,8 @@ function Mongo(app) {
         db.close();
       });
     });
-  })
-};
+  });
+}
 
 
 // TODO: This should come from config.

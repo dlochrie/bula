@@ -39,7 +39,8 @@ module.exports = function(app, express) {
    * (Optional)
    * Setup environment-specific settings.
    * For example, if you are adding a custom logger to Dev, but you don't want
-   * to use it in Prod.
+   * to use it in Prod, then you can create a `dev` file for dev-specific
+   * settings.
    */
   var conf = root + 'config/environment/' + env.toLowerCase() + '.js';
   if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
