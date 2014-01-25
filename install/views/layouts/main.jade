@@ -1,7 +1,7 @@
-doctype 5
+doctype html
 html(lang="en")
   head
-    title= 'daniellochrie: ' + title
+    title= title
     meta(name='description', content=description)
     link(rel='canonical', href=canonical)
     block head
@@ -18,8 +18,8 @@ html(lang="en")
       block header
         .row: .span12
           .page-header
-            h1 randomness &amp; boredomicity
-              small.pull-right programming + tech + stuff
+            h1= title
+              small.pull-right Subtitle
 
       <!--Begin Alerts-->
       include ../partials/alerts

@@ -1,7 +1,7 @@
-doctype 5
+doctype html
 html(lang="en")
   head
-    title= title || 'site administration'
+    title= title
     block head
       include ../partials/head
 
@@ -16,14 +16,14 @@ html(lang="en")
       block header
         .row: .span12
           .page-header
-            h1= title || 'site administration'
-              small.pull-right Feelin' fine.
+            h1= title || 'Site Administration'
+              small.pull-right Subtitle.
 
       <!--Begin Breadcrumbs-->
       ul.breadcrumb
         block breadcrumbs
           li
-            a(href="/admin") admin panel
+            a(href="/admin") admin home
             span.divider /
 
       <!--Begin Alerts-->
