@@ -11,3 +11,8 @@ exports.about = function(req, res) {
 exports.contact = function(req, res) {
   res.render('main/contact', {title: 'Contact'});
 };
+
+
+exports.login = function(req, res) {
+  res.render('main/login', {title: 'Login'});
+};
