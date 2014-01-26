@@ -10,10 +10,9 @@ module.exports = function(app) {
    * Compress Pages and Assets for speed/performance.
    */
   app.use(express.compress());
-
+  app.use(express.static(path.join(rootPath, 'public')));
   app.set('views', rootPath + '/app/views');
   app.set('view engine', 'jade');
-  app.use(express.static(path.join(rootPath, 'public')));
 
   /**
    * Set up  Body Parsing, omitting the Multipart middleware.
@@ -47,6 +46,19 @@ module.exports = function(app) {
   app.use(flash());
   app.use(function(req, res, next) {
     res.locals.messages = req.flash();
+    next();
+  });
+
+  /**
+   * Make the User's Name available to Views
+   * TODO: Is this necessary every request???
+   */
+  app.use(function(req, res, next) {
+    console.log(req.session)
+    if (req.session.logged_in) {
+      res.locals.user = req.session.passport.user;
+    }
+    console.log(res.locals.user)
     next();
   });
 
