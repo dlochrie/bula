@@ -6,19 +6,6 @@ module.exports = function(app) {
     RedisStore = require('connect-redis')(express);
 
   /**
-   * Set up site globals - these are based off of Environmental variables.
-   */
-  var env = (process.env.NODE_ENV || 'dev').toUpperCase();
-  app.set('NODE ENVIRONMENT', env);
-  app.set('NODE PORT', process.env[env + '_NODE_PORT'] || 3000);
-  app.set('NODE HOST', process.env[env + '_NODE_HOST'] || '0.0.0.0');
-  app.set('ROOT PATH', process.env[env + '_ROOT_PATH']);
-  app.set('ROOT URL', process.env[env + '_ROOT_URL']);
-  app.set('COOKIE SECRET', process.env[env + '_COOKIE_SECRET']);
-  app.set('REDIS SECRET', process.env[env + '_REDIS_SECRET']);
-  app.set('SITE OWNERS', process.env.SITE_OWNERS);
-
-  /**
    * Compress Pages and Assets for speed/performance.
    */
   app.use(express.compress());
