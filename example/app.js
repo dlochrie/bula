@@ -4,18 +4,13 @@
 var express = require('express'),
   fs = require('fs'),
   http = require('http'),
-  path = require('path');
-
-var app = express();
+  path = require('path'),
+  app = express();
 
 /**
  * Initialize the Application.
  */
 require('../init')(app, express);
-
-var rootPath = app.get('ROOT PATH'),
-  rootUrl = app.get('ROOT URL'),
-  env = app.get('NODE ENVIRONMENT');
 
 /**
  * Start the application.
@@ -26,8 +21,8 @@ http.createServer(app).listen(
   // TODO: Add checks for Site Variables....
 
   console.log('Express server listening on port ' + app.get('NODE PORT') +
-      ' in the `' + env + '` environment on address ' +
+      ' in the `' + app.get('NODE ENVIRONMENT') + '` environment on address ' +
       app.get('NODE HOST') + '.');
-  console.log('`URL ROOT`: ' + rootPath);
-  console.log('`APP ROOT`: ' + rootUrl);
+  console.log('`URL ROOT`: ' + app.get('ROOT PATH'));
+  console.log('`APP ROOT`: ' + app.get('ROOT URL'));
 });
