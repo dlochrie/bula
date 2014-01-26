@@ -3,15 +3,17 @@ module.exports = function(app) {
     express = require('express'),
     path = require('path'),
     passport = require('passport'),
-    RedisStore = require('connect-redis')(express);
+    RedisStore = require('connect-redis')(express),
+    rootPath = app.get('ROOT PATH');
 
   /**
    * Compress Pages and Assets for speed/performance.
    */
   app.use(express.compress());
 
-  app.set('views', __dirname + '/app/views');
+  app.set('views', rootPath + '/app/views');
   app.set('view engine', 'jade');
+  app.use(express.static(path.join(rootPath, 'public')));
 
   /**
    * Set up  Body Parsing, omitting the Multipart middleware.

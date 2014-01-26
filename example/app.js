@@ -18,12 +18,6 @@ var rootPath = app.get('ROOT PATH'),
   env = app.get('NODE ENVIRONMENT');
 
 /**
- * Setup application-specific settings.
- */
-app.set('views', rootPath + '/app/views');
-app.use(express.static(path.join(rootPath, 'public')));
-
-/**
  * Start the application.
  */
 http.createServer(app).listen(
