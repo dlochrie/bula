@@ -16,11 +16,18 @@ nav.navbar.navbar-default(role='navigation')
       li: a(href='/about', title='About') About
 
     ul.nav.navbar-nav.navbar-right
-      li.dropdown
-        a.dropdown-toggle(href='#', data-toggle='dropdown')
-          | My Account <b class='caret'></b>
-        ul.dropdown-menu
-          li: a(href='#') View Account
-          li.divider
-          li: a(href='#') Logout
+      if user
+        li.dropdown
+          a(class='dropdown', data-toggle='dropdown', href='#')
+            = user.displayName
+            |&nbsp;
+            b.caret
+          ul.dropdown-menu
+            li: a(href='/logout')
+              i.fa.fa-sign-out
+              |  logout
+      else
+        li: a(href='/auth/google').navbar-link
+          i.fa.fa-sign-in
+          |  login
   <!-- /.navbar-collapse -->
