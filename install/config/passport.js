@@ -42,11 +42,11 @@ module.exports = function(app) {
     // TODO: DON'T DO THIS: THIS LOGIC SHOULD BE IN A USER MODEL
     app.db.collection('user').
         findOne({email: resource.email}, function(err, user) {
-          if (err) throw err;
-          if (user) return done(null, user);
+          if (err || user) {
+            return done(err, user);
+          }
           app.db.collection('user').insert(resource, function(err, result) {
-            if (err) throw err;
-            console.log('User not found, adding user');
+            // Massage the user data...
             result = (result) ? result[0] : null;
             if (!result || err) {
               return done('There was an error creating the User: ' +
