@@ -54,11 +54,9 @@ module.exports = function(app) {
    * TODO: Is this necessary every request???
    */
   app.use(function(req, res, next) {
-    console.log(req.session)
     if (req.session.logged_in) {
       res.locals.user = req.session.passport.user;
     }
-    console.log(res.locals.user)
     next();
   });
 

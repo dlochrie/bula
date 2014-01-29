@@ -7,7 +7,7 @@ module.exports = function(app) {
     rootPath = app.get('ROOT PATH'),
     rootUrl = app.get('ROOT URL'),
     User = require(rootPath + 'app/models/user');
-//    string = require(rootPath + 'util/string');
+
 
   // Passport session setup.
   //   To support persistent login sessions, Passport needs to be able to
@@ -39,7 +39,22 @@ module.exports = function(app) {
       google_id: identifier,
       email: profile.emails[0].value
     };
-    done(null, resource);
+    // TODO: DON'T DO THIS: THIS LOGIC SHOULD BE IN A USER MODEL
+    app.db.collection('user').
+        findOne({email: resource.email}, function(err, user) {
+          if (err) throw err;
+          if (user) return done(null, user);
+          app.db.collection('user').insert(resource, function(err, result) {
+            if (err) throw err;
+            console.log('User not found, adding user');
+            result = (result) ? result[0] : null;
+            if (!result || err) {
+              return done('There was an error creating the User: ' +
+                  err || 'N/A', null);
+            }
+            return done(null, result);
+          });
+        });
   }));
 
 
@@ -53,15 +68,15 @@ module.exports = function(app) {
    * Handle the Response from the Google OpenId API.
    */
    app.get('/auth/google/return', passport.authenticate('google', {
-      failureFlash: true,
-      failureRedirect: '/login'
-    }), function(req, res) {
+        failureFlash: true,
+        failureRedirect: '/login'
+      }), function(req, res) {
         var session = req.session;
         if (session.passport.user) {
           session.logged_in = true;
         }
         res.redirect('/');
-    });
+      });
 
 
   /**
