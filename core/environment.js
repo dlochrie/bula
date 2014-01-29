@@ -1,10 +1,10 @@
 module.exports = function(app) {
   var flash = require('connect-flash'),
-    express = require('express'),
-    path = require('path'),
-    passport = require('passport'),
-    RedisStore = require('connect-redis')(express),
-    rootPath = app.get('ROOT PATH');
+      express = require('express'),
+      path = require('path'),
+      passport = require('passport'),
+      RedisStore = require('connect-redis')(express),
+      rootPath = app.get('ROOT PATH');
 
   /**
    * Compress Pages and Assets for speed/performance.

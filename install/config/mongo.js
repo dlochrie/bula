@@ -7,6 +7,7 @@ var MongoClient = require('mongodb').MongoClient;
 module.exports = Mongo;
 
 
+
 /**
  * @constructor
  * @param {Function} app Instance of Express App.

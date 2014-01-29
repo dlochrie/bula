@@ -10,7 +10,7 @@ module.exports = Model;
  * appropriate adapter.
  * @constructor
  */
-function Model(app) {};
+function Model(app) {}
 
 
 Model.prototype.find = function() {

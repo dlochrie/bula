@@ -8,7 +8,7 @@
  */
 module.exports = function(app, express) {
   var dir = __dirname + '/core/',
-    fs = require('fs');
+      fs = require('fs');
 
   /**
    * Set up site globals - these are based off of Environmental variables.
@@ -35,7 +35,7 @@ module.exports = function(app, express) {
    * Extract environmental variables.
    */
   var root = app.get('ROOT PATH'),
-    env = app.get('NODE ENVIRONMENT');
+      env = app.get('NODE ENVIRONMENT');
 
   /**
    * Load application-specific config files (routes, etc).

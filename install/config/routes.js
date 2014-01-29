@@ -5,9 +5,9 @@
 module.exports = function(app) {
   // TODO: Maybe just loop through controllers??
   var dir = app.get('ROOT PATH') + 'app/controllers/',
-    main = require(dir + 'main'),
-    admin = require(dir + 'admin'),
-    users = require(dir + 'users');
+      main = require(dir + 'main'),
+      admin = require(dir + 'admin'),
+      users = require(dir + 'users');
 
   /**
    * Public Routes.
