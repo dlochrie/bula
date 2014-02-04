@@ -39,22 +39,23 @@ module.exports = function(app) {
       google_id: identifier,
       email: profile.emails[0].value
     };
-    // TODO: DON'T DO THIS: THIS LOGIC SHOULD BE IN A USER MODEL
-    app.db.collection('user').
-        findOne({email: resource.email}, function(err, user) {
-          if (err || user) {
-            return done(err, user);
-          }
-          app.db.collection('user').insert(resource, function(err, result) {
-            // Massage the user data...
-            result = (result) ? result[0] : null;
-            if (!result || err) {
-              return done('There was an error creating the User: ' +
-                  err || 'N/A', null);
-            }
-            return done(null, result);
-          });
-        });
+    var user = new User(app);
+    // TODO: Validate.
+    user.findOne({email: resource.email}, function(err, user) {
+      if (err || user) {
+        return done(err, user);
+      }
+      user.insert(resource, function(err, result) {
+        // TODO: Validate.
+        // Massage the user data...
+        result = (result) ? result[0] : null;
+        if (!result || err) {
+          return done('There was an error creating the User: ' +
+              err || 'N/A', null);
+        }
+        return done(null, result);
+      });
+    });
   }));
 
 

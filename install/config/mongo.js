@@ -15,9 +15,16 @@ module.exports = Mongo;
 function Mongo(app) {
   var self = this;
 
-  MongoClient.connect(Mongo.CONNECTION_STRING_, function(err, db) {
-    if (err) throw 'Could not connect to MongoDB: ' + err;
-    app.db = db;
+  MongoClient.connect(Mongo.CONNECTION_STRING_, function(err, connection) {
+    if (err) {
+      throw 'Could not connect to MongoDB: ' + err;
+    } else {
+      console.log('Successfully connected to MongoDB.');
+      self.db = app.db = {
+        connection: connection,
+        type: 'mongodb'
+      };
+    }
   });
 }
 
@@ -30,35 +37,9 @@ Mongo.CONNECTION_STRING_ = 'mongodb://127.0.0.1:27017/test';
 
 
 /**
- * Get all rows matching criteria.
+ * @const
+ * @enum {string}
  */
-Mongo.prototype.find = function(model, params, cb) {
-  var collection = this.db.collection(model);
-  collection.find().toArray(function(err, results) {
-    // Close the db
-    db.close();
-  });
+Mongo.CONNECTION_OPTIONS_ = {
+  // TODO: ...Add here...
 };
-
-
-/**
- * Get one or first row matching criteria.
- */
-Mongo.prototype.findOne = function(model, params, cb) {
-  var collection = this.db.collection(model);
-  collection.findOne(params, function(err, result) {
-    // Close the db
-    db.close();
-    return cb(err, result);
-  });
-};
-
-
-/**
- * Get one or first row matching criteria.
- */
-Mongo.prototype.insert = function() {};
-Mongo.prototype.update = function() {};
-Mongo.prototype.save = function() {};
-Mongo.prototype.remove = function() {};
-Mongo.prototype.validate = function() {};
