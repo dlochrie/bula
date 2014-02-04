@@ -12,9 +12,7 @@ module.exports = Base;
  * @param {express.app} app Express app function.
  * @interface
  */
-function Base() {
-  this.app.models = {base: this};
-}
+function Base() {}
 
 
 Base.prototype.find = function() {
