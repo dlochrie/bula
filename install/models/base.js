@@ -1,32 +1,74 @@
 /**
- * Base model class.
- * This Class works like an interface - methods should have an override in the
- * appropriate adapter.
+ * Base model class. Provides common methods for models.
  */
 module.exports = Base;
 
 
-
 /**
  * Base model constructor.
- * @param {express.app} app Express app function.
- * @interface
+ * @constructor
  */
 function Base() {}
 
 
-Base.prototype.find = function() {
-  throw 'Please supply a database adapter.';
+/**
+ * Finds all records that match the given parameters.
+ * @param {Object} params The parameters on which to locate the records.
+ * @param {Function} cb Callback function to fire when done.
+ */
+Base.prototype.find = function(params, cb) {
+  var query = this.QUERIES_['find'];
+  var resource = this.buildResource(params);
+  this.db.getConnection(function(err, connection) {
+    connection.query(query, resource || '1 = 1', function(err, results) {
+      connection.release(); // Return this connection to the pool.
+      var results = results || [];
+      cb(err, results);
+    });
+  });
 };
 
 
-Base.prototype.findOne = function() {
-  throw 'Please supply a database adapter.';
+/**
+ * Finds one record that matches the given parameters.
+ * @param {Object} params The parameters on which to locate the records.
+ * @param {Function} cb Callback function to fire when done.
+ */
+Base.prototype.findOne = function(params, cb) {
+  var query = this.QUERIES_['findOne'];
+  var resource = this.buildResource(params);
+  this.db.getConnection(function(err, connection) {
+    connection.query(query, resource || '1 = 1', function(err, results) {
+      connection.release(); // Return this connection to the pool.
+      var result = results[0] || null;
+      cb(err, result);
+    });
+  });
 };
 
 
-Base.prototype.insert = function() {
-  throw 'Please supply a database adapter.';
+/**
+ * Inserts a record with the given parameters.
+ * @param {Object} params The parameters on which to insert.
+ * @param {Function} cb Callback function to fire when done.
+ */
+Base.prototype.insert = function(params, cb) {
+  var query = this.queries['insert'];
+  var resource = this.buildResource(params);
+  this.db.getConnection(function(err, connection) {
+    connection.query(query, resource, function(err, result) {
+      connection.release(); // Return this connection to the pool.
+      if (err) {
+        cb('This ' + this.TABLE_ + ' could not be added: ' + err, null);
+      } else {
+        /**
+         * During an insert the resource MUST be returned manually since the
+         * Node-MySQL module does not return the inserted resource.
+         */
+        cb(err, resource);
+      }
+    });
+  });
 };
 
 
@@ -47,4 +89,23 @@ Base.prototype.remove = function() {
 
 Base.prototype.validate = function() {
   throw 'Please supply a database adapter.';
+};
+
+
+/**
+ * Builds the resource as Object with Field:Value pairs.
+ * @param {Object} params Resource to parse for key-value pairs.
+ * @return {Object} The formatted resource.
+ */
+Base.prototype.buildResource = function(params) {
+  var structure = this.STRUCTURE_;
+  var keys = Object.keys(params) || [];
+  if (!params || !keys.length) return null;
+  var resource = {};
+  keys.forEach(function(key) {
+    if (structure[key]) {
+      resource[key] = params[key];
+    }
+  });
+  return resource;
 };
