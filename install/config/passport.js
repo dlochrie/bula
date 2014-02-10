@@ -9,6 +9,17 @@ module.exports = function(app) {
       User = require(rootPath + 'app/models/user');
 
 
+  function handleResponse(err, result, done) {
+    if (!err) {
+      done(null, result);
+    } else {
+      /**
+       * First argument MUST be null/false or `failureFlash` won't fire.
+       */
+      done(null, result, {message: err});
+    }
+  }
+
   // Passport session setup.
   //   To support persistent login sessions, Passport needs to be able to
   //   serialize users into and deserialize users out of the session.  Typically,
@@ -41,19 +52,13 @@ module.exports = function(app) {
     };
     var user = new User(app);
     // TODO: Validate.
-    user.findOne({email: resource.email}, function(err, user) {
-      if (err || user) {
-        return done(err, user);
-      }
-      user.insert(resource, function(err, result) {
+    user.findOne({email: resource.email}, function(err, result) {
+      if (err || result) return handleResponse(err, result, done);
+      return user.insert(resource, function(err, result) {
         // TODO: Validate.
-        // Massage the user data...
-        result = (result) ? result[0] : null;
-        if (!result || err) {
-          return done('There was an error creating the User: ' +
-              err || 'N/A', null);
-        }
-        return done(null, result);
+        err = err ? 'There was an error creating the User: ' + err : false;
+        result = result || null;
+        handleResponse(err, result, done);
       });
     });
   }));
