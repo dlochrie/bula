@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 var express = require('express'),
+    resource = require('express-resource'),
     fs = require('fs'),
     http = require('http'),
     path = require('path'),
