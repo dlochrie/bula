@@ -19,9 +19,24 @@ module.exports = function(app, express) {
   app.set('NODE HOST', process.env[env + '_NODE_HOST'] || '0.0.0.0');
   app.set('ROOT PATH', process.env[env + '_ROOT_PATH']);
   app.set('ROOT URL', process.env[env + '_ROOT_URL']);
+  app.set('MYSQL DB', process.env[env + '_MYSQL_DB']);
+  app.set('MYSQL HOST', process.env[env + '_MYSQL_HOST']);
+  app.set('MYSQL USER', process.env[env + '_MYSQL_USER']);
+  app.set('MYSQL PASS', process.env[env + '_MYSQL_PASS']);
+  app.set('MYSQL MAX CONN', process.env[env + '_MYSQL_MAX_CONN']);
   app.set('COOKIE SECRET', process.env[env + '_COOKIE_SECRET']);
   app.set('REDIS SECRET', process.env[env + '_REDIS_SECRET']);
-  app.set('SITE OWNERS', process.env.SITE_OWNERS);
+
+  /**
+   * Extract the Site Owners and store as global.
+   */
+  var owners = process.env[env + '_SITE_OWNERS'];
+  var ownersList = owners ? owners.split(',') : [];
+  var siteOwners = ownersList.map(function(owner) {
+    // TODO: Maybe also verify if this is an email address or not.
+    return owner.trim();
+  });
+  app.set('SITE OWNERS', siteOwners);
 
   /**
    * Load all required core files.
