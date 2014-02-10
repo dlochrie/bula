@@ -6,8 +6,10 @@ module.exports = function(app) {
   // TODO: Maybe just loop through controllers??
   var dir = app.get('ROOT PATH') + 'app/controllers/',
       main = require(dir + 'main'),
+      users = require(dir + 'users'),
+      posts = require(dir + 'posts'),
       admin = require(dir + 'admin'),
-      users = require(dir + 'users');
+      adminPosts = require(dir + 'admin/posts');
 
   /**
    * Public Routes.
@@ -16,6 +18,11 @@ module.exports = function(app) {
   app.get('/about', main.about);
   app.get('/contact', main.contact);
   app.get('/login', main.login);
+
+  /**
+   * Public Resources.
+   */
+  app.resource('posts', posts);
 
   /**
    * Authenticate all `admin` routes with authentication middleware.
@@ -30,4 +37,5 @@ module.exports = function(app) {
    * Should be protected by authentication middleware above.
    */
   //app.resource('admin', admin);
+  app.resource('admin/posts', adminPosts);
 };
