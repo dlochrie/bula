@@ -10,7 +10,7 @@
 exports.authenticate = function(req, res, next) {
   var user = res.locals.user || null;
   var owners = req.app.get('SITE OWNERS') || [];
-  if (user && (owners.indexOf(user.user_email) !== -1)) {
+  if (user && (owners.indexOf(user.email) !== -1)) {
     return next();
   }
   req.flash('error', 'This action is unauthorized.');
