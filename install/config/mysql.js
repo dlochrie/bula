@@ -18,15 +18,7 @@ function MySQL(app) {
     host: app.get('MYSQL HOST'),
     user: app.get('MYSQL USER'),
     password: app.get('MYSQL PASS'),
-    connectionLimit: app.get('MYSQL_MAX_CONN') || 10
+    connectionLimit: app.get('MYSQL_MAX_CONN') || 10,
+    nestTables: true
   });
 }
-
-
-/**
- * @const
- * @enum {string}
- */
-MySQL.CONNECTION_OPTIONS_ = {
-  // TODO: ...Add here...
-};
