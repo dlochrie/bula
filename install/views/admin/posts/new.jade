@@ -1,0 +1,21 @@
+extends ../../layouts/main
+
+append breadcrumbs
+  li
+    a(href="/admin/posts") posts administration
+    span.divider /
+  li.active= title
+
+block body
+  form(action='/admin/posts', method='post', role='form')
+    include _form
+    
+    input(type='hidden', name='user_id', value=user.id)
+    input(type='hidden', name='_csrf', value=token)
+    input(type='hidden', name='_method', value='post')
+
+    button.btn.btn-primary(type='submit')
+      i.fa.fa-plus
+      |  Create Post
+    | 
+    a.btn.btn-default(href='/admin/posts', role='button') Cancel

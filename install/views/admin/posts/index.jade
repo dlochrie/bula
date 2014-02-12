@@ -1,0 +1,33 @@
+extends ../../layouts/main
+
+append breadcrumbs
+  li.active= title
+
+block body
+  p.pull-right: a.btn.btn-primary(href='/admin/posts/new')
+    i.fa.fa-plus
+    |  Create Post
+  table.table.table-hover.table-striped
+    thead
+      tr
+        th Title
+        th Author
+        th Created
+        th Actions
+    tbody
+    if (posts.length)
+      each post in posts
+        tr
+          td: a(href='/admin/posts/#{post.slug}/edit') #{post.title}
+          td: a(href='/users/#{post.user_id}/') #{post.author}
+          td= post.updated
+          td
+            a(href='/admin/posts/#{post.slug}/edit', class='btn btn-default',
+              role='button')
+              i.fa.fa-pencil
+            | 
+            a(href='/admin/posts/#{post.slug}/delete', data-method='delete',
+                class='btn btn-danger', role='button')
+              i.fa.fa-times
+    else
+      tr: td(colspan=5) No Posts Found.

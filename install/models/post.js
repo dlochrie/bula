@@ -83,8 +83,8 @@ Post.STRUCTURE_ = {
   description_md: {type: 'Text', required: true},
   body: {type: 'Text', required: true},
   body_md: {type: 'Text', required: true},
-  created: {type: Number, required: true, default: 'NOW()'},
-  updated: {type: Number, required: true, default: 'NOW()'}
+  created: {type: Number, required: false, default: new Date().getTime()},
+  updated: {type: Number, required: true, default: new Date().getTime()}
 };
 
 
