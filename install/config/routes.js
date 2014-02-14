@@ -36,7 +36,7 @@ module.exports = function(app) {
    * Admin Routes.
    * Should be protected by authentication middleware above.
    */
-  //app.resource('admin', admin);
+  app.resource('admin', admin);
   app.resource('admin/posts', adminPosts);
   app.get('/admin/posts/:post/delete', adminPosts.delete);
 };

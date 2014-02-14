@@ -53,7 +53,7 @@ AdminPosts.prototype.index = function(req, res) {
       return res.redirect('/admin');
     }
     res.render(AdminPosts.INDEX_PAGE_, {
-      title: 'AdminPosts Administration',
+      title: 'Posts Administration',
       posts: posts
     });
   });
