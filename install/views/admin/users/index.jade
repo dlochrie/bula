@@ -9,25 +9,28 @@ block body
       tr
         th Display Name
         th Created
+        th Updated
         th Is Owner?
         th Actions
     tbody
     if (users.length)
       each user in users
         tr
-          td: a(href='/users/#{user.user_slug}/') #{user.user_displayName}
-          td= user.user_updated
+          td: a(href='/users/#{user.slug}/') #{user.displayName}
+          td= user.created
+          td= user.updated
           td
             if Authorize.isOwner(user)
               span.text-info: strong True
             else
               span.text-warning False
           td
-            a(href='/admin/users/#{user.user_slug}/edit', class='btn')
-              i.icon-edit
+            a(href='/admin/users/#{user.slug}/edit', class='btn btn-default',
+                role='button')
+              i.fa.fa-pencil
             | 
             a(href='/admin/users/#{user.user_slug}/delete',
-                data-method='delete', class='btn btn-danger')
-              i.icon-remove.icon-white
+                role='button')
+              i.fa.fa-times
     else
-      tr: td(colspan=3) No Users Found.
+      tr: td(colspan=4) No Users Found.

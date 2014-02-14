@@ -28,8 +28,8 @@ block body
               role='button')
               i.fa.fa-pencil
             | 
-            a(href='/admin/posts/#{post.slug}/delete', data-method='delete',
-                class='btn btn-danger', role='button')
+            a(href='/admin/posts/#{post.slug}/delete', class='btn btn-danger',
+                role='button')
               i.fa.fa-times
     else
       tr: td(colspan=5) No Posts Found.
