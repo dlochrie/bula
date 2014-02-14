@@ -1,9 +1,7 @@
-extends ../../layouts/main
+extends ../../layouts/admin
 
 append breadcrumbs
-  li
-    a(href="/admin/posts") posts administration
-    span.divider /
+  li: a(href='/admin/posts') Posts Administration
   li.active= title
 
 block body
@@ -29,6 +27,6 @@ block body
     .form-actions
       .btn-group
         button.btn.btn-danger
-          i.icon-remove.icon-white
+          i.fa.fa-times
           |&nbsp;Delete Post
-        a.btn(href='/admin/posts') Cancel
+        a.btn.btn-default(href='/admin/posts', role='button') Cancel

@@ -1,4 +1,4 @@
-extends ../../layouts/main
+extends ../../layouts/admin
 
 append breadcrumbs
   li.active= title
@@ -13,6 +13,7 @@ block body
         th Title
         th Author
         th Created
+        th Updated
         th Actions
     tbody
     if (posts.length)
@@ -20,6 +21,7 @@ block body
         tr
           td: a(href='/admin/posts/#{post.slug}/edit') #{post.title}
           td: a(href='/users/#{post.user_id}/') #{post.author}
+          td= post.created
           td= post.updated
           td
             a(href='/admin/posts/#{post.slug}/edit', class='btn btn-default',

@@ -1,9 +1,7 @@
-extends ../../layouts/main
+extends ../../layouts/admin
 
 append breadcrumbs
-  li
-    a(href="/admin/posts") posts administration
-    span.divider /
+  li: a(href='/admin/posts') Posts Administration
   li.active= title
 
 block body
