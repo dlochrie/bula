@@ -33,13 +33,26 @@ User.TABLE_ = 'user';
 
 
 /**
+ * TODO:
+ * These columns are more specific, but this is lazy, and not as safe.
+ * Queries should be composed at runtime, and these should be escaped with the
+ * the adapter, ie db.escapeId('col'), or with placeholders '??'.
+ */
+User.SELECT_COLUMNS_ = ['id', 'displayName', 'slug', 'email',
+  'DATE_FORMAT(created, "%M %D, %Y %h:%m %p") as created',
+  'DATE_FORMAT(updated, "%M %D, %Y %h:%m %p") as updated'].join(', ');
+
+
+/**
  * MySQL Query Strings.
  * @private
  * @enum {string}
  */
 User.QUERIES_ = {
-  find: 'SELECT * FROM `' + User.TABLE_ + '` WHERE ?',
-  findOne: 'SELECT * FROM `' + User.TABLE_ + '` WHERE ? LIMIT 1',
+  find: 'SELECT ' + User.SELECT_COLUMNS_ + ' FROM `' + User.TABLE_ +
+      '` WHERE ?',
+  findOne: 'SELECT ' + User.SELECT_COLUMNS_ + ' FROM `' + User.TABLE_ +
+      '` WHERE ? LIMIT 1',
   insert: 'INSERT INTO `' + User.TABLE_ + '` SET ?'
 };
 

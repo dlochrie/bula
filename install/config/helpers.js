@@ -3,7 +3,7 @@
  * @param {Function} app Instance of Express App.
  */
 module.exports = function(app) {
-    var dir = app.get('ROOT PATH') + 'app/helpers',
+  var dir = app.get('ROOT PATH') + 'app/helpers',
       fs = require('fs'),
       helpers = fs.readdirSync(dir);
 
