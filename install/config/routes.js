@@ -9,7 +9,8 @@ module.exports = function(app) {
       users = require(dir + 'users'),
       posts = require(dir + 'posts'),
       admin = require(dir + 'admin'),
-      adminPosts = require(dir + 'admin/posts');
+      adminPosts = require(dir + 'admin/posts'),
+      adminUsers = require(dir + 'admin/users');
 
   /**
    * Public Routes.
@@ -39,4 +40,6 @@ module.exports = function(app) {
   app.resource('admin', admin);
   app.resource('admin/posts', adminPosts);
   app.get('/admin/posts/:post/delete', adminPosts.delete);
+  app.resource('admin/users', adminUsers);
+  app.get('/admin/users/:user/delete', adminUsers.delete);
 };
