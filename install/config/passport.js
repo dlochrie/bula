@@ -53,7 +53,7 @@ module.exports = function(app) {
     var user = new User(app);
     // TODO: Validate.
     user.findOne({email: resource.email}, function(err, result) {
-      if (err || result) return handleResponse(err, result, done);
+      if (err || result) return handleResponse(err, result.user, done);
       return user.insert(resource, function(err, result) {
         // TODO: Validate.
         err = err ? 'There was an error creating the User: ' + err : false;

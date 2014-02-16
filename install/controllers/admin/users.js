@@ -49,7 +49,7 @@ AdminUsers.DELETE_VIEW_ = 'admin/users/delete';
 
 
 /**
- * Renders users' admin index page - lists all users.
+ * Renders users' admin index pagelists all users.
  * @param {Object} req Express request object.
  * @param {Object} res Express response object.
  */
@@ -66,6 +66,55 @@ AdminUsers.prototype.index = function(req, res) {
         results: results
       });
     }
+  });
+};
+
+
+/**
+ * Renders users' create form.
+ * @param {Object} req Express request object.
+ * @param {Object} res Express response object.
+ */
+AdminUsers.prototype.new = function(req, res) {
+  res.render('admin/users/new', {
+    title: 'Create User',
+    user: {},
+    token: res.locals.token
+  });
+};
+
+
+// // TODO: JUST TESTING... SHOULD BE VALIDATED!!!
+// var now = Util.getDate();
+// params.created = now;
+// params.updated = now;
+
+// params.slug = Util.getDate().getTime();
+// params.body_md = Util.sanitize(params.body);
+// params.description_md = Util.sanitize(params.description);
+
+// console.log('params', params);
+
+
+/**
+ * Saves new user or displays creation errors.
+ * Only on creation should a Slug be added - updating them on edit might break
+ * permalinks for users.
+ * @param {Object} req Express request object.
+ * @param {Object} res Express response object.
+ */
+AdminUsers.prototype.create = function(req, res) {
+  var user = new User(req.app, null); // We really should pass in the resource...
+  var params = User.validate(req.body, function(err, resource) {
+    user.insert(params, function(err, user) {
+      if (err || !user) {
+        req.flash('error', 'There was an error creating the user: ' + err);
+        res.redirect(AdminUsers.INDEX_VIEW_);
+      } else {
+        req.flash('success', 'User Successfully Created');
+        res.redirect(AdminUsers.INDEX_VIEW_);
+      }
+    });
   });
 };
 
