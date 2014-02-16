@@ -66,13 +66,10 @@ AdminPosts.prototype.index = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.new = function(req, res) {
-  // TODO: Is this really neccessary? Isn't it available already???
-  var user = res.locals.user || null;
   var post = new Post(req.app);
   res.render('admin/posts/new', {
     title: 'Create Post',
-    post: post,
-    user: user,
+    result: {post: {}, user: {}},
     token: res.locals.token
   });
 };
