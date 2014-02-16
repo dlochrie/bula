@@ -1,7 +1,7 @@
 .form-group
   label(for='title') Title
   input.form-control(type='text', name='title',
-      value=(post.title) ? post.title : "",
+      value=(result.post.title) ? result.post.title : "",
       placeholder='Man Lands on the Moon!')
 
 .form-group
@@ -13,10 +13,10 @@
   label(for='description') Description
   textarea.form-control(rows=2, name='description',
       placeholder='Add a Description here, for Lists and RSS')
-      !=post.description_md
+      !=result.post.description_md
 
 .form-group
   label(for='body') Body Content
   textarea.form-control(rows=10, name='body',
       placeholder='Neil Armstrong, we hardly knew ye...')
-      !=post.body_md
+      !=result.post.body_md

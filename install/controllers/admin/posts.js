@@ -47,14 +47,14 @@ AdminPosts.DELETE_PAGE_ = 'admin/posts/delete';
 AdminPosts.prototype.index = function(req, res) {
   var post = new Post(req.app);
   var params = req.body;
-  post.find(params, function(err, posts) {
-    if (err || !posts) {
+  post.find(params, function(err, results) {
+    if (err || !results) {
       req.flash('error', 'There was an error getting the posts: ' + err);
       return res.redirect('/admin');
     }
     res.render(AdminPosts.INDEX_PAGE_, {
       title: 'Posts Administration',
-      posts: posts
+      results: results
     });
   });
 };
@@ -122,13 +122,13 @@ AdminPosts.prototype.edit = function(req, res) {
   var post = new Post(req.app, null),
       slug = req.params.post;
 
-  post.findOne({slug: slug}, function(err, post) {
-    if (err || !post) {
+  post.findOne({slug: slug}, function(err, result) {
+    if (err || !result) {
       req.flash('error', 'There was an error editing the post: ' + err);
       res.redirect(AdminPosts.INDEX_PAGE_);
     } else {
       res.render('admin/posts/edit', {
-        title: 'Edit Post', post: post, token: res.locals.token
+        title: 'Edit Post', result: result, token: res.locals.token
       });
     }
   });
@@ -170,14 +170,13 @@ AdminPosts.prototype.update = function(req, res) {
 AdminPosts.prototype.delete = function(req, res) {
   var post = new Post(req.app, null),
       slug = req.params.post;
-  console.log('slug', slug);
-  post.findOne({slug: slug}, function(err, post) {
-    if (err || !post) {
+  post.findOne({slug: slug}, function(err, result) {
+    if (err || !result) {
       req.flash('error', 'There was an error deleting the post: ' + err);
       res.redirect(AdminPosts.INDEX_PAGE_);
     } else {
       res.render('admin/posts/delete', {
-        title: 'Delete Post', post: post, token: res.locals.token
+        title: 'Delete Post', result: result, token: res.locals.token
       });
     }
   });

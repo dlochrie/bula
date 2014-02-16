@@ -5,10 +5,10 @@ append breadcrumbs
   li.active= title
 
 block body
-  form(action='/admin/posts/#{post.slug}', method='post', role='form')
+  form(action='/admin/posts/#{result.post.slug}', method='post', role='form')
     include _form
 
-    input(type='hidden', name='user_id', value=post.user_id)
+    input(type='hidden', name='user_id', value=result.post.user_id)
     input(type='hidden', name='_csrf', value=token)
     input(type='hidden', name='_method', value='put')
 
