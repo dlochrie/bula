@@ -17,26 +17,35 @@ function AdminUsers() {}
 
 
 /**
- * Users admin index page.
+ * Path to users index page.
  * @private {string}
  * @const
  */
-AdminUsers.INDEX_PAGE_ = 'admin/users/';
+AdminUsers.INDEX_VIEW_ = 'admin/users/';
 
 
 /**
- * Users admin create page.
+ * Path to users create view.
  * @private {string}
  * @const
  */
-AdminUsers.CREATE_PAGE_ = 'admin/users/new';
+AdminUsers.CREATE_VIEW_ = 'admin/users/new';
 
 
 /**
- * THESE TWO: Don't they need the slug???
+ * Path to users edit view.
+ * @private {string}
+ * @const
  */
-AdminUsers.UPDATE_PAGE_ = 'admin/users/edit';
-AdminUsers.DELETE_PAGE_ = 'admin/users/delete';
+AdminUsers.UPDATE_VIEW_ = 'admin/users/edit';
+
+
+/**
+ * Path to users delete view.
+ * @private {string}
+ * @const
+ */
+AdminUsers.DELETE_VIEW_ = 'admin/users/delete';
 
 
 /**
@@ -47,15 +56,16 @@ AdminUsers.DELETE_PAGE_ = 'admin/users/delete';
 AdminUsers.prototype.index = function(req, res) {
   var user = new User(req.app);
   var params = req.body;
-  user.find(params, function(err, users) {
-    if (err || !users) {
+  user.find(params, function(err, results) {
+    if (err || !results) {
       req.flash('error', 'There was an error getting the users: ' + err);
-      return res.redirect('/admin');
+      res.redirect('/admin');
+    } else {
+      res.render(AdminUsers.INDEX_VIEW_, {
+        title: 'Users Administration',
+        results: results
+      });
     }
-    res.render(AdminUsers.INDEX_PAGE_, {
-      title: 'Users Administration',
-      users: users
-    });
   });
 };
 
@@ -71,7 +81,6 @@ AdminUsers.prototype.new = function(req, res) {
   var user = new User(req.app);
   res.render('admin/users/new', {
     title: 'Create User',
-    user: user,
     user: user,
     token: res.locals.token
   });
@@ -105,10 +114,10 @@ AdminUsers.prototype.create = function(req, res) {
   user.insert(params, function(err, user) {
     if (err || !user) {
       req.flash('error', 'There was an error creating the user: ' + err);
-      res.redirect(AdminUsers.INDEX_PAGE_);
+      res.redirect(AdminUsers.INDEX_VIEW_);
     } else {
       req.flash('success', 'User Successfully Created');
-      res.redirect(AdminUsers.INDEX_PAGE_);
+      res.redirect(AdminUsers.INDEX_VIEW_);
     }
   });
 };
@@ -125,7 +134,7 @@ AdminUsers.prototype.edit = function(req, res) {
   user.findOne({slug: slug}, function(err, user) {
     if (err || !user) {
       req.flash('error', 'There was an error editing the user: ' + err);
-      res.redirect(AdminUsers.INDEX_PAGE_);
+      res.redirect(AdminUsers.INDEX_VIEW_);
     } else {
       res.render('admin/users/edit', {
         title: 'Edit User', user: user, token: res.locals.token
@@ -156,7 +165,7 @@ AdminUsers.prototype.update = function(req, res) {
       res.redirect('/admin/users/' + slug + '/edit');
     } else {
       req.flash('success', 'User Successfully Updated');
-      res.redirect(AdminUsers.INDEX_PAGE_);
+      res.redirect(AdminUsers.INDEX_VIEW_);
     }
   });
 };
@@ -170,11 +179,10 @@ AdminUsers.prototype.update = function(req, res) {
 AdminUsers.prototype.delete = function(req, res) {
   var user = new User(req.app, null),
       slug = req.params.user;
-  console.log('slug', slug);
   user.findOne({slug: slug}, function(err, user) {
     if (err || !user) {
       req.flash('error', 'There was an error deleting the user: ' + err);
-      res.redirect(AdminUsers.INDEX_PAGE_);
+      res.redirect(AdminUsers.INDEX_VIEW_);
     } else {
       res.render('admin/users/delete', {
         title: 'Delete User', user: user, token: res.locals.token
@@ -198,6 +206,6 @@ AdminUsers.prototype.destroy = function(req, res) {
     } else {
       req.flash('info', 'User Successfully Deleted.');
     }
-    res.redirect(AdminUsers.INDEX_PAGE_);
+    res.redirect(AdminUsers.INDEX_VIEW_);
   });
 };

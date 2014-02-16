@@ -59,12 +59,13 @@ AdminPosts.prototype.index = function(req, res) {
   post.find(params, function(err, results) {
     if (err || !results) {
       req.flash('error', 'There was an error getting the posts: ' + err);
-      return res.redirect('/admin');
+      res.redirect('/admin');
+    } else {
+      res.render(AdminPosts.INDEX_VIEW_, {
+        title: 'Posts Administration',
+        results: results
+      });
     }
-    res.render(AdminPosts.INDEX_VIEW_, {
-      title: 'Posts Administration',
-      results: results
-    });
   });
 };
 
