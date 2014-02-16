@@ -17,26 +17,35 @@ function AdminPosts() {}
 
 
 /**
- * Posts admin index page.
+ * Path to posts index page.
  * @private {string}
  * @const
  */
-AdminPosts.INDEX_PAGE_ = 'admin/posts/';
+AdminPosts.INDEX_VIEW_ = 'admin/posts/';
 
 
 /**
- * Posts admin create page.
+ * Path to posts create view.
  * @private {string}
  * @const
  */
-AdminPosts.CREATE_PAGE_ = 'admin/posts/new';
+AdminPosts.CREATE_VIEW_ = 'admin/posts/new';
 
 
 /**
- * THESE TWO: Don't they need the slug???
+ * Path to posts edit view.
+ * @private {string}
+ * @const
  */
-AdminPosts.UPDATE_PAGE_ = 'admin/posts/edit';
-AdminPosts.DELETE_PAGE_ = 'admin/posts/delete';
+AdminPosts.UPDATE_VIEW_ = 'admin/posts/edit';
+
+
+/**
+ * Path to posts delete view.
+ * @private {string}
+ * @const
+ */
+AdminPosts.DELETE_VIEW_ = 'admin/posts/delete';
 
 
 /**
@@ -52,7 +61,7 @@ AdminPosts.prototype.index = function(req, res) {
       req.flash('error', 'There was an error getting the posts: ' + err);
       return res.redirect('/admin');
     }
-    res.render(AdminPosts.INDEX_PAGE_, {
+    res.render(AdminPosts.INDEX_VIEW_, {
       title: 'Posts Administration',
       results: results
     });
@@ -102,10 +111,10 @@ AdminPosts.prototype.create = function(req, res) {
   post.insert(params, function(err, post) {
     if (err || !post) {
       req.flash('error', 'There was an error creating the post: ' + err);
-      res.redirect(AdminPosts.INDEX_PAGE_);
+      res.redirect(AdminPosts.INDEX_VIEW_);
     } else {
       req.flash('success', 'Post Successfully Created');
-      res.redirect(AdminPosts.INDEX_PAGE_);
+      res.redirect(AdminPosts.INDEX_VIEW_);
     }
   });
 };
@@ -122,9 +131,9 @@ AdminPosts.prototype.edit = function(req, res) {
   post.findOne({slug: slug}, function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error editing the post: ' + err);
-      res.redirect(AdminPosts.INDEX_PAGE_);
+      res.redirect(AdminPosts.INDEX_VIEW_);
     } else {
-      res.render('admin/posts/edit', {
+      res.render(AdminPosts.UPDATE_VIEW_, {
         title: 'Edit Post', result: result, token: res.locals.token
       });
     }
@@ -153,7 +162,7 @@ AdminPosts.prototype.update = function(req, res) {
       res.redirect('/admin/posts/' + slug + '/edit');
     } else {
       req.flash('success', 'Post Successfully Updated');
-      res.redirect(AdminPosts.INDEX_PAGE_);
+      res.redirect(AdminPosts.INDEX_VIEW_);
     }
   });
 };
@@ -170,9 +179,9 @@ AdminPosts.prototype.delete = function(req, res) {
   post.findOne({slug: slug}, function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error deleting the post: ' + err);
-      res.redirect(AdminPosts.INDEX_PAGE_);
+      res.redirect(AdminPosts.INDEX_VIEW_);
     } else {
-      res.render('admin/posts/delete', {
+      res.render(AdminPosts.DELETE_VIEW_, {
         title: 'Delete Post', result: result, token: res.locals.token
       });
     }
@@ -194,6 +203,6 @@ AdminPosts.prototype.destroy = function(req, res) {
     } else {
       req.flash('info', 'Post Successfully Deleted.');
     }
-    res.redirect(AdminPosts.INDEX_PAGE_);
+    res.redirect(AdminPosts.INDEX_VIEW_);
   });
 };
