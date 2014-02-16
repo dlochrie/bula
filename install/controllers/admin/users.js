@@ -71,59 +71,6 @@ AdminUsers.prototype.index = function(req, res) {
 
 
 /**
- * Renders users' create form.
- * @param {Object} req Express request object.
- * @param {Object} res Express response object.
- */
-AdminUsers.prototype.new = function(req, res) {
-  // TODO: Is this really neccessary? Isn't it available already???
-  var user = res.locals.user || null;
-  var user = new User(req.app);
-  res.render('admin/users/new', {
-    title: 'Create User',
-    user: user,
-    token: res.locals.token
-  });
-};
-
-
-/**
- * Saves new user or displays creation errors.
- * Only on creation should a Slug be added - updating them on edit might break
- * permalinks for users.
- * @param {Object} req Express request object.
- * @param {Object} res Express response object.
- */
-AdminUsers.prototype.create = function(req, res) {
-  var user = new User(req.app, null);
-  var params = req.body;
-
-
-  // TODO: JUST TESTING... SHOULD BE VALIDATED!!!
-  var now = Util.getDate();
-  params.created = now;
-  params.updated = now;
-
-  params.slug = Util.getDate().getTime();
-  params.body_md = Util.sanitize(params.body);
-  params.description_md = Util.sanitize(params.description);
-
-  console.log('params', params);
-
-
-  user.insert(params, function(err, user) {
-    if (err || !user) {
-      req.flash('error', 'There was an error creating the user: ' + err);
-      res.redirect(AdminUsers.INDEX_VIEW_);
-    } else {
-      req.flash('success', 'User Successfully Created');
-      res.redirect(AdminUsers.INDEX_VIEW_);
-    }
-  });
-};
-
-
-/**
  * @param {Object} req Express request object.
  * @param {Object} res Express response object.
  */
@@ -131,13 +78,13 @@ AdminUsers.prototype.edit = function(req, res) {
   var user = new User(req.app, null),
       slug = req.params.user;
 
-  user.findOne({slug: slug}, function(err, user) {
-    if (err || !user) {
+  user.findOne({slug: slug}, function(err, result) {
+    if (err || !result) {
       req.flash('error', 'There was an error editing the user: ' + err);
       res.redirect(AdminUsers.INDEX_VIEW_);
     } else {
       res.render('admin/users/edit', {
-        title: 'Edit User', user: user, token: res.locals.token
+        title: 'Edit User', result: result, token: res.locals.token
       });
     }
   });
@@ -179,13 +126,13 @@ AdminUsers.prototype.update = function(req, res) {
 AdminUsers.prototype.delete = function(req, res) {
   var user = new User(req.app, null),
       slug = req.params.user;
-  user.findOne({slug: slug}, function(err, user) {
-    if (err || !user) {
+  user.findOne({slug: slug}, function(err, result) {
+    if (err || !result) {
       req.flash('error', 'There was an error deleting the user: ' + err);
       res.redirect(AdminUsers.INDEX_VIEW_);
     } else {
       res.render('admin/users/delete', {
-        title: 'Delete User', user: user, token: res.locals.token
+        title: 'Delete User', result: result, token: res.locals.token
       });
     }
   });
