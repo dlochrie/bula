@@ -12,6 +12,9 @@ module.exports = Base;
 function Base() {}
 
 
+Base.DEFAULT_WHERE_VALUE_ = '1 = 1';
+
+
 /**
  * Finds all records that match the given parameters.
  * @param {Object} params The parameters on which to locate the records.
@@ -19,13 +22,10 @@ function Base() {}
  */
 Base.prototype.find = function(params, cb) {
   var query = this.getQuery('find');
-  var resource = this.buildResource(params);
-  this.db.getConnection(function(err, connection) {
-    var q = connection.query(query, resource || '1 = 1', function(err, results) {
-      connection.release(); // Return this connection to the pool.
-      cb(err, results || []);
-    });
-    Base.logQuery(q);
+  var columns = this.getColumns();
+  var where = this.buildResource(params) || Base.DEFAULT_WHERE_VALUE_;
+  this.select(query, columns, where, function(err, results) {
+    cb(err, results || []);
   });
 };
 
@@ -37,14 +37,10 @@ Base.prototype.find = function(params, cb) {
  */
 Base.prototype.findOne = function(params, cb) {
   var query = this.getQuery('findOne');
-  var resource = this.buildResource(params);
-  this.db.getConnection(function(err, connection) {
-    var q = connection.query(query, resource || '1 = 1',
-        function(err, results) {
-          connection.release(); // Return this connection to the pool.
-          cb(err, results ? results[0] : null);
-        });
-    Base.logQuery(q);
+  var columns = this.getColumns();
+  var where = this.buildResource(params) || Base.DEFAULT_WHERE_VALUE_;
+  this.select(query, columns, where, function(err, results) {
+    cb(err, results ? results[0] : null);
   });
 };
 
@@ -128,6 +124,36 @@ Base.prototype.remove = function(params, cb) {
 
 Base.prototype.validate = function() {
   throw 'Please supply a database adapter.';
+};
+
+
+/**
+ * Wrapper for SELECT statements.
+ * Performs query and returns connection back to pool.
+ * @param {string} query The query string to append values to.
+ * @param {Object} columns The columns to retrieve in the query.
+ * @param {Object} where The parameters that identify the result set.
+ * @param {Functon(<string>, <Array>)} Callback function to perform when done.
+ */
+Base.prototype.select = function(query, columns, where, cb) {
+  /**
+   * Nesting tables allows for results like:
+   * {
+   *   post: {id: '...', title: '...'},
+   *   user: {id: '...', displayName: '...'}
+   * }
+   */
+  var options = {
+    sql: query,
+    nestTables: true
+  };
+  this.db.getConnection(function(err, connection) {
+    var q = connection.query(options, [columns, where], function(err, results) {
+      connection.release();
+      cb(err, results || []);
+    });
+    Base.logQuery(q);
+  });
 };
 
 

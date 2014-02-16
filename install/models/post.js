@@ -41,6 +41,16 @@ Post.USERS_TABLE_ = 'user';
 
 
 /**
+ * Columns to retrieve in SELECT statements.
+ * @const
+ * @private {Array.<string>}
+ */
+Post.SELECT_COLUMNS_ = ['post.id', 'post.title', 'post.description',
+  'post.body', 'post.slug', 'post.created', 'post.updated',
+  'user.displayName', 'user.email', 'user.id', 'user.slug'];
+
+
+/**
  * MySQL Query Strings.
  *
  * TODO: You might want some MORE specific queries here for articles, etc -
@@ -50,15 +60,11 @@ Post.USERS_TABLE_ = 'user';
  * @enum {string}
  */
 Post.QUERIES_ = {
-  find: 'SELECT `post`.*, ' +
-      '`' + Post.USERS_TABLE_ + '`.`displayName` as `author` ' +
-      'FROM `' + Post.TABLE_ + '` ' +
+  find: 'SELECT ?? FROM `' + Post.TABLE_ + '` ' +
       'LEFT JOIN `' + Post.USERS_TABLE_ + '` ' +
       'ON `' + Post.TABLE_ + '`.`user_id` = `' + Post.USERS_TABLE_ + '`.`id` ' +
       'WHERE ?',
-  findOne: 'SELECT `post`.*, ' +
-      '`' + Post.USERS_TABLE_ + '`.`displayName` as `author` ' +
-      'FROM `' + Post.TABLE_ + '` ' +
+  findOne: 'SELECT ?? FROM `' + Post.TABLE_ + '` ' +
       'LEFT JOIN `' + Post.USERS_TABLE_ + '` ' +
       'ON `' + Post.TABLE_ + '`.`user_id` = `' + Post.USERS_TABLE_ + '`.`id` ' +
       'WHERE ? ' +
@@ -99,6 +105,16 @@ Post.prototype.getQuery = function(action) {
   } else {
     return Post.QUERIES_;
   }
+};
+
+
+/**
+ * Gets the columns to be displayed in a result, or returns them all.
+ * @param {?string} action Type of query to get/perform.
+ * @return {string|Object} query or queries.
+ */
+Post.prototype.getColumns = function(action) {
+  return Post.SELECT_COLUMNS_;
 };
 
 

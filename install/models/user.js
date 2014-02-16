@@ -33,14 +33,12 @@ User.TABLE_ = 'user';
 
 
 /**
- * TODO:
- * These columns are more specific, but this is lazy, and not as safe.
- * Queries should be composed at runtime, and these should be escaped with the
- * the adapter, ie db.escapeId('col'), or with placeholders '??'.
+ * Columns to retrieve in SELECT statements.
+ * @const
+ * @private {Array.<string>}
  */
-User.SELECT_COLUMNS_ = ['id', 'displayName', 'slug', 'email',
-  'DATE_FORMAT(created, "%M %D, %Y %h:%m %p") as created',
-  'DATE_FORMAT(updated, "%M %D, %Y %h:%m %p") as updated'].join(', ');
+User.SELECT_COLUMNS_ = ['id', 'displayName', 'slug', 'email', 'created',
+  'updated'];
 
 
 /**
@@ -49,10 +47,8 @@ User.SELECT_COLUMNS_ = ['id', 'displayName', 'slug', 'email',
  * @enum {string}
  */
 User.QUERIES_ = {
-  find: 'SELECT ' + User.SELECT_COLUMNS_ + ' FROM `' + User.TABLE_ +
-      '` WHERE ?',
-  findOne: 'SELECT ' + User.SELECT_COLUMNS_ + ' FROM `' + User.TABLE_ +
-      '` WHERE ? LIMIT 1',
+  find: 'SELECT ?? FROM `' + User.TABLE_ + '` WHERE ?',
+  findOne: 'SELECT ?? FROM `' + User.TABLE_ + '` WHERE ? LIMIT 1',
   insert: 'INSERT INTO `' + User.TABLE_ + '` SET ?'
 };
 
@@ -86,6 +82,16 @@ User.prototype.getQuery = function(action) {
   } else {
     return User.QUERIES_;
   }
+};
+
+
+/**
+ * Gets the columns to be displayed in a result, or returns them all.
+ * @param {?string} action Type of query to get/perform.
+ * @return {string|Object} query or queries.
+ */
+User.prototype.getColumns = function(action) {
+  return User.SELECT_COLUMNS_;
 };
 
 
