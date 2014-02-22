@@ -16,7 +16,7 @@ block body
   form(action='/admin/posts/#{result.post.id}', method='post', role='form')
     include _form
 
-    input(type='hidden', name='user_id', value=result.post.user_id)
+    input(type='hidden', name='user_id', value=result.user.id)
     input(type='hidden', name='_csrf', value=token)
     input(type='hidden', name='_method', value='put')
 
