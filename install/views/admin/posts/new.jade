@@ -5,6 +5,14 @@ append breadcrumbs
   li.active= title
 
 block body
+  if (errors && errors.length)
+    .alert.alert-danger.alert-dismissable
+      button.close(type='button', data-dismiss='alert' aria-hidden='true')
+        | &times;
+      ul
+      each error in errors
+        li= error
+
   form(action='/admin/posts', method='post', role='form')
     include _form
     

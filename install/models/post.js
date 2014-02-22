@@ -1,4 +1,5 @@
 var Base = require('./base');
+var Util = require('../controllers/util');
 
 
 /**
@@ -46,8 +47,9 @@ Post.USERS_TABLE_ = 'user';
  * @private {Array.<string>}
  */
 Post.SELECT_COLUMNS_ = ['post.id', 'post.title', 'post.description',
-  'post.body', 'post.slug', 'post.created', 'post.updated',
-  'user.displayName', 'user.email', 'user.id', 'user.slug'];
+  'post.description_md', 'post.body', 'post.body_md', 'post.slug',
+  'post.created', 'post.updated', 'user.displayName', 'user.email', 'user.id',
+  'user.slug'];
 
 
 /**
@@ -81,16 +83,16 @@ Post.QUERIES_ = {
  * @enum {string}
  */
 Post.STRUCTURE_ = {
-  id: {type: Number, required: false},
-  user_id: {type: Number, length: 10, required: true},
-  title: {type: String, length: 255, required: true},
-  slug: {type: String, length: 255, required: true},
+  id: {type: 'Number', required: false},
+  user_id: {type: 'Number', length: 10, required: true},
+  title: {type: 'String', length: 255, required: true},
+  slug: {type: 'String', length: 255},
   description: {type: 'Text', required: true},
   description_md: {type: 'Text', required: true},
   body: {type: 'Text', required: true},
   body_md: {type: 'Text', required: true},
-  created: {type: Number, required: false, default: new Date().getTime()},
-  updated: {type: Number, required: true, default: new Date().getTime()}
+  created: {type: 'Number', required: false, default: new Date().getTime()},
+  updated: {type: 'Number', required: false, default: new Date().getTime()}
 };
 
 
@@ -133,4 +135,38 @@ Post.prototype.getStructure = function() {
  */
 Post.prototype.getTable = function() {
   return Post.TABLE_;
+};
+
+
+/**
+ * Add / Modify fields that are not populated by the form, and that need to be
+ * generated.
+ */
+Post.prototype.prepare = function(resource) {
+  resource.slug = this.convertToSlug(resource.title);
+  resource.body_md = Util.sanitize(resource.body_md);
+  resource.body = this.convertMarkdown(resource.body_md);
+  resource.description_md = Util.sanitize(resource.description_md);
+  resource.description = this.convertMarkdown(resource.description_md);
+  return resource;
+};
+
+
+Post.prototype.convertMarkdown = function(text) {
+  return require('marked')(text || '');
+};
+
+
+/**
+ * TODO: Why is this NOT in a common area???
+ * Converts a string into a friendly url string.
+ * @param {string} text The string to convert.
+ * @return {string} The converted string.
+ */
+Post.prototype.convertToSlug = function(text) {
+  return (text || '')
+      .toString()
+      .toLowerCase()
+      .replace(/[^\w ]+/g, '')
+      .replace(/ +/g, '-');
 };

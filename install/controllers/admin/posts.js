@@ -79,6 +79,7 @@ AdminPosts.prototype.new = function(req, res) {
   var post = new Post(req.app);
   res.render('admin/posts/new', {
     title: 'Create Post',
+    errors: [],
     result: {post: {}, user: {}},
     token: res.locals.token
   });
@@ -96,23 +97,16 @@ AdminPosts.prototype.create = function(req, res) {
   var post = new Post(req.app, null);
   var params = req.body;
 
-
-  // TODO: JUST TESTING... SHOULD BE VALIDATED!!!
-  var now = Util.getDate();
-  params.created = now;
-  params.updated = now;
-
-  params.slug = Util.getDate().getTime();
-  params.body_md = Util.sanitize(params.body);
-  params.description_md = Util.sanitize(params.description);
-
-  console.log('params', params);
-
-
-  post.insert(params, function(err, post) {
-    if (err || !post) {
-      req.flash('error', 'There was an error creating the post: ' + err);
-      res.redirect(AdminPosts.INDEX_VIEW_);
+  post.insert(params, function(errors, post) {
+    if (errors || !post) {
+      req.flash('error', 'There was an error creating the post: ');
+      // TODO: WE might have to redirect... and then bind these vars...
+      res.render(AdminPosts.CREATE_VIEW_, {
+        title: 'Create Post',
+        errors: errors,
+        result: {post: params, user: {}},
+        token: res.locals.token
+      });
     } else {
       req.flash('success', 'Post Successfully Created');
       res.redirect(AdminPosts.INDEX_VIEW_);

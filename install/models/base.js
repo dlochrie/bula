@@ -52,22 +52,36 @@ Base.prototype.findOne = function(params, cb) {
  */
 Base.prototype.insert = function(params, cb) {
   var query = this.getQuery('insert');
-  var resource = this.buildResource(params);
-  this.db.getConnection(function(err, connection) {
-    var q = connection.query(query, resource, function(err, result) {
-      connection.release(); // Return this connection to the pool.
-      if (err) {
-        cb('This ' + getTable() + ' could not be added: ' + err, null);
-      } else {
-        /**
-         * During an insert the resource MUST be returned manually since the
-         * Node-MySQL module does not return the inserted resource.
-         */
-        cb(err, resource);
-      }
+
+  /**
+   * TODO: This is ugly - think of a more elegant way:
+   * (1) Prepare..?
+   * (2) Validate..?
+   * (3) Build..?
+   */
+  var resource = this.prepare(params);
+  resource = this.validate(resource);
+
+  if (!resource.isValid) {
+    cb(resource.errors, null);
+  } else {
+    resource = this.buildResource(params);
+    this.db.getConnection(function(err, connection) {
+      var q = connection.query(query, resource, function(err, result) {
+        connection.release(); // Return this connection to the pool.
+        if (err) {
+          cb('This ' + getTable() + ' could not be added: ' + err, null);
+        } else {
+          /**
+           * During an insert the resource MUST be returned manually since the
+           * Node-MySQL module does not return the inserted resource.
+           */
+          cb(err, resource);
+        }
+      });
+      Base.logQuery(q);
     });
-    Base.logQuery(q);
-  });
+  }
 };
 
 
@@ -122,8 +136,29 @@ Base.prototype.remove = function(params, cb) {
 };
 
 
-Base.prototype.validate = function() {
-  throw 'Please supply a database adapter.';
+/**
+ * Validates the resource against the model's STRUCTURE.
+ */
+Base.prototype.validate = function(resource) {
+  var structure = this.getStructure();
+  var errors = [];
+
+  for (property in structure) {
+    var rules = structure[property];
+
+    // Validate Required Properties...
+    if (rules['required'] && !resource[property]) {
+      errors.push('The following required field is missing: ' +
+          property);
+    }
+
+    // TODO: Validate Length (MIN and MAX)
+
+    // TODO: Validate Types... (String, Number, Date, etc)...
+  }
+
+  var isValid = !errors.length ? true : false;
+  return {isValid: isValid, errors: errors};
 };
 
 

@@ -11,12 +11,12 @@
 
 .form-group
   label(for='description') Description
-  textarea.form-control(rows=2, name='description',
+  textarea.form-control(rows=2, name='description_md',
       placeholder='Add a Description here, for Lists and RSS')
       !=result.post.description_md
 
 .form-group
   label(for='body') Body Content
-  textarea.form-control(rows=10, name='body',
+  textarea.form-control(rows=10, name='body_md',
       placeholder='Neil Armstrong, we hardly knew ye...')
       !=result.post.body_md
