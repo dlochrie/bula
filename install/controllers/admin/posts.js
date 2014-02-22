@@ -121,9 +121,9 @@ AdminPosts.prototype.create = function(req, res) {
  */
 AdminPosts.prototype.edit = function(req, res) {
   var post = new Post(req.app, null),
-      slug = req.params.post;
+      id = parseInt(req.params.post);
 
-  post.findOne({slug: slug}, function(err, result) {
+  post.findOne({id: id}, function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error editing the post: ' + err);
       res.redirect(AdminPosts.INDEX_VIEW_);
@@ -144,17 +144,17 @@ AdminPosts.prototype.edit = function(req, res) {
  */
 AdminPosts.prototype.update = function(req, res) {
   var post = new Post(req.app, null),
-      slug = req.params.post,
+      id = parseInt(req.params.post),
       params = req.body;
 
   params.body_md = Util.sanitize(params.body);
   params.description_md = Util.sanitize(params.description);
   params.updated = Util.getDate();
 
-  post.update({slug: slug}, params, function(err) {
+  post.update({id: id}, params, function(err) {
     if (err) {
       req.flash('error', 'There was an error editing the post: ' + err);
-      res.redirect('/admin/posts/' + slug + '/edit');
+      res.redirect('/admin/posts/' + id + '/edit');
     } else {
       req.flash('success', 'Post Successfully Updated');
       res.redirect(AdminPosts.INDEX_VIEW_);
@@ -170,8 +170,8 @@ AdminPosts.prototype.update = function(req, res) {
  */
 AdminPosts.prototype.delete = function(req, res) {
   var post = new Post(req.app, null),
-      slug = req.params.post;
-  post.findOne({slug: slug}, function(err, result) {
+      id = parseInt(req.params.post);
+  post.findOne({id: id}, function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error deleting the post: ' + err);
       res.redirect(AdminPosts.INDEX_VIEW_);
@@ -191,8 +191,8 @@ AdminPosts.prototype.delete = function(req, res) {
  */
 AdminPosts.prototype.destroy = function(req, res) {
   var post = new Post(req.app, null),
-      slug = req.params.post;
-  post.remove({slug: slug}, function(err) {
+      id = parseInt(req.params.post);
+  post.remove({id: id}, function(err) {
     if (err) {
       req.flash('error', 'There was an error deleting the post: ' + err);
     } else {

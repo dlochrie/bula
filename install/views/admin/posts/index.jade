@@ -20,17 +20,17 @@ block body
       each result in results
         tr
           td
-            a(href='/admin/posts/#{result.post.slug}/edit') #{result.post.title}
+            a(href='/admin/posts/#{result.post.id}/edit') #{result.post.title}
           td
             a(href='/users/#{result.user.slug}/') #{result.user.displayName}
           td= result.post.created
           td= result.post.updated
           td
-            a(href='/admin/posts/#{result.post.slug}/edit',
+            a(href='/admin/posts/#{result.post.id}/edit',
                 class='btn btn-default', role='button')
               i.fa.fa-pencil
             | 
-            a(href='/admin/posts/#{result.post.slug}/delete',
+            a(href='/admin/posts/#{result.post.id}/delete',
                 class='btn btn-danger', role='button')
               i.fa.fa-times
     else
