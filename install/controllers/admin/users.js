@@ -84,18 +84,6 @@ AdminUsers.prototype.new = function(req, res) {
 };
 
 
-// // TODO: JUST TESTING... SHOULD BE VALIDATED!!!
-// var now = Util.getDate();
-// params.created = now;
-// params.updated = now;
-
-// params.slug = Util.getDate().getTime();
-// params.body_md = Util.sanitize(params.body);
-// params.description_md = Util.sanitize(params.description);
-
-// console.log('params', params);
-
-
 /**
  * Saves new user or displays creation errors.
  * Only on creation should a Slug be added - updating them on edit might break

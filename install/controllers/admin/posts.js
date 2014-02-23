@@ -54,9 +54,9 @@ AdminPosts.DELETE_VIEW_ = 'admin/posts/delete';
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.index = function(req, res) {
-  var post = new Post(req.app);
-  var params = req.body;
-  post.find(params, function(err, results) {
+  var params = req.body || {};
+  var post = new Post(req.app, params);
+  post.find(function(err, results) {
     if (err || !results) {
       req.flash('error', 'There was an error getting the posts: ' + err);
       res.redirect('/admin');
@@ -94,10 +94,10 @@ AdminPosts.prototype.new = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.create = function(req, res) {
-  var post = new Post(req.app, null);
-  var params = req.body;
+  var params = req.body || {}; // ????
+  var post = new Post(req.app, params);
 
-  post.insert(params, function(errors, post) {
+  post.insert(function(errors, post) {
     if (errors || !post) {
       req.flash('error', 'There was an error creating the post: ');
       // TODO: WE might have to redirect... and then bind these vars...
@@ -120,10 +120,9 @@ AdminPosts.prototype.create = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.edit = function(req, res) {
-  var post = new Post(req.app, null),
-      id = parseInt(req.params.post);
+  var post = new Post(req.app, {id: parseInt(req.params.post)});
 
-  post.findOne({id: id}, function(err, result) {
+  post.findOne(function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error editing the post: ' + err);
       res.redirect(AdminPosts.INDEX_VIEW_);
@@ -143,15 +142,9 @@ AdminPosts.prototype.edit = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.update = function(req, res) {
-  var post = new Post(req.app, null),
-      id = parseInt(req.params.post),
-      params = req.body;
+  var post = new Post(req.app, req.body);
 
-  params.body_md = Util.sanitize(params.body);
-  params.description_md = Util.sanitize(params.description);
-  params.updated = Util.getDate();
-
-  post.update({id: id}, params, function(err) {
+  post.update({id: parseInt(req.params.post)}, function(err) {
     if (err) {
       req.flash('error', 'There was an error editing the post: ' + err);
       res.redirect('/admin/posts/' + id + '/edit');
@@ -169,9 +162,9 @@ AdminPosts.prototype.update = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.delete = function(req, res) {
-  var post = new Post(req.app, null),
-      id = parseInt(req.params.post);
-  post.findOne({id: id}, function(err, result) {
+  var post = new Post(req.app, {id: parseInt(req.params.post)});
+
+  post.findOne(function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error deleting the post: ' + err);
       res.redirect(AdminPosts.INDEX_VIEW_);
@@ -190,9 +183,9 @@ AdminPosts.prototype.delete = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.destroy = function(req, res) {
-  var post = new Post(req.app, null),
-      id = parseInt(req.params.post);
-  post.remove({id: id}, function(err) {
+  var post = new Post(req.app, {id: parseInt(req.params.post)});
+
+  post.remove(function(err) {
     if (err) {
       req.flash('error', 'There was an error deleting the post: ' + err);
     } else {

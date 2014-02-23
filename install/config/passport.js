@@ -50,9 +50,9 @@ module.exports = function(app) {
       google_id: identifier,
       email: profile.emails[0].value
     };
-    var user = new User(app);
+    var user = new User(app, {email: resource.email});
     // TODO: Validate.
-    user.findOne({email: resource.email}, function(err, result) {
+    user.findOne(function(err, result) {
       if (err || result) return handleResponse(err, result.user, done);
       return user.insert(resource, function(err, result) {
         // TODO: Validate.
