@@ -11,13 +11,13 @@ module.exports = User;
 /**
  * User model constructor.
  * @param {express.app} app Express App instance.
- * @param {Object=} resource Optional resource.
+ * @param {Object=} opt_resource Optional resource.
  * @constructor
  * @extends {app.models.base}
  */
-function User(app, resource) {
+function User(app, opt_resource) {
   this.app = app;
-  this.resource = resource || null;
+  this.resource = opt_resource || null;
   this.db = app.db;
   Base.call(this);
 }

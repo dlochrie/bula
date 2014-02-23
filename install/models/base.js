@@ -17,13 +17,12 @@ Base.DEFAULT_WHERE_VALUE_ = '1 = 1';
 
 /**
  * Finds all records that match the given parameters.
- * @param {Object} params The parameters on which to locate the records.
  * @param {Function} cb Callback function to fire when done.
  */
-Base.prototype.find = function(params, cb) {
+Base.prototype.find = function(cb) {
   var query = this.getQuery('find');
   var columns = this.getColumns();
-  var where = this.buildResource(params) || Base.DEFAULT_WHERE_VALUE_;
+  var where = this.getQueryObject() || Base.DEFAULT_WHERE_VALUE_;
   this.select(query, columns, where, function(err, results) {
     cb(err, results || []);
   });
@@ -32,13 +31,12 @@ Base.prototype.find = function(params, cb) {
 
 /**
  * Finds one record that matches the given parameters.
- * @param {Object} params The parameters on which to locate the records.
  * @param {Function} cb Callback function to fire when done.
  */
-Base.prototype.findOne = function(params, cb) {
+Base.prototype.findOne = function(cb) {
   var query = this.getQuery('findOne');
   var columns = this.getColumns();
-  var where = this.buildResource(params) || Base.DEFAULT_WHERE_VALUE_;
+  var where = this.getQueryObject(this.resource) || Base.DEFAULT_WHERE_VALUE_;
   this.select(query, columns, where, function(err, results) {
     cb(err, results ? results[0] : null);
   });
@@ -47,30 +45,27 @@ Base.prototype.findOne = function(params, cb) {
 
 /**
  * Inserts a record with the given parameters.
- * @param {Object} params The parameters on which to insert.
  * @param {Function} cb Callback function to fire when done.
  */
-Base.prototype.insert = function(params, cb) {
+Base.prototype.insert = function(cb) {
   var query = this.getQuery('insert');
+  var self = this;
 
-  /**
-   * TODO: This is ugly - think of a more elegant way:
-   * (1) Prepare..?
-   * (2) Validate..?
-   * (3) Build..?
-   */
-  var resource = this.prepare(params);
-  resource = this.validate(resource);
+  this.validate(function(err) {
+    if (err) return cb(err, null);
 
-  if (!resource.isValid) {
-    cb(resource.errors, null);
-  } else {
-    resource = this.buildResource(params);
+    // Prepare the resource, adding any system generated values, like slug's.
+    // The format it for inserting in DB.
+    var resource = self.prepare();
+    var insertObject = self.getQueryObject(resource) || {};
+
     this.db.getConnection(function(err, connection) {
-      var q = connection.query(query, resource, function(err, result) {
+      if (err) return cb(err, null);
+
+      var q = connection.query(query, insertObject, function(err, result) {
         connection.release(); // Return this connection to the pool.
         if (err) {
-          cb('This ' + getTable() + ' could not be added: ' + err, null);
+          cb('This ' + self.getTable() + ' could not be added: ' + err, null);
         } else {
           /**
            * During an insert the resource MUST be returned manually since the
@@ -81,34 +76,46 @@ Base.prototype.insert = function(params, cb) {
       });
       Base.logQuery(q);
     });
-  }
+  });
 };
 
 
 /**
  * @param {Object} identifier The WHERE clause argument.
- * @param {Object} params The values to update.
  * @param {Function} cb Callback function to fire when done.
  */
-Base.prototype.update = function(identifier, params, cb) {
+Base.prototype.update = function(identifier, cb) {
   var query = this.getQuery('update');
-  var resource = this.buildResource(params);
-  this.db.getConnection(function(err, connection) {
-    var q = connection.query(query, [resource, identifier],
-        function(err, result) {
-          connection.release(); // Return this connection to the pool.
-          if (err) {
-            // TODO: Handle sticky forms in case of failed update - eg Return resource.
-            cb('This ' + getTable() + ' could not be updated: ' + err);
-          } else {
-            cb(err);
-          }
-        });
-    Base.logQuery(q);
+  var self = this;
+
+  this.validate(function(err) {
+    if (err) return cb(err, null);
+
+    // Prepare the resource, adding any system generated values, like slug's.
+    // The format it for inserting in DB.
+    var resource = self.prepare();
+    var insertObject = self.getQueryObject(resource) || {};
+
+    this.db.getConnection(function(err, connection) {
+      if (err) return cb(err, null);
+
+      var q = connection.query(query, [insertObject, identifier], function(err, result) {
+        connection.release(); // Return this connection to the pool.
+        if (err) {
+          cb('This ' + self.getTable() + ' could not be updated: ' + err, null);
+        } else {
+          cb(err, resource);
+        }
+      });
+      Base.logQuery(q);
+    });
   });
 };
 
 
+/**
+ * Wrapper for Inserts and Updates.
+ */
 Base.prototype.save = function() {
   throw 'Please supply a database adapter.';
 };
@@ -116,14 +123,16 @@ Base.prototype.save = function() {
 
 /**
  * Removes the resource identified by the parameters.
- * @param {Object} params Object identifying resource to remove.
+ * @param {Functon(<string>, <Array>)} Callback function to perform when done.
  */
-Base.prototype.remove = function(params, cb) {
+Base.prototype.remove = function(cb) {
   var self = this;
-  var query = this.getQuery('remove');
-  var resource = this.buildResource(params);
   this.db.getConnection(function(err, connection) {
-    var q = connection.query(query, resource, function(err) {
+    if (err) return cb(err, null);
+    var query = self.getQuery('remove');
+    var where = self.getQueryObject(self.resource);
+    var q = connection.query(query, where, function(err) {
+      if (err) return cb(err, null);
       connection.release(); // Return this connection to the pool.
       if (err) {
         cb('This ' + self.getTable() + ' could not be deleted: ' + err, null);
@@ -137,12 +146,44 @@ Base.prototype.remove = function(params, cb) {
 
 
 /**
+ * Wrapper for SELECT statements.
+ * Performs query and returns connection back to pool.
+ * @param {string} query The query string to append values to.
+ * @param {Object} columns The columns to retrieve in the query.
+ * @param {Object} where The parameters that identify the result set.
+ * @param {Functon(<string>, <Array>)} Callback function to perform when done.
+ */
+Base.prototype.select = function(query, columns, where, cb) {
+  this.db.getConnection(function(err, connection) {
+    if (err) return cb(err, null);
+
+    /**
+     * Nesting tables allows for results like:
+     * {
+     *   post: {id: '...', title: '...'},
+     *   user: {id: '...', displayName: '...'}
+     * }
+     */
+    var options = {sql: query, nestTables: true};
+    var q = connection.query(options, [columns, where], function(err, results) {
+      if (err) return cb(err, null);
+      connection.release();
+      cb(err, results || []);
+    });
+    Base.logQuery(q);
+  });
+};
+
+
+/**
  * Validates the resource against the model's STRUCTURE.
  */
-Base.prototype.validate = function(resource) {
+Base.prototype.validate = function(cb) {
+  var resource = this.resource;
   var structure = this.getStructure();
   var errors = [];
 
+  // TODO: Could be a MAP...
   for (property in structure) {
     var rules = structure[property];
 
@@ -153,62 +194,35 @@ Base.prototype.validate = function(resource) {
     }
 
     // TODO: Validate Length (MIN and MAX)
-
     // TODO: Validate Types... (String, Number, Date, etc)...
   }
 
-  var isValid = !errors.length ? true : false;
-  return {isValid: isValid, errors: errors};
+  cb(errors.length ? errors : false);
 };
 
 
 /**
- * Wrapper for SELECT statements.
- * Performs query and returns connection back to pool.
- * @param {string} query The query string to append values to.
- * @param {Object} columns The columns to retrieve in the query.
- * @param {Object} where The parameters that identify the result set.
- * @param {Functon(<string>, <Array>)} Callback function to perform when done.
+ * Converts the model resource into a query object with key:value pairs.
+ * @return {?Object || null} The formatted resource.
  */
-Base.prototype.select = function(query, columns, where, cb) {
-  /**
-   * Nesting tables allows for results like:
-   * {
-   *   post: {id: '...', title: '...'},
-   *   user: {id: '...', displayName: '...'}
-   * }
-   */
-  var options = {
-    sql: query,
-    nestTables: true
-  };
-  this.db.getConnection(function(err, connection) {
-    var q = connection.query(options, [columns, where], function(err, results) {
-      connection.release();
-      cb(err, results || []);
-    });
-    Base.logQuery(q);
-  });
-};
+Base.prototype.getQueryObject = function() {
+  if (!this.resource || !Object.keys(this.resource).length) {
+    return null;
+  }
 
-
-/**
- * Builds the resource as an Object with Field:Value pairs.
- * @param {Object} params Resource to parse for key-value pairs.
- * @return {Object} The formatted resource.
- */
-Base.prototype.buildResource = function(params) {
   var structure = this.getStructure();
-  var table = this.getTable();
-  var keys = Object.keys(params) || [];
-  if (!params || !keys.length) return null;
-  var resource = {};
-  keys.forEach(function(key) {
-    if (structure[key]) {
-      resource[table + '.' + key] = params[key];
+  var tableName = this.getTable();
+  var resource = this.resource;
+  var object = {};
+
+  var fields = Object.keys(structure) || [];
+  fields.forEach(function(field) {
+    if (resource[field]) {
+      object[tableName + '.' + field] = resource[field];
     }
   });
-  return resource;
+
+  return object;
 };
 
 

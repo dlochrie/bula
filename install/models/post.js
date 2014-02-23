@@ -79,18 +79,20 @@ Post.QUERIES_ = {
 
 /**
  * Table strucure. Describes field types and validation properties.
+ * Note: Fields that will get generated (i.e. date, markdown formatted content)
+ *   should NOT be required - they will always fail validation if they are.
  * @private
  * @enum {string}
  */
 Post.STRUCTURE_ = {
-  id: {type: 'Number', required: false},
-  user_id: {type: 'Number', length: 10, required: true},
-  title: {type: 'String', length: 255, required: true},
+  id: {type: 'Number'},
+  user_id: {type: 'Number', length: 10, required: true, displayName: 'User'},
+  title: {type: 'String', length: 255, required: true, displayName: 'Title'},
   slug: {type: 'String', length: 255},
-  description: {type: 'Text', required: true},
-  description_md: {type: 'Text', required: true},
-  body: {type: 'Text', required: true},
-  body_md: {type: 'Text', required: true},
+  description: {type: 'Text'},
+  description_md: {type: 'Text', required: true, displayName: 'Description'},
+  body: {type: 'Text'},
+  body_md: {type: 'Text', required: true, displayName: 'Body'},
   created: {type: 'Number', required: false, default: new Date().getTime()},
   updated: {type: 'Number', required: false, default: new Date().getTime()}
 };
@@ -142,7 +144,11 @@ Post.prototype.getTable = function() {
  * Add / Modify fields that are not populated by the form, and that need to be
  * generated.
  */
-Post.prototype.prepare = function(resource) {
+Post.prototype.prepare = function() {
+  var resource = this.resource;
+  var date = Util.getDate();
+  resource.created = date; // Um shouldn't update on edit...
+  resource.updated = date;
   resource.slug = this.convertToSlug(resource.title);
   resource.body_md = Util.sanitize(resource.body_md);
   resource.body = this.convertMarkdown(resource.body_md);
@@ -152,6 +158,7 @@ Post.prototype.prepare = function(resource) {
 };
 
 
+// TODO: Move to Util
 Post.prototype.convertMarkdown = function(text) {
   return require('marked')(text || '');
 };
