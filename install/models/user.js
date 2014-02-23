@@ -111,17 +111,3 @@ User.prototype.getStructure = function() {
 User.prototype.getTable = function() {
   return User.TABLE_;
 };
-
-
-/**
- * Validate the resource based on rules provided in model's structure.
- * @param {Object} resource The resource to validate.
- * @return {?Object} The validated/sanitized resource...???
- */
-User.prototype.validate = function(resource) {
-  var strucure = this.getStructure();
-  // Loop through each property - validate on each.
-  for (property in structure) {
-    //...
-  }
-};

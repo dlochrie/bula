@@ -54,9 +54,8 @@ AdminUsers.DELETE_VIEW_ = 'admin/users/delete';
  * @param {Object} res Express response object.
  */
 AdminUsers.prototype.index = function(req, res) {
-  var user = new User(req.app);
-  var params = req.body;
-  user.find(params, function(err, results) {
+  var user = new User(req.app, req.body);
+  user.find(function(err, results) {
     if (err || !results) {
       req.flash('error', 'There was an error getting the users: ' + err);
       res.redirect('/admin');
