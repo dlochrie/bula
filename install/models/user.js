@@ -54,20 +54,22 @@ User.QUERIES_ = {
 
 
 /**
- * Table strucure.
+ * Table strucure. Describes field types and validation properties.
+ * Note: Fields that will get generated (i.e. date, markdown formatted content)
+ *   should NOT be required - they will always fail validation if they are.
  * @private
  * @enum {string}
  */
 User.STRUCTURE_ = {
-  id: {type: Number, required: false},
+  id: {type: Number},
   displayName: {type: String, length: 100, required: true},
-  slug: {type: String, length: 100, required: true},
+  slug: {type: String, length: 100},
   email: {type: String, length: 100, required: true},
-  google_id: {type: String, length: 100, required: false},
-  facebook_id: {type: Number, length: 100, required: false},
-  twitter: {type: String, length: 100, required: false},
-  created: {type: Number, required: true, default: 'NOW()'},
-  updated: {type: Number, required: true, default: 'NOW()'}
+  google_id: {type: String, length: 100},
+  facebook_id: {type: Number, length: 100},
+  twitter: {type: String, length: 100},
+  created: {type: Number},
+  updated: {type: Number}
 };
 
 
@@ -110,4 +112,8 @@ User.prototype.getStructure = function() {
  */
 User.prototype.getTable = function() {
   return User.TABLE_;
+};
+
+User.prototype.prepare = function() {
+  console.log('PLEASE ADD SOMETHING... LIKE CREATED/UPDATED AND SLUG');
 };
