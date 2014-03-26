@@ -31,7 +31,7 @@ Util.convertToSlug = function(text) {
 
 /**
  * Gets the current date.
- * @return New date object
+ * @return {Date} New date object
  */
 Util.getDate = function() {
   return new Date();
@@ -41,7 +41,7 @@ Util.getDate = function() {
 /**
  * Converts the date to 'Month Day, Year HH:MM' format.
  * @param {string} date The date string to format.
- * @return New date object
+ * @return {Date} New date object
  */
 Util.getHumanDate = function(date) {
   return new Date(date).toLocaleTimeString('en-US', {
@@ -62,7 +62,7 @@ Util.getHumanDate = function(date) {
  * --> google/caja/plugin/html-sanitizer.js
  *
  * @param {string} resource The string to sanitize.
- * @return The sanitized string.
+ * @return {string} The sanitized string.
  */
 Util.sanitize = function(resource) {
   return resource ?

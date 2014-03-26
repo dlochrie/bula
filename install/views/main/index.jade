@@ -10,3 +10,12 @@ block body
     li Edit <em>this</em> text: <code>app/views/main/index</code>.
     li Alter or remove the About and Contact Pages, as necessary.
     li Create new resources...
+
+  <hr>
+
+  if (results.length)
+    each result in results
+      article
+        h4: a(href="#") #{result.post.title}
+        p by <a href="#">#{result.user.displayName}</a> on #{result.post.created}
+        div.content!= result.post.description

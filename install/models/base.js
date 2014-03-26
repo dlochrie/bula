@@ -99,14 +99,16 @@ Base.prototype.update = function(identifier, cb) {
     this.db.getConnection(function(err, connection) {
       if (err) return cb(err, null);
 
-      var q = connection.query(query, [insertObject, identifier], function(err, result) {
-        connection.release(); // Return this connection to the pool.
-        if (err) {
-          cb('This ' + self.getTable() + ' could not be updated: ' + err, null);
-        } else {
-          cb(err, resource);
-        }
-      });
+      var q = connection.query(
+          query, [insertObject, identifier], function(err, result) {
+            connection.release(); // Return this connection to the pool.
+            if (err) {
+              cb('This ' + self.getTable() + ' could not be updated: ' +
+                 err, null);
+            } else {
+              cb(err, resource);
+            }
+          });
       Base.logQuery(q);
     });
   });
@@ -123,7 +125,8 @@ Base.prototype.save = function() {
 
 /**
  * Removes the resource identified by the parameters.
- * @param {Functon(<string>, <Array>)} Callback function to perform when done.
+ * @param {Functon(<string>, <Array>)} cb Callback function to perform when
+ *     done.
  */
 Base.prototype.remove = function(cb) {
   var self = this;
@@ -151,7 +154,8 @@ Base.prototype.remove = function(cb) {
  * @param {string} query The query string to append values to.
  * @param {Object} columns The columns to retrieve in the query.
  * @param {Object} where The parameters that identify the result set.
- * @param {Functon(<string>, <Array>)} Callback function to perform when done.
+ * @param {Functon(<string>, <Array>)} cb Callback function to perform when
+ *     done.
  */
 Base.prototype.select = function(query, columns, where, cb) {
   this.db.getConnection(function(err, connection) {
@@ -177,6 +181,7 @@ Base.prototype.select = function(query, columns, where, cb) {
 
 /**
  * Validates the resource against the model's STRUCTURE.
+ * @param {Functon(<Array>)} cb Callback function to perform when done.
  */
 Base.prototype.validate = function(cb) {
   var resource = this.resource;
