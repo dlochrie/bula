@@ -1,26 +1,24 @@
 extends ../layouts/main
 
 block body
-  h3 Next Steps
-
-  if (posts.length)
-    each post in posts
+  if (results.length)
+    each result in results
       .post-list-entry
         h3.headline
-          a(href='/blog/#{post.slug}', title=post.title)
-            | #{post.title}
+          a(href='/blog/#{result.post.slug}', title=result.post.title)
+            | #{result.post.title}
         h5.byline
-          small #{post.created}
-        .description!= post.description
+          small #{result.post.created}
+        .description!= result.post.description
         ul.inline
           li
             i.fa.fa-comment &nbsp;
-            a(href='/blog/#{post.post}#disqus_thread')
+            | Disqus
           //- li: i.fa.fa-facebook
           //-   |  20
           //- li: i.fa.fa-twitter
           //-   |  22
           li
-            .g-plusone(data-size="small", data-href='/blog/#{post.slug}')
+            | GPlus...
   // Disqus Comment Count
   script(src="/js/disqus-comments.js")
