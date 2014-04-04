@@ -5,7 +5,7 @@ block body
     each result in results
       .post-list-entry
         h3.headline
-          a(href='/blog/#{result.post.slug}', title=result.post.title)
+          a(href='/posts/#{result.post.slug}', title=result.post.title)
             | #{result.post.title}
         h5.byline
           small #{result.post.created}
