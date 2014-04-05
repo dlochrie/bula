@@ -24,6 +24,7 @@ module.exports = function(app) {
    * Public Resources.
    */
   app.resource('posts', posts);
+  app.resource('users', users);
 
   /**
    * Authenticate all `admin` routes with authentication middleware.
