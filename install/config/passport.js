@@ -1,5 +1,6 @@
 /**
- * Base Authentication Module
+ * Passport Authentication Module.
+ * @param {function(Object, Object, Function)} app Express application instance.
  */
 module.exports = function(app) {
   var passport = require('passport'),

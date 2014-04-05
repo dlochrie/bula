@@ -1,6 +1,7 @@
 /**
  * The Archives helper contains methods that help generate months and years
  * for display the archive sidebar.
+ * @param {function(Object, Object, Function)} app Express application instance.
  */
 module.exports = function(app) {
   /**

@@ -9,7 +9,6 @@
  * @param {Function} express Express/Connect instance.
  */
 module.exports = function(app, express) {
-  console.log('app', app)
   var dir = __dirname + '/core/',
       fs = require('fs');
 

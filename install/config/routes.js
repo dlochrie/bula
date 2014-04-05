@@ -1,6 +1,7 @@
 /**
  * Main router module.
  * Add your routes here.
+ * @param {function(Object, Object, Function)} app Express application instance.
  */
 module.exports = function(app) {
   // TODO: Maybe just loop through controllers??
