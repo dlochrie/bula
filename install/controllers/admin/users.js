@@ -91,7 +91,8 @@ AdminUsers.prototype.new = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminUsers.prototype.create = function(req, res) {
-  var user = new User(req.app, null); // We really should pass in the resource...
+  // TODO: We really should pass in the resource...
+  var user = new User(req.app, null);
   var params = User.validate(req.body, function(err, resource) {
     user.insert(params, function(err, user) {
       if (err || !user) {

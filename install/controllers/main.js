@@ -1,6 +1,26 @@
 var Post = require('../models/post');
 
-exports.index = function(req, res) {
+
+/**
+ * Expose `Main` Controller.
+ */
+module.exports = new Main;
+
+
+
+/**
+ * Main Controller.
+ * @constructor
+ */
+function Main() {}
+
+
+/**
+ * Renders main/home index page.
+ * @param {http.IncomingMessage} req Node/Express request object.
+ * @param {http.ServerResponse} res Node/Express response object.
+ */
+Main.prototype.index = function(req, res) {
   var post = new Post(req.app);
   post.find(function(err, results) {
     if (err || !results) {
@@ -16,16 +36,31 @@ exports.index = function(req, res) {
 };
 
 
-exports.about = function(req, res) {
+/**
+ * Renders main/home about page.
+ * @param {http.IncomingMessage} req Node/Express request object.
+ * @param {http.ServerResponse} res Node/Express response object.
+ */
+Main.prototype.about = function(req, res) {
   res.render('main/about', {title: 'About'});
 };
 
 
-exports.contact = function(req, res) {
+/**
+ * Renders main/home contact page.
+ * @param {http.IncomingMessage} req Node/Express request object.
+ * @param {http.ServerResponse} res Node/Express response object.
+ */
+Main.prototype.contact = function(req, res) {
   res.render('main/contact', {title: 'Contact'});
 };
 
 
-exports.login = function(req, res) {
+/**
+ * Renders main/home login page.
+ * @param {http.IncomingMessage} req Node/Express request object.
+ * @param {http.ServerResponse} res Node/Express response object.
+ */
+Main.prototype.login = function(req, res) {
   res.render('main/login', {title: 'Login'});
 };
