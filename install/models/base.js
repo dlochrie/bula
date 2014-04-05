@@ -12,6 +12,11 @@ module.exports = Base;
 function Base() {}
 
 
+/**
+ * Default 'where' value for SELECT statements.
+ * @const
+ * @private {string}
+ */
 Base.DEFAULT_WHERE_VALUE_ = '1 = 1';
 
 

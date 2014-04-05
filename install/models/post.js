@@ -159,7 +159,7 @@ Post.prototype.prepare = function() {
 };
 
 
-// TODO: Move to Util
+// TODO: Move to Util.
 Post.prototype.convertMarkdown = function(text) {
   return require('marked')(text || '');
 };
