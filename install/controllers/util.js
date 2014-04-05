@@ -16,6 +16,16 @@ function Util() {}
 
 
 /**
+ * Converts markdown-formatted text into HTML using the 'marked' Node Module.
+ * @param {string} text String to convert.
+ * @return {string} Converted text.
+ */
+Util.prototype.convertMarkdown = function(text) {
+  return require('marked')(text || '');
+};
+
+
+/**
  * Converts a string into a friendly url string.
  * @param {string} text The string to convert.
  * @return {string} The converted string.

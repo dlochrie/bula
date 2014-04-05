@@ -119,6 +119,7 @@ User.prototype.getTable = function() {
 /**
  * Add / Modify fields that are not populated by the form, and that need to be
  * generated.
+ * @return {Object.<string, string>} The updated User resource.
  */
 User.prototype.prepare = function() {
   var resource = this.resource;

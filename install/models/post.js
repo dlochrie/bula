@@ -143,6 +143,7 @@ Post.prototype.getTable = function() {
 /**
  * Add / Modify fields that are not populated by the form, and that need to be
  * generated.
+ * @return {Object.<string, string>} The updated Post resource.
  */
 Post.prototype.prepare = function() {
   var resource = this.resource;
@@ -152,14 +153,8 @@ Post.prototype.prepare = function() {
   resource.updated = date;
   resource.slug = Util.convertToSlug(resource.title);
   resource.body_md = Util.sanitize(resource.body_md);
-  resource.body = this.convertMarkdown(resource.body_md);
+  resource.body = Util.convertMarkdown(resource.body_md);
   resource.description_md = Util.sanitize(resource.description_md);
-  resource.description = this.convertMarkdown(resource.description_md);
+  resource.description = Util.convertMarkdown(resource.description_md);
   return resource;
-};
-
-
-// TODO: Move to Util.
-Post.prototype.convertMarkdown = function(text) {
-  return require('marked')(text || '');
 };
