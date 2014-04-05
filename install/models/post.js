@@ -147,9 +147,10 @@ Post.prototype.getTable = function() {
 Post.prototype.prepare = function() {
   var resource = this.resource;
   var date = Util.getDate();
-  resource.created = date; // Um shouldn't update on edit...
+  // TODO: 'created' shouldn't update on edit, only on insert.
+  resource.created = date;
   resource.updated = date;
-  resource.slug = this.convertToSlug(resource.title);
+  resource.slug = Util.convertToSlug(resource.title);
   resource.body_md = Util.sanitize(resource.body_md);
   resource.body = this.convertMarkdown(resource.body_md);
   resource.description_md = Util.sanitize(resource.description_md);
@@ -161,19 +162,4 @@ Post.prototype.prepare = function() {
 // TODO: Move to Util
 Post.prototype.convertMarkdown = function(text) {
   return require('marked')(text || '');
-};
-
-
-/**
- * TODO: Why is this NOT in a common area???
- * Converts a string into a friendly url string.
- * @param {string} text The string to convert.
- * @return {string} The converted string.
- */
-Post.prototype.convertToSlug = function(text) {
-  return (text || '')
-      .toString()
-      .toLowerCase()
-      .replace(/[^\w ]+/g, '')
-      .replace(/ +/g, '-');
 };
