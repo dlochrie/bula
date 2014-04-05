@@ -10,15 +10,8 @@ block body
         h5.byline
           small #{result.post.created}
         .description!= result.post.description
-        ul.inline
-          li
-            i.fa.fa-comment &nbsp;
-            | Disqus
-          //- li: i.fa.fa-facebook
-          //-   |  20
-          //- li: i.fa.fa-twitter
-          //-   |  22
-          li
-            | GPlus...
-  // Disqus Comment Count
-  script(src="/js/disqus-comments.js")
+        ul.list-inline.flairline
+          li: a: i.fa.fa-envelope
+          li: a: i.fa.fa-facebook
+          li: a: i.fa.fa-twitter
+          li: a: i.fa.fa-google-plus

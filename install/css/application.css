@@ -8,3 +8,11 @@ body {
 }
 
 .breadcrumb:empty { display: none; }
+
+.flairline a {
+  color: #a94442;
+}
+
+.flairline a:hover {
+  color: #cc0033;
+}
