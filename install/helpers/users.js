@@ -11,6 +11,7 @@ module.exports = function(app) {
 
   /**
    * Checks to see if the user is an Owner.
+   * @param {Object.<string, string>} user User object.
    * @return {boolean} Whether the user is an owner or not.
    */
   app.locals.User.isOwner = function(user) {
