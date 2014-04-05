@@ -73,7 +73,6 @@ module.exports = function(app, express) {
    * settings.
    */
   var conf = root + 'config/environment/' + env.toLowerCase() + '.js';
-  var conf = root + 'config/environment/' + 'dev' + '.js';
   if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
     require(conf)(app, express);
   }
