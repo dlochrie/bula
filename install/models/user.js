@@ -1,4 +1,5 @@
 var Base = require('./base');
+var Util = require('../controllers/util');
 
 
 /**
@@ -114,6 +115,17 @@ User.prototype.getTable = function() {
   return User.TABLE_;
 };
 
+
+/**
+ * Add / Modify fields that are not populated by the form, and that need to be
+ * generated.
+ */
 User.prototype.prepare = function() {
-  console.log('PLEASE ADD SOMETHING... LIKE CREATED/UPDATED AND SLUG');
+  var resource = this.resource;
+  var date = Util.getDate();
+  // TODO: 'created' shouldn't update on edit, only on insert.
+  resource.created = date;
+  resource.updated = date;
+  resource.slug = Util.convertToSlug(resource.displayName);
+  return resource;
 };
