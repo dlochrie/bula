@@ -5,8 +5,11 @@
  * core modules.
  *
  * If any error is encountered, this module should terminate the application.
+ * @param {function(Object, Object, Function)} app Express application instance.
+ * @param {Function} express Express/Connect instance.
  */
 module.exports = function(app, express) {
+  console.log('app', app)
   var dir = __dirname + '/core/',
       fs = require('fs');
 
@@ -71,6 +74,7 @@ module.exports = function(app, express) {
    * settings.
    */
   var conf = root + 'config/environment/' + env.toLowerCase() + '.js';
+  var conf = root + 'config/environment/' + 'dev' + '.js';
   if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
     require(conf)(app, express);
   }
