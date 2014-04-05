@@ -10,7 +10,7 @@ module.exports = MySQL;
 
 /**
  * @constructor
- * @param {Function} app Instance of Express App.
+ * @param {function(Object, Object, Function)} app Express application instance.
  */
 function MySQL(app) {
   this.db = app.db = MySQLClient.createPool({

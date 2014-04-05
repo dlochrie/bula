@@ -43,7 +43,7 @@ Posts.prototype.index = function(req, res) {
       req.flash('error', 'There was an error getting the posts: ' + err);
       res.redirect('/');
     } else {
-      res.render('posts/index', {
+      res.render(Posts.INDEX_VIEW_, {
         title: 'Latest Posts',
         description: 'Browse the latest posts.',
         results: results
@@ -63,10 +63,10 @@ Posts.prototype.show = function(req, res) {
   post.findOne(function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error getting the post: ' + err);
-      res.redirect('/posts');
+      res.redirect(Posts.INDEX_VIEW_);
     } else {
       // TODO: Strip Tags from the description.
-      res.render('posts/show', {
+      res.render(Posts.SHOW_VIEW_, {
         title: result.post.title,
         description: result.post.description,
         result: result
