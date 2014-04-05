@@ -16,6 +16,7 @@ block body
   if (results.length)
     each result in results
       article
-        h4: a(href="#") #{result.post.title}
-        p by <a href="#">#{result.user.displayName}</a> on #{result.post.created}
+        h4: a(href="/posts/#{result.post.slug}") #{result.post.title}
+        p by <a href="/users/#{result.user.slug}">#{result.user.displayName}</a>
+        | on #{result.post.created}
         div.content!= result.post.description
