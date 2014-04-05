@@ -20,7 +20,7 @@ function Util() {}
  * @param {string} text String to convert.
  * @return {string} Converted text.
  */
-Util.prototype.convertMarkdown = function(text) {
+Util.convertMarkdown = function(text) {
   return require('marked')(text || '');
 };
 
