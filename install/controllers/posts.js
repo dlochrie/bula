@@ -41,7 +41,7 @@ Posts.prototype.index = function(req, res) {
   post.find(function(err, results) {
     if (err || !results) {
       req.flash('error', 'There was an error getting the posts: ' + err);
-      res.redirect('/');
+      res.redirect(req.app.get('STATIC_ROUTES').SITE_HOME);
     } else {
       res.render(Posts.INDEX_VIEW_, {
         title: 'Latest Posts',

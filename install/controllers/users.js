@@ -61,7 +61,7 @@ Users.prototype.index = function(req, res) {
   user.find(function(err, results) {
     if (err || !results) {
       req.flash('error', 'There was an error getting the users: ' + err);
-      res.redirect('/');
+      res.redirect(req.app.get('STATIC_ROUTES').SITE_HOME);
     } else {
       res.render(Users.INDEX_VIEW_, {
         title: 'Listing Users',

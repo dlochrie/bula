@@ -1,9 +1,17 @@
 /**
+ * Expose `Routes` Module.
+ */
+module.exports = Routes;
+
+
+
+/**
  * Main router module.
  * Add your routes here.
  * @param {function(Object, Object, Function)} app Express application instance.
+ * @constructor
  */
-module.exports = function(app) {
+function Routes(app) {
   // TODO: Maybe just loop through controllers??
   var dir = app.get('ROOT PATH') + 'app/controllers/',
       main = require(dir + 'main'),
@@ -16,10 +24,11 @@ module.exports = function(app) {
   /**
    * Public Routes.
    */
-  app.get('/', main.index);
-  app.get('/about', main.about);
-  app.get('/contact', main.contact);
-  app.get('/login', main.login);
+  var staticRoutes = Routes.StaticRoutes_;
+  app.get(staticRoutes.SITE_HOME, main.index);
+  app.get(staticRoutes.SITE_ABOUT, main.about);
+  app.get(staticRoutes.SITE_CONTACT, main.contact);
+  app.get(staticRoutes.SITE_LOGIN, main.login);
 
   /**
    * Public Resources.
@@ -44,4 +53,22 @@ module.exports = function(app) {
   app.get('/admin/posts/:post/delete', adminPosts.delete);
   app.resource('admin/users', adminUsers);
   app.get('/admin/users/:user/delete', adminUsers.delete);
+
+  // Define the static routes that Express Resource does NOT provide us
+  // automatically.
+  app.set('STATIC_ROUTES', staticRoutes);
+}
+
+
+/**
+ * Static Routes should be defined here for use in controllers and other parts
+ * of the application.
+ * @enum {string}
+ * @private
+ */
+Routes.StaticRoutes_ = {
+  SITE_HOME: '/',
+  SITE_ABOUT: '/about',
+  SITE_CONTACT: '/contact',
+  SITE_LOGIN: '/login'
 };
