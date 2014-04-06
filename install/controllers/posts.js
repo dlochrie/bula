@@ -17,16 +17,16 @@ function Posts() {}
 
 /**
  * Path to posts index page.
- * @private {string}
  * @const
+ * @private {string}
  */
 Posts.INDEX_VIEW_ = 'posts/';
 
 
 /**
  * Path to posts show view.
- * @private {string}
  * @const
+ * @private {string}
  */
 Posts.SHOW_VIEW_ = 'posts/show';
 

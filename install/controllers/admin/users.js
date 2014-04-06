@@ -18,32 +18,32 @@ function AdminUsers() {}
 
 /**
  * Path to users index page.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminUsers.INDEX_VIEW_ = 'admin/users/';
 
 
 /**
  * Path to users create view.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminUsers.CREATE_VIEW_ = 'admin/users/new';
 
 
 /**
  * Path to users edit view.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminUsers.UPDATE_VIEW_ = 'admin/users/edit';
 
 
 /**
  * Path to users delete view.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminUsers.DELETE_VIEW_ = 'admin/users/delete';
 

@@ -17,16 +17,16 @@ function Users() {}
 
 /**
  * Path to users index page.
- * @private {string}
  * @const
+ * @private {string}
  */
 Users.INDEX_VIEW_ = 'users/';
 
 
 /**
  * Path to users show view.
- * @private {string}
  * @const
+ * @private {string}
  */
 Users.SHOW_VIEW_ = 'users/show';
 

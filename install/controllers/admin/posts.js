@@ -18,32 +18,32 @@ function AdminPosts() {}
 
 /**
  * Path to posts index page.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminPosts.INDEX_VIEW_ = 'admin/posts/';
 
 
 /**
  * Path to posts create view.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminPosts.CREATE_VIEW_ = 'admin/posts/new';
 
 
 /**
  * Path to posts edit view.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminPosts.UPDATE_VIEW_ = 'admin/posts/edit';
 
 
 /**
  * Path to posts delete view.
- * @private {string}
  * @const
+ * @private {string}
  */
 AdminPosts.DELETE_VIEW_ = 'admin/posts/delete';
 
