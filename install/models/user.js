@@ -44,8 +44,8 @@ User.SELECT_COLUMNS_ = ['id', 'displayName', 'slug', 'email', 'created',
 
 /**
  * MySQL Query Strings.
- * @private
  * @enum {string}
+ * @private
  */
 User.QUERIES_ = {
   find: 'SELECT ?? FROM `' + User.TABLE_ + '` WHERE ?',
@@ -58,8 +58,8 @@ User.QUERIES_ = {
  * Table strucure. Describes field types and validation properties.
  * Note: Fields that will get generated (i.e. date, markdown formatted content)
  *   should NOT be required - they will always fail validation if they are.
+ * @enum {Object.<string, string>}
  * @private
- * @enum {string}
  */
 User.STRUCTURE_ = {
   id: {type: Number},
