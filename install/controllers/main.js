@@ -17,16 +17,16 @@ function Main() {}
 
 /**
  * Path to main index (home) page.
- * @private {string}
  * @const
+ * @private {string}
  */
 Main.INDEX_VIEW_ = 'main/index';
 
 
 /**
  * Path to site about view.
- * @private {string}
  * @const
+ * @private {string}s
  */
 Main.ABOUT_VIEW_ = 'main/about';
 
