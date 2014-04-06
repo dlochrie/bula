@@ -16,6 +16,38 @@ function Main() {}
 
 
 /**
+ * Path to main index (home) page.
+ * @private {string}
+ * @const
+ */
+Main.INDEX_VIEW_ = 'main/index';
+
+
+/**
+ * Path to site about view.
+ * @private {string}
+ * @const
+ */
+Main.ABOUT_VIEW_ = 'main/about';
+
+
+/**
+ * Path to site contact view.
+ * @const
+ * @private {string}
+ */
+Main.CONTACT_VIEW_ = 'main/contact';
+
+
+/**
+ * Path to site login view.
+ * @const
+ * @private {string}
+ */
+Main.LOGIN_VIEW_ = 'main/login';
+
+
+/**
  * Renders main/home index page.
  * @param {http.IncomingMessage} req Node/Express request object.
  * @param {http.ServerResponse} res Node/Express response object.
@@ -25,9 +57,9 @@ Main.prototype.index = function(req, res) {
   post.find(function(err, results) {
     if (err || !results) {
       req.flash('error', 'There was an error getting the posts: ' + err);
-      res.redirect('/');
+      res.redirect(req.app.get('STATIC_ROUTES').SITE_HOME);
     } else {
-      res.render('main/index', {
+      res.render(Main.INDEX_VIEW_, {
         title: 'Home',
         results: results
       });
@@ -42,7 +74,7 @@ Main.prototype.index = function(req, res) {
  * @param {http.ServerResponse} res Node/Express response object.
  */
 Main.prototype.about = function(req, res) {
-  res.render('main/about', {title: 'About'});
+  res.render(Main.ABOUT_VIEW_, {title: 'About'});
 };
 
 
@@ -52,7 +84,7 @@ Main.prototype.about = function(req, res) {
  * @param {http.ServerResponse} res Node/Express response object.
  */
 Main.prototype.contact = function(req, res) {
-  res.render('main/contact', {title: 'Contact'});
+  res.render(Main.CONTACT_VIEW_, {title: 'Contact'});
 };
 
 
@@ -62,5 +94,5 @@ Main.prototype.contact = function(req, res) {
  * @param {http.ServerResponse} res Node/Express response object.
  */
 Main.prototype.login = function(req, res) {
-  res.render('main/login', {title: 'Login'});
+  res.render(Main.LOGIN_VIEW_, {title: 'Login'});
 };
