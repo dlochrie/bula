@@ -62,15 +62,15 @@ User.QUERIES_ = {
  * @private
  */
 User.STRUCTURE_ = {
-  id: {type: Number},
-  displayName: {type: String, length: 100, required: true},
-  slug: {type: String, length: 100},
-  email: {type: String, length: 100, required: true},
-  google_id: {type: String, length: 100},
-  facebook_id: {type: Number, length: 100},
-  twitter: {type: String, length: 100},
-  created: {type: Number},
-  updated: {type: Number}
+  id: {type: 'Number'},
+  displayName: {type: 'String', length: 100, required: true},
+  slug: {type: 'String', length: 100},
+  email: {type: 'String', length: 100, required: true},
+  google_id: {type: 'String', length: 100},
+  facebook_id: {type: 'Number', length: 100},
+  twitter: {type: 'String', length: 100},
+  created: {type: 'Number'},
+  updated: {type: 'Number'}
 };
 
 
