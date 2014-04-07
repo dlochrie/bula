@@ -5,23 +5,20 @@ append breadcrumbs
   li.active= title
 
 block body
-  if (errors && errors.length)
-    .alert.alert-danger.alert-dismissable
-      button.close(type='button', data-dismiss='alert' aria-hidden='true')
-        | &times;
-      ul
-      each error in errors
-        li= error
+  p.alert.alert-warning <strong>TODO</strong>: Please add validation here.
 
-  form(action='/admin/posts', method='post', role='form')
-    include _form
-    
-    input(type='hidden', name='user_id', value=user.id)
-    input(type='hidden', name='_csrf', value=token)
-    input(type='hidden', name='_method', value='post')
+  form.form-horizontal(action='/admin/posts', method='post', role='form')
+    fieldset
+      legend Fill out the form below to create a new Post.
 
-    button.btn.btn-primary(type='submit')
-      i.fa.fa-plus
-      |  Create Post
-    | 
-    a.btn.btn-default(href='/admin/posts', role='button') Cancel
+      include _form
+
+      input(type='hidden', name='user_id', value=user.id)
+      input(type='hidden', name='_csrf', value=token)
+      input(type='hidden', name='_method', value='post')
+
+      .form-group
+        .col-md-offset-3.col-md-9
+          .btn-group
+            button.btn.btn-primary(type='submit') Create Post
+            a.btn.btn-default(href='/admin/posts', role='button') Cancel

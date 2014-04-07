@@ -1,21 +1,21 @@
 extends ../../layouts/admin
 
 append breadcrumbs
-  li
-    a(href="/admin/users") user administration
-    span.divider /
+  li: a(href="/admin/users") Users Administration
   li.active= title
 
 block body
-  form(action='/admin/users/#{user.user_slug}', method='post')
+  p.alert.alert-warning <strong>TODO</strong>: Please add validation here.
+
+  form.form-horizontal(action='/admin/users/#{result.user.id}', method='post',
+        role='form')
     include _form
 
-    input(type='hidden',name='_csrf',value=token)
-    input(type='hidden',name='_method',value='put')
+    input(type='hidden', name='_csrf', value=token)
+    input(type='hidden', name='_method', value='put')
 
-    .form-actions
-      .btn-group
-        button.btn.btn-primary
-          i.icon-ok.icon-white
-          |&nbsp;Update User
-        a.btn(href='/admin/users') Cancel
+    .form-group
+      .col-md-offset-3.col-md-9
+        .btn-group
+          button.btn.btn-primary(type='submit') Edit User
+          a.btn.btn-default(href='/admin/users', role='button') Cancel
