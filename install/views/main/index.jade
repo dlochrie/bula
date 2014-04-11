@@ -18,5 +18,5 @@ block body
       article
         h4: a(href="/posts/#{result.post.slug}") #{result.post.title}
         p by <a href="/users/#{result.user.slug}">#{result.user.displayName}</a>
-        | on #{result.post.created}
+        | on #{getHumanDate(result.post.created)}
         div.content!= result.post.description

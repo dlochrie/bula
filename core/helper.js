@@ -10,6 +10,7 @@ module.exports = function(app) {
     if (req.session.logged_in) {
       res.locals.user = req.session.passport.user;
     }
+    // TODO: See if these are even if use - if so, FOMALIZE THEM.
     res.locals.title =
         'A nice title here!';
     res.locals.description =
@@ -25,6 +26,17 @@ module.exports = function(app) {
     res.locals.messages = req.flash();
     next();
   });
+
+
+  /**
+   * Returns a 'Human-Readable' date string.
+   * Requires the use of the `moment` library.
+   * @param {string} date The date string.
+   * @return {string} A human-readable date string.
+   */
+  app.locals.getHumanDate = function(date) {
+    return require('moment')(date).format('MMMM Do YYYY, [at] h:mm:ss A');
+  };
 
   // TODO: Put this here????
   // TODO: Doesn't seem to be putting ellipses on the correct string length.
