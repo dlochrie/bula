@@ -5,7 +5,7 @@ block body
     h5 by 
       a(href='/users/#{result.user.slug}')= result.user.displayName
       span.pull-right
-        small #{result.post.created.toUTCString()}
+        small #{getHumanDate(result.post.created)}
     div!= result.post.body
 
   .row#post-share: .col-md-12

@@ -11,4 +11,4 @@ block body
           td
             a(href='/users/#{result.user.slug}', title=result.user.displayName)
               | #{result.user.displayName}
-          td= result.user.created
+          td= getHumanDate(result.user.created)

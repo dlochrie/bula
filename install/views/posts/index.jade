@@ -8,7 +8,7 @@ block body
           a(href='/posts/#{result.post.slug}', title=result.post.title)
             | #{result.post.title}
         h5.byline
-          small #{result.post.created}
+          small #{getHumanDate(result.post.created)}
         .description!= result.post.description
         ul.list-inline.flairline
           li: a: i.fa.fa-envelope

@@ -20,7 +20,7 @@ block body
                 img(src="#{user.gravatar}", alt='#{user.user_displayName}')
         tr
           th Member Since
-          td #{user.user_created}
+          td #{getHumanDate(user.user_created)}
         tr
           th Email
           td: a(href='mailto:#{user.user_email}') #{user.user_email}
