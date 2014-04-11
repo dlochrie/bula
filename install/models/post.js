@@ -46,10 +46,21 @@ Post.USERS_TABLE_ = 'user';
  * @const
  * @private {Array.<string>}
  */
-Post.SELECT_COLUMNS_ = ['post.id', 'post.title', 'post.description',
-  'post.description_md', 'post.body', 'post.body_md', 'post.slug',
-  'post.created', 'post.updated', 'user.displayName', 'user.email', 'user.id',
-  'user.slug'];
+Post.SELECT_COLUMNS_ = [
+  'post.id',
+  'post.title',
+  'post.description',
+  'post.description_md',
+  'post.body',
+  'post.body_md',
+  'post.slug',
+  'post.created',
+  'post.updated',
+  'user.displayName',
+  'user.email',
+  'user.id',
+  'user.slug'
+];
 
 
 /**

@@ -38,8 +38,14 @@ User.TABLE_ = 'user';
  * @const
  * @private {Array.<string>}
  */
-User.SELECT_COLUMNS_ = ['id', 'displayName', 'slug', 'email', 'created',
-  'updated'];
+User.SELECT_COLUMNS_ = [
+  'user.id',
+  'user.displayName',
+  'user.slug',
+  'user.email',
+  'user.created',
+  'user.updated'
+];
 
 
 /**
