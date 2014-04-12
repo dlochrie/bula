@@ -26,7 +26,8 @@ module.exports = function(app, express) {
       env = app.get('NODE ENVIRONMENT');
 
   // Load application-specific config files (routes, etc) from the `app/config`
-  // directory. Any overrides, or custom settings/middleware should come from here.
+  // directory. Any overrides, or custom settings/middleware should come from
+  // here.
   var confs = fs.readdirSync(root + 'config');
   confs.forEach(function(conf) {
     var path = root + 'config/' + conf;

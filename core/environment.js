@@ -19,6 +19,7 @@ module.exports = function(app) {
   app.set('COOKIE SECRET', process.env[env + '_COOKIE_SECRET']);
   app.set('REDIS SECRET', process.env[env + '_REDIS_SECRET']);
 
+
   // Extract the Site Owners and store as global.
   var owners = process.env[env + '_SITE_OWNERS'];
   var ownersList = owners ? owners.split(',') : [];
@@ -28,6 +29,8 @@ module.exports = function(app) {
   });
   app.set('SITE OWNERS', siteOwners);
 
+
+  // Sets the default view engine as "jade".
   var rootPath = app.get('ROOT PATH');
   app.set('views', rootPath + '/app/views');
   app.set('view engine', 'jade');
