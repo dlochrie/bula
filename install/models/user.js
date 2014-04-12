@@ -56,7 +56,9 @@ User.SELECT_COLUMNS_ = [
 User.QUERIES_ = {
   find: 'SELECT ?? FROM `' + User.TABLE_ + '` WHERE ?',
   findOne: 'SELECT ?? FROM `' + User.TABLE_ + '` WHERE ? LIMIT 1',
-  insert: 'INSERT INTO `' + User.TABLE_ + '` SET ?'
+  insert: 'INSERT INTO `' + User.TABLE_ + '` SET ?',
+  update: 'UPDATE `' + User.TABLE_ + '` SET ? WHERE ?',
+  remove: 'DELETE FROM `' + User.TABLE_ + '` WHERE ? LIMIT 1'
 };
 
 
