@@ -4,8 +4,9 @@
  * `app/config/environment/[environment].js`.
  */
 var express = require('express'),
-    http = require('http'),
+    resource = require('express-resource'),
     app = express(),
+    http = require('http'),
     port = app.get('NODE PORT'),
     host = app.get('NODE HOST');
 
