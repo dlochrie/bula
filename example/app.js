@@ -6,12 +6,14 @@
 var express = require('express'),
     resource = require('express-resource'),
     app = express(),
-    http = require('http'),
-    port = app.get('NODE PORT'),
-    host = app.get('NODE HOST');
+    http = require('http');
 
 // Initialize the Application.
 require('../init')(app, express);
+
+// Extract some of the previously defined globals.
+var port = app.get('NODE PORT'),
+    host = app.get('NODE HOST');
 
 // Start the application/server.
 http.createServer(app).listen(port, host, function() {
