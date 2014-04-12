@@ -21,11 +21,23 @@ Base.DEFAULT_WHERE_VALUE_ = '1 = 1';
 
 
 /**
+ * Error message indicating that there is no query defined in the model.
+ * @const
+ * @private {string}
+ */
+Base.DEFAULT_MISSING_QUERY_MESSAGE_ =
+    'Could not find a query for this action: ';
+
+
+/**
  * Finds all records that match the given parameters.
  * @param {Function} cb Callback function to fire when done.
  */
 Base.prototype.find = function(cb) {
   var query = this.getQuery('find');
+  if (!query) {
+    return cb(Base.DEFAULT_MISSING_QUERY_MESSAGE_ + 'find.', null);
+  }
   var columns = this.getColumns();
   var where = this.getQueryObject() || Base.DEFAULT_WHERE_VALUE_;
   this.select(query, columns, where, function(err, results) {
@@ -40,6 +52,9 @@ Base.prototype.find = function(cb) {
  */
 Base.prototype.findOne = function(cb) {
   var query = this.getQuery('findOne');
+  if (!query) {
+    return cb(Base.DEFAULT_MISSING_QUERY_MESSAGE_ + 'findOne.', null);
+  }
   var columns = this.getColumns();
   var where = this.getQueryObject(this.resource) || Base.DEFAULT_WHERE_VALUE_;
   this.select(query, columns, where, function(err, results) {
@@ -53,8 +68,11 @@ Base.prototype.findOne = function(cb) {
  * @param {Function} cb Callback function to fire when done.
  */
 Base.prototype.insert = function(cb) {
-  var query = this.getQuery('insert');
   var self = this;
+  var query = this.getQuery('insert');
+  if (!query) {
+    return cb(Base.DEFAULT_MISSING_QUERY_MESSAGE_ + 'insert.', null);
+  }
 
   this.validate(function(err) {
     if (err) return cb(err, null);
@@ -90,8 +108,11 @@ Base.prototype.insert = function(cb) {
  * @param {Function} cb Callback function to fire when done.
  */
 Base.prototype.update = function(identifier, cb) {
-  var query = this.getQuery('update');
   var self = this;
+  var query = this.getQuery('update');
+  if (!query) {
+    return cb(Base.DEFAULT_MISSING_QUERY_MESSAGE_ + ' update.', null);
+  }
 
   this.validate(function(err) {
     if (err) return cb(err, null);
@@ -138,6 +159,9 @@ Base.prototype.remove = function(cb) {
   this.db.getConnection(function(err, connection) {
     if (err) return cb(err, null);
     var query = self.getQuery('remove');
+    if (!query) {
+      return cb(Base.DEFAULT_MISSING_QUERY_MESSAGE_ + ' remove.', null);
+    }
     var where = self.getQueryObject(self.resource);
     var q = connection.query(query, where, function(err) {
       if (err) return cb(err, null);
