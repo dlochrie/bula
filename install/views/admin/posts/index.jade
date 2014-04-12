@@ -23,8 +23,8 @@ block body
             a(href='/admin/posts/#{result.post.id}/edit') #{result.post.title}
           td
             a(href='/users/#{result.user.slug}/') #{result.user.displayName}
-          td= getHumanDate(result.post.created)
-          td= getHumanDate(result.post.updated)
+          td= DateHelper.getHumanDate(result.post.created)
+          td= DateHelper.getHumanDate(result.post.updated)
           td
             a(href='/admin/posts/#{result.post.id}/edit',
                 class='btn btn-default', role='button')

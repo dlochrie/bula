@@ -17,8 +17,8 @@ block body
       each result in results
         tr
           td: a(href='/admin/users/#{result.user.id}/edit') #{result.user.displayName}
-          td= getHumanDate(result.user.created)
-          td= getHumanDate(result.user.updated)
+          td= DateHelper.getHumanDate(result.user.created)
+          td= DateHelper.getHumanDate(result.user.updated)
           td
             if User.isOwner(user)
               span.text-info: strong True
