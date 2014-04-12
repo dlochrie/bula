@@ -1,31 +1,22 @@
 /**
- * Module dependencies.
+ * This is the main file for this application. It should _rarely_ be modified,
+ * if at all. If you need to make a configuration change, you should do so in
+ * `app/config/environment/[environment].js`.
  */
 var express = require('express'),
-    resource = require('express-resource'),
-    fs = require('fs'),
     http = require('http'),
-    path = require('path'),
-    app = express();
+    app = express(),
+    port = app.get('NODE PORT'),
+    host = app.get('NODE HOST');
 
-
-/**
- * Initialize the Application.
- */
+// Initialize the Application.
 require('../init')(app, express);
 
-
-/**
- * Start the application.
- */
-http.createServer(app).listen(
-    app.get('NODE PORT'), app.get('NODE HOST'), function() {
-
-      // TODO: Add checks for Site Variables....
-
-      console.log('Express server listening on port ' + app.get('NODE PORT') +
-          ' in the `' + app.get('NODE ENVIRONMENT') +
-          '` environment on address ' + app.get('NODE HOST') + '.');
-      console.log('`URL ROOT`: ' + app.get('ROOT PATH'));
-      console.log('`APP ROOT`: ' + app.get('ROOT URL'));
-    });
+// Start the application/server.
+http.createServer(app).listen(port, host, function() {
+  // TODO: Add checks for Site Variables....
+  console.log('Express server listening on port ' + port + ' in the `' +
+      app.get('NODE ENVIRONMENT') + '` environment on address ' + host + '.');
+  console.log('`URL ROOT`: ' + app.get('ROOT PATH'));
+  console.log('`APP ROOT`: ' + app.get('ROOT URL'));
+});
