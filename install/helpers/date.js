@@ -36,7 +36,7 @@ module.exports = function(app) {
    * @param {string} date The date string.
    * @return {string} A human-readable date string.
    */
-  app.locals.DateHelper.DateHelper.getHumanDate = function(date) {
+  app.locals.DateHelper.getHumanDate = function(date) {
     return require('moment')(date).format('MMMM Do YYYY, h:mm:ss A');
   };
 
