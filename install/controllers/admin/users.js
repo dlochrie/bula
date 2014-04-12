@@ -96,18 +96,12 @@ AdminUsers.prototype.edit = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminUsers.prototype.update = function(req, res) {
-  var user = new User(req.app, null),
-      slug = req.params.user,
-      params = req.body;
-
-  params.body_md = Util.sanitize(params.body);
-  params.description_md = Util.sanitize(params.description);
-  params.updated = Util.getDate();
-
-  user.update({slug: slug}, params, function(err) {
+  var user = new User(req.app, req.body);
+  var id = parseInt(req.params.user);
+  user.update({id: id}, function(err) {
     if (err) {
       req.flash('error', 'There was an error editing the user: ' + err);
-      res.redirect('/admin/users/' + slug + '/edit');
+      res.redirect('/admin/users/' + id + '/edit');
     } else {
       req.flash('success', 'User Successfully Updated');
       res.redirect(AdminUsers.INDEX_VIEW_);
@@ -122,14 +116,13 @@ AdminUsers.prototype.update = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminUsers.prototype.delete = function(req, res) {
-  var user = new User(req.app, null),
-      slug = req.params.user;
-  user.findOne({slug: slug}, function(err, result) {
+  var user = new User(req.app, {id: parseInt(req.params.user)});
+  user.findOne(function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error deleting the user: ' + err);
       res.redirect(AdminUsers.INDEX_VIEW_);
     } else {
-      res.render('admin/users/delete', {
+      res.render(AdminUsers.DELETE_VIEW_, {
         title: 'Delete User', result: result, token: res.locals.token
       });
     }
@@ -143,9 +136,8 @@ AdminUsers.prototype.delete = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminUsers.prototype.destroy = function(req, res) {
-  var user = new User(req.app, null),
-      slug = req.params.user;
-  user.remove({slug: slug}, function(err) {
+  var user = new User(req.app, {id: parseInt(req.params.user)});
+  user.remove(function(err) {
     if (err) {
       req.flash('error', 'There was an error deleting the user: ' + err);
     } else {
