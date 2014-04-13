@@ -10,7 +10,6 @@ block body
   form.form-horizontal(action='/admin/posts', method='post', role='form')
     fieldset
       legend Fill out the form below to create a new Post.
-
       include _form
 
       input(type='hidden', name='user_id', value=user.id)

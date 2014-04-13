@@ -115,6 +115,7 @@ AdminPosts.prototype.create = function(req, res) {
 
 
 /**
+ * Shows the Edit form for a Post.
  * @param {Object} req Express request object.
  * @param {Object} res Express response object.
  */
