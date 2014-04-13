@@ -59,10 +59,12 @@ Posts.prototype.index = function(req, res) {
  * @param {http.ServerResponse} res Node/Express response object.
  */
 Posts.prototype.show = function(req, res) {
-  var post = new Post(req.app, req.body || {});
+  var slug = req.params.post;
+  var post = new Post(req.app, slug ? {slug: slug} : {});
   post.findOne(function(err, result) {
     if (err || !result) {
-      req.flash('error', 'There was an error getting the post: ' + err);
+      req.flash('error', 'The post you were trying to view (' + slug + ') ' +
+          'was removed, or does not exist.');
       res.redirect(Posts.INDEX_VIEW_);
     } else {
       // TODO: Strip Tags from the description.
