@@ -15,7 +15,7 @@ module.exports = function(app) {
   app.set('MYSQL HOST', process.env[env + '_MYSQL_HOST']);
   app.set('MYSQL USER', process.env[env + '_MYSQL_USER']);
   app.set('MYSQL PASS', process.env[env + '_MYSQL_PASS']);
-  app.set('MYSQL MAX CONN', process.env[env + '_MYSQL_MAX_CONN']);
+  app.set('MYSQL MAX CONN', process.env[env + '_MYSQL_MAX_CONN'] || 10);
   app.set('COOKIE SECRET', process.env[env + '_COOKIE_SECRET']);
   app.set('REDIS SECRET', process.env[env + '_REDIS_SECRET']);
 
