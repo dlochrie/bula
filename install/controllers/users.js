@@ -79,10 +79,12 @@ Users.prototype.index = function(req, res) {
  * @param {http.ServerResponse} res Node/Express response object.
  */
 Users.prototype.show = function(req, res) {
-  var user = new User(req.app, req.body || {});
+  var slug = req.params.user;
+  var user = new User(req.app, slug ? {slug: slug} : {});
   user.findOne(function(err, result) {
     if (err || !result) {
-      req.flash('error', 'There was an error getting the user: ' + err);
+      req.flash('error', 'The user you were trying to view (' + slug + ') ' +
+          'was removed, or does not exist.');
       res.redirect(Users.INDEX_VIEW_);
     } else {
       // TODO: Strip Tags from the description.
