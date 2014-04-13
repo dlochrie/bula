@@ -96,7 +96,6 @@ AdminPosts.prototype.new = function(req, res) {
 AdminPosts.prototype.create = function(req, res) {
   var params = req.body || {}; // ????
   var post = new Post(req.app, params);
-
   post.insert(function(errors, post) {
     if (errors || !post) {
       req.flash('error', 'There was an error creating the post: ');
@@ -121,7 +120,6 @@ AdminPosts.prototype.create = function(req, res) {
  */
 AdminPosts.prototype.edit = function(req, res) {
   var post = new Post(req.app, {id: parseInt(req.params.post)});
-
   post.findOne(function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error editing the post: ' + err);
@@ -143,8 +141,8 @@ AdminPosts.prototype.edit = function(req, res) {
  */
 AdminPosts.prototype.update = function(req, res) {
   var post = new Post(req.app, req.body);
-
-  post.update({id: parseInt(req.params.post)}, function(err) {
+  var id = parseInt(req.params.post);
+  post.update({id: id}, function(err) {
     if (err) {
       req.flash('error', 'There was an error editing the post: ' + err);
       res.redirect('/admin/posts/' + id + '/edit');
@@ -163,7 +161,6 @@ AdminPosts.prototype.update = function(req, res) {
  */
 AdminPosts.prototype.delete = function(req, res) {
   var post = new Post(req.app, {id: parseInt(req.params.post)});
-
   post.findOne(function(err, result) {
     if (err || !result) {
       req.flash('error', 'There was an error deleting the post: ' + err);
@@ -184,7 +181,6 @@ AdminPosts.prototype.delete = function(req, res) {
  */
 AdminPosts.prototype.destroy = function(req, res) {
   var post = new Post(req.app, {id: parseInt(req.params.post)});
-
   post.remove(function(err) {
     if (err) {
       req.flash('error', 'There was an error deleting the post: ' + err);
