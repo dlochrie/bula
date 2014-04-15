@@ -1,7 +1,6 @@
 var express = require('express'),
     app = express(),
-    should = require('should'),
-    environment;
+    should = require('should');
 
 
 // NOTE: If you are FAILING in any of these tests, please make sure you have set
