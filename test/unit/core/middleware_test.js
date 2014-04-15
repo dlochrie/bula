@@ -25,6 +25,7 @@ function testLoadUserLocal(req, res, next) {
   next();
 }
 
+
 // Set up the tests.
 var app = express();
 app.session = {
@@ -37,19 +38,18 @@ app.set('ROOT PATH', '/test/path');
 app.set('REDIS SECRET', 'test-secret');
 require('../../../core/middleware')(app);
 
-// Enable the test middleware - required to access the `req` request object.s
+
+// Enable the test middleware - required to access the `req` request objects.
 app.use(testConnectFlash);
 app.use(testLoadUserLocal);
 
 
 describe('Core middleware module', function() {
-  var session;
-
   // TODO: This before hook feels really awkward. Should revisit establishing
   // sessions like this.
   beforeEach(function(done) {
     app.request.session = app.session;
-    session = app.request.session;
+    var session = app.request.session;
     session.logged_in.should.be.true;
     session.passport.should.be.an.Object;
     done();
