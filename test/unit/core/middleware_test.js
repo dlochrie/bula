@@ -1,3 +1,7 @@
+/**
+ * These tests do not test that Express/Connect/Passport/etc middleware is
+ * working/loaded as needed - only that `custom` middleware is working/loaded.
+ */
 var express = require('express'),
     request = require('supertest'),
     should = require('should');
