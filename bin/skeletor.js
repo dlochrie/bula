@@ -1,3 +1,6 @@
+var fs = require('fs');
+
+
 /**
  * Get all arguments.
  */
@@ -30,8 +33,7 @@ function Install() {
    */
   this.app_ = argv.appName;
 
-  // Initialize the installation.
-  this.findOrCreatePath_();
+  this.initialize_();
 }
 
 
@@ -58,16 +60,41 @@ Install.STRUCTURE_ = {
 
 
 /**
- * Looks up a path and creates it if it does not exist.
+ * Kicks off the install process.
  * @private
  */
-Install.prototype.findOrCreatePath_ = function() {
-  if (fs.lstatSync(this.path_).isDirectory()) {
-    this.deployAllFiles_();
-  } else {
-    // First, try to create the path, then...
-    // ...complain that this is NOT a directory, or it cannot be found.
-  }
+Install.prototype.initialize_ = function() {
+  var dir = this.path_ + this.app_.toLowerCase();
+  var self = this;
+  // Create the application directory.
+  this.findOrCreatePath_(dir, function(err) {
+    if (err) throw ('Could not create the directory:\t' + dir);
+    // Start deploying the new files to the application.
+    self.deployAllFiles_();
+  });
+};
+
+
+/**
+ * Looks up a path and creates it if it does not exist.
+ * @param dir {string}
+ * @private
+ */
+Install.prototype.findOrCreatePath_ = function(dir, done) {
+  var self = this;
+  fs.lstat(dir, function(err, stat) {
+    if (err) {
+      fs.mkdir(dir, function(err) {
+        if (err) {
+          done(err);
+        } else {
+          self.findOrCreatePath_(dir, done);
+        }
+      });
+    } else {
+      done();
+    }
+  });
 };
 
 
@@ -76,6 +103,7 @@ Install.prototype.findOrCreatePath_ = function() {
  * @private
  */
 Install.prototype.deployAllFiles_ = function() {
+  console.log('Creating all files.');
   // Start with the root files.
   // Next load the rest of the structure - overwrite as necessary.
 };
