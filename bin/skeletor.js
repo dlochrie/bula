@@ -24,15 +24,28 @@ var argv = require('optimist')
  */
 function Install() {
   /**
+   * Root path to install to - does not include the app name.
+   * TODO: Right now only Unix-style slashes are being used.
    * @private
    */
-  this.path_ = argv.path;
+  this.path_ = Install.addSlash(argv.path);
 
   /**
+   * Name of application - will be used through the install process, and also
+   * indicated the name of the directory in which this application will be
+   * installed.
    * @private
    */
   this.app_ = argv.appName;
 
+  /**
+   * Normalized name of the application install directory - will serve as the
+   * "root path" for this app.
+   * @private
+   */
+  this.appDirectory_ = this.path_ + Install.addSlash(this.app_).toLowerCase();
+
+  // Start the install process.
   this.initialize_();
 }
 
@@ -64,10 +77,10 @@ Install.STRUCTURE_ = {
  * @private
  */
 Install.prototype.initialize_ = function() {
-  var dir = this.path_ + this.app_.toLowerCase();
+  var dir = this.appDirectory_;
   var self = this;
   // Create the application directory.
-  this.findOrCreatePath_(dir, function(err) {
+  this.findOrCreateDirectory_(dir, function(err) {
     if (err) throw ('Could not create the directory:\t' + dir);
     // Start deploying the new files to the application.
     self.deployAllFiles_();
@@ -80,15 +93,15 @@ Install.prototype.initialize_ = function() {
  * @param dir {string}
  * @private
  */
-Install.prototype.findOrCreatePath_ = function(dir, done) {
+Install.prototype.findOrCreateDirectory_ = function(dir, done) {
   var self = this;
   fs.lstat(dir, function(err, stat) {
-    if (err) {
+    if (err || (stat && !stat.isDirectory())) {
       fs.mkdir(dir, function(err) {
         if (err) {
           done(err);
         } else {
-          self.findOrCreatePath_(dir, done);
+          self.findOrCreateDirectory_(dir, done);
         }
       });
     } else {
@@ -103,9 +116,28 @@ Install.prototype.findOrCreatePath_ = function(dir, done) {
  * @private
  */
 Install.prototype.deployAllFiles_ = function() {
-  console.log('Creating all files.');
-  // Start with the root files.
-  // Next load the rest of the structure - overwrite as necessary.
+  var structure = Install.STRUCTURE_;
+  var self = this;
+  Object.keys(structure).forEach(function(dir) {
+    dir = self.appDirectory_ + dir;
+    self.findOrCreateDirectory_(dir, function(err) {
+      if (err || !fs.lstatSync(dir).isDirectory()) {
+        throw ('Could not create the directory:\t' + dir);
+      }
+      // Since this directory has been successfully installed, now we install
+      // its directories and files.
+    });
+  });
+};
+
+
+/**
+ * Adds a slash to the end of the string if one does not exist.
+ * @param {*} str String to append slash to.
+ * @return {string} String with slash at the end of it.
+ */
+Install.addSlash = function(str) {
+  return (str ? str.toString() : '').replace(/\/?$/, '/');
 };
 
 
