@@ -49,42 +49,50 @@ function Install() {
   this.initialize_();
 }
 
+Install.prototype.complain = function(text) {
+  console.log(text);
+};
+
 
 /**
- * @const {Object.<string, Array>}
- * @private
+ * TODO:
+ * This should crawl the directory recursively, and create the directories where
+ * they need to be created, and copy files where they need to be created.
+ * A manifest/install log should be created as well, and deployed to the
+ * new application's root directory.
  */
-Install.STRUCTURE_ = [
-  {
-    'name': 'app',
-    'children': [{
-      'name': 'controllers',
-      'path': 'controllers',
-      'children': [{
-        'name': 'admin'
-      }]
-    }, {
-      'name': 'helpers'
-    }, {
-      'name': 'models'
-    }, {
-      'name': 'views'
-    }]
-  }, {
-    'name': 'config',
-    'children': [{
-      'name': 'environment'
-    }]
-  }, {
-    'name': 'public',
-    'children': [{
-      'name': 'css'
-    }, {
-      'name': 'images'
-    }, {
-      'name': 'js'
-    }]
-  }];
+Install.prototype.buildFileManifest = function() {
+  var dir = require('path').resolve(__dirname, '../install');
+
+  var walk = function(dir, done) {
+    var results = [];
+    fs.readdir(dir, function(err, list) {
+      if (err) return done(err);
+      var pending = list.length;
+      if (!pending) return done(null, results);
+      list.forEach(function(file) {
+        file = dir + '/' + file;
+        fs.stat(file, function(err, stat) {
+          if (stat && stat.isDirectory()) {
+            console.log(file + ' is a directory.');
+            walk(file, function(err, res) {
+              results = results.concat(res);
+              if (!--pending) done(null, results);
+            });
+          } else {
+            console.log(file + ' is a file.');
+            results.push(file);
+            if (!--pending) done(null, results);
+          }
+        });
+      });
+    });
+  };
+  walk(dir, function(err, results) {
+    if (err) throw err;
+    console.log(results);
+  });
+};
 
 
 /**
@@ -92,14 +100,15 @@ Install.STRUCTURE_ = [
  * @private
  */
 Install.prototype.initialize_ = function() {
-  var dir = this.appDirectory_;
-  var self = this;
-  // Create the application directory.
-  this.findOrCreateDirectory_(dir, function(err) {
-    if (err) throw ('Could not create the directory:\t' + dir);
-    // Start deploying the new files to the application.
-    self.deployAllDirectories_();
-  });
+  this.buildFileManifest();
+  // var dir = this.appDirectory_;
+  // var self = this;
+  // // Create the application directory.
+  // this.findOrCreateDirectory_(dir, function(err) {
+  //   if (err) throw ('Could not create the directory:\t' + dir);
+  //   // Start deploying the new files to the application.
+  //   self.deployAllDirectories_();
+  // });
 };
 
 
