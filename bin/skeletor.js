@@ -54,22 +54,37 @@ function Install() {
  * @const {Object.<string, Array>}
  * @private
  */
-Install.STRUCTURE_ = {
-  app: [
-    'controllers',
-    'helpers',
-    'models',
-    'views'
-  ],
-  config: [
-    'environment'
-  ],
-  public: [
-    'css',
-    'images',
-    'js'
-  ]
-};
+Install.STRUCTURE_ = [
+  {
+    'name': 'app',
+    'children': [{
+      'name': 'controllers',
+      'path': 'controllers',
+      'children': [{
+        'name': 'admin'
+      }]
+    }, {
+      'name': 'helpers'
+    }, {
+      'name': 'models'
+    }, {
+      'name': 'views'
+    }]
+  }, {
+    'name': 'config',
+    'children': [{
+      'name': 'environment'
+    }]
+  }, {
+    'name': 'public',
+    'children': [{
+      'name': 'css'
+    }, {
+      'name': 'images'
+    }, {
+      'name': 'js'
+    }]
+  }];
 
 
 /**
@@ -83,7 +98,7 @@ Install.prototype.initialize_ = function() {
   this.findOrCreateDirectory_(dir, function(err) {
     if (err) throw ('Could not create the directory:\t' + dir);
     // Start deploying the new files to the application.
-    self.deployAllFiles_();
+    self.deployAllDirectories_();
   });
 };
 
@@ -112,22 +127,34 @@ Install.prototype.findOrCreateDirectory_ = function(dir, done) {
 
 
 /**
- * Copies all files over to the new directory.
+ * Creates new directories based on the provided directory structure.
  * @private
  */
-Install.prototype.deployAllFiles_ = function() {
+Install.prototype.deployAllDirectories_ = function() {
   var structure = Install.STRUCTURE_;
   var self = this;
-  Object.keys(structure).forEach(function(dir) {
-    dir = self.appDirectory_ + dir;
-    self.findOrCreateDirectory_(dir, function(err) {
-      if (err || !fs.lstatSync(dir).isDirectory()) {
-        throw ('Could not create the directory:\t' + dir);
+
+  function installDirectory(dir, opt_parent) {
+    var name = dir.name;
+    var path = opt_parent ? opt_parent + name : self.appDirectory_ + name;
+    console.log('Attempting to create directory:\t', path);
+    self.findOrCreateDirectory_(path, function(err) {
+      if (err || !fs.lstatSync(path).isDirectory()) {
+        throw ('Could not create the directory:\t' + path);
       }
-      // Since this directory has been successfully installed, now we install
-      // its directories and files.
+      console.log('Successfully created:\t' + path);
+      console.log('Attempting to deploy files for:\t' + name);
+      if (dir.children) {
+        dir.children.forEach(function(child) {
+          installDirectory(child, Install.addSlash(path));
+        });
+      }
     });
-  });
+  }
+
+  for (struct in structure) {
+    installDirectory(structure[struct]);
+  }
 };
 
 
