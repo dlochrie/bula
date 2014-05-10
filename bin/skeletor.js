@@ -41,13 +41,6 @@ function Install() {
   this.appPath_ = Install.addSlash(argv.path);
 
   /**
-   * Default options for reading files. Reading as a utf-8-encoded string, as
-   * opposed to raw binary, allows us to replace placeholders in the text.
-   * @private
-   */
-  this.readOptions_ = {encoding: 'utf8'};
-
-  /**
    * Object containing a mapping of directories and files to deploy.
    * @type {Object.<string, Array>}
    * @private
@@ -58,11 +51,26 @@ function Install() {
   };
 
   /**
+   * Default options for reading files. Reading as a utf-8-encoded string, as
+   * opposed to raw binary, allows us to replace placeholders in the text.
+   * @private
+   */
+  this.readOptions_ = {encoding: 'utf8'};
+
+  /**
    * The source directory for all deployable files and directories.
    * @type {string}
    * @private
    */
   this.skeletorDir_ = path.resolve(__dirname, '../install');
+
+  /**
+   * Computer-friendly name of application - will be used through the install
+   * process where names with spaces and special characters are not allowed.
+   * @type {string}
+   * @private
+   */
+  this.systemName_ = this.appName_.toLowerCase().replace(/\s/, '-');
 
   // Start the install process.
   this.initialize_();
@@ -70,39 +78,40 @@ function Install() {
 
 
 /**
- * TODO:
- * This should crawl the directory recursively, and create the directories where
- * they need to be created, and copy files where they need to be created.
+ * This should crawl the directory recursively, and create a list of the
+ * directories and files that need to be created, along with their source and
+ * target deestinations.
  * A manifest/install log should be created as well, and deployed to the
  * new application's root directory.
+ * @param {Function(sting)} done Callback to fire with optional error when the
+ *     operation is done, or is aborted.
  * @private
  */
-Install.prototype.buildFileManifest_ = function() {
+Install.prototype.buildFileManifest_ = function(done) {
   var self = this;
 
-  var walk = function(dir, done) {
+  var walk = function(dir, cb) {
     fs.readdir(dir, function(err, list) {
-      if (err) return self.complain_(err);
+      if (err) return cb(err);
       var pending = list.length;
-      if (!pending) return done(null);
+      if (!pending) return cb(null);
       list.forEach(function(entity) {
         entity = dir + '/' + entity;
         fs.stat(entity, function(err, stat) {
-          if (err) return self.complain_(err);
+          if (err) return cb(err);
+          var installPath = self.normalizePath_(entity);
           if (stat && stat.isDirectory()) {
-            var installPath = self.normalizePath_(entity);
             walk(entity, function(err) {
-              if (err) return self.complain_(err);
+              if (err) return cb(err);
               self.manifest_.directories_.push(installPath);
-              if (!--pending) done(null);
+              if (!--pending) cb(null);
             });
           } else {
-            var installPath = self.normalizePath_(entity);
             self.manifest_.files_.push({
               original: entity,
               install: installPath
             });
-            if (!--pending) done(null);
+            if (!--pending) cb(null);
           }
         });
       });
@@ -111,19 +120,8 @@ Install.prototype.buildFileManifest_ = function() {
 
   /**
    * Populate the manifest.
-   * TODO: Fix so that the callback don't get too deep.
    */
-  walk(this.skeletorDir_, function(err) {
-    if (err) return self.complain_(err);
-    self.deployAllDirectories_(function(err) {
-      if (err) return self.complain_(err);
-      console.log('Done installing directories.');
-      self.deployAllFiles_(function(err) {
-        if (err) return self.complain_(err);
-        console.log('Done installing files.');
-      });
-    });
-  });
+  walk(this.skeletorDir_, done);
 };
 
 
@@ -140,7 +138,7 @@ Install.prototype.complain_ = function(text) {
 /**
  * Copies a file to a new location based on provided target destination.
  * 1. Reads the file as a utf8-encoded string.
- * 2. Replaces the {{ appName }} in the string/file data.
+ * 2. Replaces {{ appName }} and {{ systemName}} in the string/file data.
  * 3. Writes the file to the new location.
  * @param {Object.<string, string>} file The file object.
  * @param {Function(string)} done Callback function to call when operation has
@@ -152,7 +150,9 @@ Install.prototype.copyFile_ = function(file, done) {
       self = this;
   fs.readFile(file.original, options, function(err, data) {
     if (err) return done(err);
-    data = data.replace(Install.appNameRegex_, self.appName_);
+    data = data.
+      replace(Install.appNameRegex_, self.appName_).
+      replace(Install.systemNameRegex_, self.systemName_);
     fs.writeFile(file.install, data, done(err));
   });
 };
@@ -168,15 +168,15 @@ Install.prototype.deployAllDirectories_ = function(done) {
   var self = this,
       directories = this.manifest_.directories_.sort();
 
-  function createDir(dir) {
+  function installDir(dir) {
     if (!dir) return done(null);
-    self.findOrCreateDirectory_(dir, function(err) {
+    self.installDirectory_(dir, function(err) {
       if (err) throw ('Could not create the directory:\t', dir, err);
-      createDir(directories.shift());
+      installDir(directories.shift());
     });
   }
 
-  createDir(directories.shift());
+  installDir(directories.shift());
 };
 
 
@@ -205,32 +205,15 @@ Install.prototype.deployAllFiles_ = function(done) {
 
 
 /**
- * Looks up a path and creates it if it does not exist.
- * @param {string} dir The directory to create.
- * @param {Function(string)} done Callback function to call when operation has
- *     finished, or aborted.
- * @private
- */
-Install.prototype.findOrCreateDirectory_ = function(dir, done) {
-  var self = this;
-  fs.lstat(dir, function(err, stat) {
-    if (stat && stat.isDirectory()) return done();
-    fs.mkdir(dir, function(err) {
-      if (err) return done(err);
-      return self.findOrCreateDirectory_(dir, done);
-    });
-  });
-};
-
-
-/**
  * Normalized name of the application install directory - will serve as the
  * "root path" for this app.
  * @private
  * @return {string} Full root path for application.
  */
 Install.prototype.getRootPath_ = function() {
-  return this.appPath_ + Install.addSlash(this.appName_).toLowerCase();
+  return this.appPath_ + Install.addSlash(this.appName_).
+      toLowerCase().
+      replace(/\s/, '-');
 };
 
 
@@ -242,9 +225,39 @@ Install.prototype.initialize_ = function() {
   var self = this,
       dir = this.getRootPath_();
 
-  this.findOrCreateDirectory_(dir, function(err) {
+  // TODO: Fix this callback-hell.
+  this.installDirectory_(dir, function(err) {
     if (err) throw ('Could not create the directory:\t' + dir);
-    self.buildFileManifest_();
+    self.buildFileManifest_(function(err) {
+      if (err) return self.complain_(err);
+      self.deployAllDirectories_(function(err) {
+        if (err) return self.complain_(err);
+        console.log('Done installing directories.');
+        self.deployAllFiles_(function(err) {
+          if (err) return self.complain_(err);
+          console.log('Done installing files.');
+        });
+      });
+    });
+  });
+};
+
+
+/**
+ * Looks up a path and creates it if it does not exist.
+ * @param {string} dir The directory to create.
+ * @param {Function(string)} done Callback function to call when operation has
+ *     finished, or aborted.
+ * @private
+ */
+Install.prototype.installDirectory_ = function(dir, done) {
+  var self = this;
+  fs.lstat(dir, function(err, stat) {
+    if (stat && stat.isDirectory()) return done();
+    fs.mkdir(dir, function(err) {
+      if (err) return done(err);
+      return self.installDirectory_(dir, done);
+    });
   });
 };
 
@@ -264,6 +277,7 @@ Install.prototype.normalizePath_ = function(target) {
 
 /**
  * Adds a slash to the end of the string if one does not exist.
+ * Note: Does not support Windows-styled slashes yet.
  * @param {*} str String to append slash to.
  * @return {string} String with slash at the end of it.
  */
@@ -279,6 +293,15 @@ Install.addSlash = function(str) {
  * @private
  */
 Install.appNameRegex_ = /{+\s*appName\s*}+/;
+
+
+/**
+ * Pattern to match when looking for appName replacements.
+ * @const
+ * @type {RegExp}
+ * @private
+ */
+Install.systemNameRegex_ = /{+\s*systemName\s*}+/;
 
 
 /**
