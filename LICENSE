@@ -1,3 +1,7 @@
+If you get `Error: req.flash() requires sessions`, it most likely means that
+the server cannot connect to `redis`.
+
+
 The MIT License (MIT)
 
 Copyright (c) 2014 Daniel Lochrie

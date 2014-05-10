@@ -56,14 +56,14 @@ Main.prototype.index = function(req, res) {
   var post = new Post(req.app);
   post.find(function(err, results) {
     if (err || !results) {
-      req.flash('error', 'There was an error getting the posts: ' + err);
-      res.redirect(req.app.get('STATIC_ROUTES').SITE_HOME);
-    } else {
-      res.render(Main.INDEX_VIEW_, {
-        title: 'Home',
-        results: results
-      });
+      var message = err ? err.toString() : 'No posts found.';
+      req.flash('error', 'There was an error getting the posts: ' +
+          message);
     }
+    res.render(Main.INDEX_VIEW_, {
+      title: 'Home',
+      results: results
+    });
   });
 };
 
