@@ -150,9 +150,8 @@ Install.prototype.copyFile_ = function(file, done) {
       self = this;
   fs.readFile(file.original, options, function(err, data) {
     if (err) return done(err);
-    data = data.
-      replace(Install.appNameRegex_, self.appName_).
-      replace(Install.systemNameRegex_, self.systemName_);
+    data = data.replace(Install.appNameRegex_, self.appName_);
+    data = data.replace(Install.systemNameRegex_, self.systemName_);
     fs.writeFile(file.install, data, done(err));
   });
 };
