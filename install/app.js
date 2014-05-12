@@ -21,6 +21,6 @@ http.createServer(app).listen(port, host, function() {
   // TODO: Add checks for Site Variables....
   console.log('Express server listening on port ' + port + ' in the `' +
       app.get('NODE ENVIRONMENT') + '` environment on address ' + host + '.');
-  console.log('`URL ROOT`: ' + app.get('ROOT PATH'));
-  console.log('`APP ROOT`: ' + app.get('ROOT URL'));
+  console.log('`APP ROOT`: ' + app.get('ROOT PATH'));
+  console.log('`URL ROOT`: ' + app.get('ROOT URL'));
 });
