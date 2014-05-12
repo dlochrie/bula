@@ -34,7 +34,7 @@ describe('Core environment module', function() {
          app.get('MYSQL HOST').should.be.type('string');
          app.get('MYSQL USER').should.be.type('string');
          app.get('MYSQL PASS').should.be.type('string');
-         app.get('MYSQL MAX CONN').should.be.type('string');
+         app.get('MYSQL MAX CONN').should.be.type('number');
          app.get('COOKIE SECRET').should.be.type('string');
          app.get('REDIS SECRET').should.be.type('string');
        });
