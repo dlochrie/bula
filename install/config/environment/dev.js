@@ -19,16 +19,15 @@
  * @param {Function} express Express/Connect instance.
  */
 module.exports = function(app, express) {
-  // Express logger. Logs to console.
-  app.use(express.logger());
-
-
   var express = require('express'),
     flash = require('connect-flash'),
     passport = require('passport'),
     path = require('path'),
     rootPath = app.get('ROOT PATH'),
     RedisStore = require('connect-redis')(express);
+
+  // Express logger. Logs to console.
+  app.use(express.logger());
 
 
   // Compress Pages and Assets for speed/performance.
