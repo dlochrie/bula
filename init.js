@@ -25,6 +25,15 @@ module.exports = function(app, express) {
   var root = app.get('ROOT PATH'),
       env = app.get('NODE ENVIRONMENT');
 
+  // Setup environment-specific settings.
+  // For example, if you are adding a custom logger to Dev, but you don't want
+  // to use it in Prod, then you can create a `dev` file for dev-specific
+  // settings.
+  var conf = root + 'config/environment/' + env.toLowerCase() + '.js';
+  if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
+    require(conf)(app, express);
+  }
+
   // Load application-specific config files (routes, etc) from the `app/config`
   // directory. Any overrides, or custom settings/middleware should come from
   // here.
@@ -35,18 +44,6 @@ module.exports = function(app, express) {
       require(path)(app);
     }
   });
-
-  /**
-   * (Optional)
-   * Setup environment-specific settings.
-   * For example, if you are adding a custom logger to Dev, but you don't want
-   * to use it in Prod, then you can create a `dev` file for dev-specific
-   * settings.
-   */
-  var conf = root + 'config/environment/' + env.toLowerCase() + '.js';
-  if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
-    require(conf)(app, express);
-  }
 
   // Always load the Routes last.
   require(root + 'config/routes.js')(app);
