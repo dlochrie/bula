@@ -9,6 +9,9 @@ var express = require('express'),
     http = require('http'),
     skeletor = require('skeletor');
 
+// Expose `app` for functional testing.
+module.exports = app;
+
 // Initialize the Application.
 skeletor(app, express);
 
