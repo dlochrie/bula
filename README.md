@@ -3,7 +3,7 @@ skeletor-new
 
 New version of skeletor.
 
-# DB
+## DB
 
 Example config:
 
@@ -12,7 +12,14 @@ Example config:
     mysql> FLUSH PRIVILEGES;
     mysql> EXIT
 
-# Troubleshooting
+## Test
+
+### Installed Application
+
+    npm test
+
+
+## Troubleshooting
 
 If you get `Error: req.flash() requires sessions`, it most likely means that
 the server cannot connect to `redis`.
