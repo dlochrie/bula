@@ -20,11 +20,11 @@
  */
 module.exports = function(app, express) {
   var express = require('express'),
-    flash = require('connect-flash'),
-    passport = require('passport'),
-    path = require('path'),
-    rootPath = app.get('ROOT PATH'),
-    RedisStore = require('connect-redis')(express);
+      flash = require('connect-flash'),
+      passport = require('passport'),
+      path = require('path'),
+      rootPath = app.get('ROOT PATH'),
+      RedisStore = require('connect-redis')(express);
 
   // Express logger. Logs to console.
   app.use(express.logger());
