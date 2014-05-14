@@ -31,47 +31,6 @@ function Seed() {
 }
 
 
-/**
- * Kicks the seed process off.
- * @param {express.app} app Express App instance.
- */
-Seed.prototype.init = function(app, model) {
-  /**
-   * Instance of Node MySQL.
-   * @type {Object}
-   * @private
-   */
-  this.db_ = app.db;
-
-  /**
-   * The model on which to operate.
-   * @type {string}
-   * @private
-   */
-  this.model_ = model;
-
-  /**
-   * Path to fixtures/SQL scripts.
-   * @type {string}
-   * @private
-   */
-  this.root_ = app.get('ROOT PATH') + 'test/fixtures/';
-
-  /**
-   * Path to tables/SQL scripts.
-   * @type {string}
-   * @private
-   */
-  this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
-
-  // Populate the fixtures.
-  this.getFixtures_();
-
-  // Create the table if it doesn't exist.
-  this.createTable_();
-};
-
-
 Seed.prototype.createTable_ = function() {
   var file = this.tablesDir_ + this.model_ + '.sql',
       sql = this.readSqlFromFile_(file);
@@ -166,6 +125,47 @@ Seed.prototype.isSetup_ = function(filename) {
 Seed.prototype.readSqlFromFile_ = function(file) {
   return fs.lstatSync(file).isFile() ?
       fs.readFileSync(file, this.readOptions_) : null;
+};
+
+
+/**
+ * Kicks the seed process off.
+ * @param {express.app} app Express App instance.
+ */
+Seed.prototype.init = function(app, model) {
+  /**
+   * Instance of Node MySQL.
+   * @type {Object}
+   * @private
+   */
+  this.db_ = app.db;
+
+  /**
+   * The model on which to operate.
+   * @type {string}
+   * @private
+   */
+  this.model_ = model;
+
+  /**
+   * Path to fixtures/SQL scripts.
+   * @type {string}
+   * @private
+   */
+  this.root_ = app.get('ROOT PATH') + 'test/fixtures/';
+
+  /**
+   * Path to tables/SQL scripts.
+   * @type {string}
+   * @private
+   */
+  this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
+
+  // Populate the fixtures.
+  this.getFixtures_();
+
+  // Create the table if it doesn't exist.
+  this.createTable_();
 };
 
 
