@@ -1,6 +1,4 @@
-// TODO: SHOULD THESE BE REQUIRED ON NPM TEST command???
 var request = require('supertest'),
-    should = require('should'),
     seed = require('../../util/seed');
 
 
