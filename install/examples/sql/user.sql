@@ -1,8 +1,6 @@
-# Drops and creates the "user" table.
+# Attempts to create the "user" table.
 
-DROP TABLE IF EXISTS `user`;
-
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `displayName` VARCHAR(100) NOT NULL,
   `slug` VARCHAR(100) NOT NULL,

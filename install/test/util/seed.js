@@ -44,6 +44,13 @@ Seed.prototype.init = function(app, model) {
   this.db_ = app.db;
 
   /**
+   * The model on which to operate.
+   * @type {string}
+   * @private
+   */
+  this.model_ = model;
+
+  /**
    * Path to fixtures/SQL scripts.
    * @type {string}
    * @private
@@ -51,14 +58,36 @@ Seed.prototype.init = function(app, model) {
   this.root_ = app.get('ROOT PATH') + 'test/fixtures/';
 
   /**
-   * The model on which to operate.
+   * Path to tables/SQL scripts.
    * @type {string}
    * @private
    */
-  this.model_ = model;
+  this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
 
   // Populate the fixtures.
   this.getFixtures_();
+
+  // Create the table if it doesn't exist.
+  this.createTable_();
+};
+
+
+Seed.prototype.createTable_ = function() {
+  var file = this.tablesDir_ + this.model_ + '.sql',
+      sql = this.readSqlFromFile_(file);
+
+  if (sql) {
+    this.db_.getConnection(function(err, connection) {
+      if (err) throw new Error(
+          'This fixture (' + this.model_ + ') could not' + 'be added: ' + err);
+      connection.query(sql, function(err, result) {
+        connection.release(); // Return this connection to the pool.
+        if (err) {
+          throw new Error('This fixture (...) could not be added: ' + err);
+        }
+      });
+    });
+  }
 };
 
 
@@ -68,7 +97,7 @@ Seed.prototype.init = function(app, model) {
  * @private
  */
 Seed.prototype.executeSQL_ = function(sql) {
-  this.db.getConnection(function(err, connection) {
+  this.db_.getConnection(function(err, connection) {
     if (err) throw new Error('This fixture (...) could not be added: ' + err);
     connection.query(sql, function(err, result) {
       connection.release(); // Return this connection to the pool.
@@ -144,8 +173,8 @@ Seed.prototype.readSqlFromFile_ = function(file) {
  * Perform the `setup` operation - usually creating a populating a table.
  */
 Seed.prototype.setup = function() {
-  if (this.fixture_ && this.fixture_.setup_) {
-    this.executeSQL_(this.fixture_.setup_);
+  if (this.fixtures_ && this.fixtures_.setup_) {
+    this.executeSQL_(this.fixtures_.setup_);
   }
 };
 
@@ -154,9 +183,8 @@ Seed.prototype.setup = function() {
  * Perform the `teardown` operation - usually deleting a table.
  */
 Seed.prototype.teardown = function() {
-  if (this.fixture_ && this.fixture_.teardown_) {
-    console.log('performing teardown');
-    this.executeSQL_(this.fixture_.teardown_);
+  if (this.fixtures_ && this.fixtures_.teardown_) {
+    this.executeSQL_(this.fixtures_.teardown_);
   }
 };
 

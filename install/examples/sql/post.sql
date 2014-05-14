@@ -1,8 +1,6 @@
-# Drops and creates the "post" table.
+# Attempts to create the "post" table.
 
-DROP TABLE IF EXISTS `post`;
-
-CREATE TABLE `post` (
+CREATE TABLE IF NOT EXISTS `post` (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id INT(10) UNSIGNED NOT NULL,
   title VARCHAR(255) NOT NULL,
