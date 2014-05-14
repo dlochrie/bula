@@ -5,10 +5,9 @@ bulajs
 
 _Bula_ means _hello_ in Fijian. **Bula!**
 
-Bula is a ready-made express-based application using MySQL. There is plenty more to come soon,
-but the idea is to have an installable application using MySQL, Redis, and Angular, complete
-with tests and docs. Hence, _more to come_.
-
+Bula is a ready-made express-based application using MySQL. There is plenty more
+to come soon, but the idea is to have an installable application using MySQL,
+Redis, and Angular, complete with tests and docs. Hence, _more to come_.
 
 ### Install
 
@@ -21,15 +20,14 @@ The following:
 Gets you:
 
     ~/Desktop/my-application
-    
-    
+
 So:
 
     node bin/bula.js -a 'My Application' -p ~/Desktop
     cd ~/Desktop/my-application
     npm install
     node app
-    
+
 ...installs the app, its dependencies, and starts it.
 
 ### DB
@@ -46,7 +44,7 @@ Example config:
 To run the `bula` test:
 
     // To be written.
-    
+
 To run the locally installed application's tests:
 (requires that create a `test` database)
 
@@ -58,6 +56,3 @@ To run the locally installed application's tests:
 
 If you get `Error: req.flash() requires sessions`, it most likely means that
 the server cannot connect to `redis`.
-
-
-
