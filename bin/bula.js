@@ -7,7 +7,7 @@ var fs = require('fs'),
  */
 var argv = require('optimist')
     .usage(
-        'Installs a Skeletor Application to the specified directory.' +
+        'Installs a Bula Application to the specified directory.' +
         '\nUsage: $0')
     .demand('a')
     .alias('a', 'appName')
@@ -62,7 +62,7 @@ function Install() {
    * @type {string}
    * @private
    */
-  this.skeletorDir_ = path.resolve(__dirname, '../install');
+  this.bulaDir_ = path.resolve(__dirname, '../install');
 
   /**
    * Computer-friendly name of application - will be used through the install
@@ -121,7 +121,7 @@ Install.prototype.buildFileManifest_ = function(done) {
   /**
    * Populate the manifest.
    */
-  walk(this.skeletorDir_, done);
+  walk(this.bulaDir_, done);
 };
 
 
@@ -262,7 +262,7 @@ Install.prototype.installDirectory_ = function(dir, done) {
 
 
 /**
- * Normalizes a path by stripping extra slashes and the base skeletor
+ * Normalizes a path by stripping extra slashes and the base bula
  * directory, and by prepending the target application install directory.
  * @param {string} target The path of the file or directory to normalize.
  * @private
@@ -270,7 +270,7 @@ Install.prototype.installDirectory_ = function(dir, done) {
  */
 Install.prototype.normalizePath_ = function(target) {
   var rootPath = this.getRootPath_();
-  return path.normalize(rootPath + target.replace(this.skeletorDir_, ''));
+  return path.normalize(rootPath + target.replace(this.bulaDir_, ''));
 };
 
 

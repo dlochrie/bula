@@ -7,13 +7,13 @@ var express = require('express'),
     resource = require('express-resource'),
     app = express(),
     http = require('http'),
-    skeletor = require('skeletor');
+    bula = require('bula');
 
 // Expose `app` for functional testing.
 module.exports = app;
 
 // Initialize the Application.
-skeletor(app, express);
+bula(app, express);
 
 // Extract some of the previously defined globals.
 var port = app.get('NODE PORT'),

@@ -1,14 +1,14 @@
-skeletor-new
+bulajs
 ============
 
-New version of skeletor.
+_Bula_ means _hello_ in Fijian. **Bula!**
 
 ## DB
 
 Example config:
 
-    mysql> CREATE DATABASE skeletor;
-    mysql> GRANT ALL PRIVILEGES ON skeletor.* TO "skeletor"@"localhost" IDENTIFIED BY "skelepass";
+    mysql> CREATE DATABASE bula;
+    mysql> GRANT ALL PRIVILEGES ON bula.* TO "bula"@"localhost" IDENTIFIED BY "bulapass";
     mysql> FLUSH PRIVILEGES;
     mysql> EXIT
 

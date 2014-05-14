@@ -1,12 +1,12 @@
 {
-  "name": "skeletor",
-  "version": "0.1.5",
-  "private": true,
+  "name": "bula",
+  "version": "0.1.7",
+  "author": "Daniel Lochrie <daniel.lochrie@congruentlabs.com>",
   "scripts": {
     "start": "node app"
   },
   "bin": {
-    "skeletor": "bin/skeletor.js"
+    "bula": "bin/bula.js"
   },
   "dependencies": {
     "express": "3.4.8",
