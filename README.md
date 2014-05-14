@@ -52,9 +52,9 @@ To run the locally installed application's tests:
 
     npm test
 
-## Troubleshooting
+### Troubleshooting
 
-### `Error: req.flash() requires sessions`
+#### `Error: req.flash() requires sessions`
 
 If you get `Error: req.flash() requires sessions`, it most likely means that
 the server cannot connect to `redis`.
