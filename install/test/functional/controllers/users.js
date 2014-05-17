@@ -15,30 +15,30 @@ describe('Users Controller', function() {
   });
 
   describe('when not logged in', function() {
-    it('should show the users index', function(done) {
-      request(app)
-          .get('/users')
-          .expect(200)
-          .end(function(err, res) {
-            if (err) return done(err);
-            res.text.should.include('Member Since');
-            res.text.should.include('joe tester');
-            res.text.should.include('johnny edit');
-            done();
-          });
-    });
+    // it('should show the users index', function(done) {
+    //   request(app)
+    //       .get('/users')
+    //       .expect(200)
+    //       .end(function(err, res) {
+    //         if (err) return done(err);
+    //         res.text.should.include('Member Since');
+    //         res.text.should.include('joe tester');
+    //         res.text.should.include('johnny edit');
+    //         done();
+    //       });
+    // });
 
-    it('should show a user\'s profile page',
-        function(done) {
-         request(app)
-          .get('/users/joe-tester')
-          .expect(200)
-          .end(function(err, res) {
-           if (err) return done(err);
-           res.text.should.include('joe tester\'s Profile');
-           done();
-         });
-       });
+    // it('should show a user\'s profile page',
+    //     function(done) {
+    //      request(app)
+    //       .get('/users/joe-tester')
+    //       .expect(200)
+    //       .end(function(err, res) {
+    //        if (err) return done(err);
+    //        res.text.should.include('joe tester\'s Profile');
+    //        done();
+    //      });
+    //    });
   });
 
   describe('when logged in as the user', function() {

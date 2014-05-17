@@ -2,7 +2,9 @@ var fs = require('fs'),
     path = require('path');
 
 
-// Expose 'Seed' module.
+/**
+ * Expose 'Seed' module.
+ */
 module.exports = new Seed;
 
 
@@ -18,36 +20,7 @@ function Seed() {
    * @private
    */
   this.readOptions_ = {encoding: 'utf8'};
-
-  /**
-   * Locally-stored mapping of fixture and mapped SQL.
-   * @type {Object.<string, string>}
-   * @private
-   */
-  this.fixtures_ = {
-    setup_: null,
-    teardown_: null
-  };
 }
-
-
-Seed.prototype.createTable_ = function() {
-  var file = this.tablesDir_ + this.model_ + '.sql',
-      sql = this.readSqlFromFile_(file);
-
-  if (sql) {
-    this.db_.getConnection(function(err, connection) {
-      if (err) throw new Error(
-          'This fixture (' + this.model_ + ') could not' + 'be added: ' + err);
-      connection.query(sql, function(err, result) {
-        connection.release(); // Return this connection to the pool.
-        if (err) {
-          throw new Error('This fixture (...) could not be added: ' + err);
-        }
-      });
-    });
-  }
-};
 
 
 /**
@@ -57,11 +30,11 @@ Seed.prototype.createTable_ = function() {
  */
 Seed.prototype.executeSQL_ = function(sql) {
   this.db_.getConnection(function(err, connection) {
-    if (err) throw new Error('This fixture (...) could not be added: ' + err);
+    if (err) throw new Error('Could not perform query: ' + sql + '\n' + err);
     connection.query(sql, function(err, result) {
       connection.release(); // Return this connection to the pool.
       if (err) {
-        throw new Error('This fixture (...) could not be added: ' + err);
+        throw new Error('Could not perform query: ' + sql + '\n' + err);
       }
     });
   });
@@ -85,22 +58,24 @@ Seed.prototype.getBaseName_ = function(filename) {
  * teardown.
  * @private
  */
-Seed.prototype.getFixtures_ = function() {
-  var fixtures = fs.readdirSync(this.root_),
-      model = this.model_,
+Seed.prototype.getFixtures_ = function(model) {
+  var files = fs.readdirSync(this.root_),
+      model = model || this.model_,
       self = this;
 
-  fixtures.forEach(function(fixture) {
+  var fixtures = {};
+  files.forEach(function(fixture) {
     if (self.getBaseName_(fixture) === model) {
       fixture = self.root_ + fixture;
       var data = self.readSqlFromFile_(fixture);
       if (self.isSetup_(fixture)) {
-        self.fixtures_.setup_ = data;
+        fixtures.setup_ = data;
       } else {
-        self.fixtures_.teardown_ = data;
+        fixtures.teardown_ = data;
       }
     }
   });
+  return fixtures;
 };
 
 
@@ -129,16 +104,51 @@ Seed.prototype.readSqlFromFile_ = function(file) {
 
 
 /**
+ * Creates a table given the optional model, or the model that that was
+ * initialized in the init method.
+ * @param {?string=} opt_model The optional model's name.
+ */
+Seed.prototype.createTable = function(opt_model) {
+  var model = opt_model || this.model_;
+  var file = this.tablesDir_ + model + '.sql',
+      sql = this.readSqlFromFile_(file);
+
+  if (sql) {
+    this.db_.getConnection(function(err, connection) {
+      if (err) throw new Error(
+          'This fixture (' + model + ') could not' + 'be added: ' + err);
+      connection.query(sql, function(err, result) {
+        connection.release(); // Return this connection to the pool.
+        if (err) {
+          throw new Error(
+              'This fixture (' + model + ') could not be added: ' + err);
+        }
+      });
+    });
+  }
+};
+
+
+/**
  * Kicks the seed process off.
  * @param {express.app} app Express App instance.
+ * @param {?Array.<string>=} opt_dependencies Optional models required for this
+ *     model to be tested.
  */
-Seed.prototype.init = function(app, model) {
+Seed.prototype.init = function(app, model, opt_dependencies) {
   /**
    * Instance of Node MySQL.
    * @type {Object}
    * @private
    */
   this.db_ = app.db;
+
+  /**
+   * Models/tables that this model requires for testing.
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.dependencies_ = opt_dependencies || [];
 
   /**
    * The model on which to operate.
@@ -161,11 +171,23 @@ Seed.prototype.init = function(app, model) {
    */
   this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
 
-  // Populate the fixtures.
-  this.getFixtures_();
 
-  // Create the table if it doesn't exist.
-  this.createTable_();
+  /**
+   * Locally-stored mapping of fixture and mapped SQL.
+   * @type {Object.<string, string>}
+   * @private
+   */
+  this.fixtures_ = this.getFixtures_();
+
+
+  // Create the model's table if it doesn't exist.
+  this.createTable();
+
+
+  // Create the table's dependencies.
+  this.dependencies_.forEach(function(dependency) {
+    this.createTable(dependency);
+  }, this);
 };
 
 
@@ -176,6 +198,12 @@ Seed.prototype.setup = function() {
   if (this.fixtures_ && this.fixtures_.setup_) {
     this.executeSQL_(this.fixtures_.setup_);
   }
+
+  // Populate fixtures for dependencies.
+  this.dependencies_.forEach(function(dependency) {
+    var sql = this.getFixtures_(dependency).setup_;
+    this.executeSQL_(sql);
+  }, this);
 };
 
 
@@ -186,6 +214,12 @@ Seed.prototype.teardown = function() {
   if (this.fixtures_ && this.fixtures_.teardown_) {
     this.executeSQL_(this.fixtures_.teardown_);
   }
+
+  // Delete tables for dependencies.
+  this.dependencies_.forEach(function(dependency) {
+    var sql = this.getFixtures_(dependency).teardown_;
+    this.executeSQL_(sql);
+  }, this);
 };
 
 
