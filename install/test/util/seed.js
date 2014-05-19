@@ -5,21 +5,76 @@ var fs = require('fs'),
 /**
  * Expose 'Seed' module.
  */
-module.exports = new Seed;
+module.exports = Seed;
 
 
 
 /**
  * The Seed module populates fixtures for functional testing.
+ * @param {express.app} app Express App instance.
+ * @param {string} model The model on which to operate.
+ * @param {?Array.<string>=} opt_dependencies Optional models required for this
+ *     model to be tested.
  * @constructor
  */
-function Seed() {
+function Seed(app, model, opt_dependencies) {
+  /**
+   * Instance of Node MySQL.
+   * @type {Object}
+   * @private
+   */
+  this.db_ = app.db;
+
+  /**
+   * Models/tables that this model requires for testing.
+   * @type {?Array.<string>}
+   * @private
+   */
+  this.dependencies_ = opt_dependencies || [];
+
+  /**
+   * Locally-stored mapping of fixture and mapped SQL.
+   * @type {Object.<string, string>}
+   * @private
+   */
+  this.fixtures_ = this.getFixtures_();
+
+  /**
+   * The model on which to operate.
+   * @type {string}
+   * @private
+   */
+  this.model_ = model;
+
   /**
    * Default options for reading files. Reading as a utf-8-encoded string, as
    * opposed to raw binary, allows for proper sql queries.
    * @private
    */
   this.readOptions_ = {encoding: 'utf8'};
+
+  /**
+   * Path to fixtures/SQL scripts.
+   * @type {string}
+   * @private
+   */
+  this.root_ = app.get('ROOT PATH') + 'test/fixtures/';
+
+  /**
+   * Path to tables/SQL scripts.
+   * @type {string}
+   * @private
+   */
+  this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
+
+  // Create the model's table if it doesn't exist.
+  this.createTable();
+
+
+  // Create the table's dependencies.
+  this.dependencies_.forEach(function(dependency) {
+    this.createTable(dependency);
+  }, this);
 }
 
 
@@ -56,11 +111,13 @@ Seed.prototype.getBaseName_ = function(filename) {
 /**
  * Gets the fixtures based on model. Reads and stores the sql for both setup and
  * teardown.
+ * @param {string=} opt_model The model to get fixtures for.
  * @private
+ * @return {Object.<string, string>}
  */
-Seed.prototype.getFixtures_ = function(model) {
+Seed.prototype.getFixtures_ = function(opt_model) {
   var files = fs.readdirSync(this.root_),
-      model = model || this.model_,
+      model = opt_model || this.model_,
       self = this;
 
   var fixtures = {};
@@ -93,9 +150,9 @@ Seed.prototype.isSetup_ = function(filename) {
 
 /**
  * Gets the raw SQL from the script by reading it as a UTF-8-encoded string.
- * @param file Full path to the file to read.
+ * @param {string} file Full path to the file to read.
  * @private
- * @return The raw SQL data.
+ * @return {string} The raw SQL data.
  */
 Seed.prototype.readSqlFromFile_ = function(file) {
   return fs.lstatSync(file).isFile() ?
@@ -126,68 +183,6 @@ Seed.prototype.createTable = function(opt_model) {
       });
     });
   }
-};
-
-
-/**
- * Kicks the seed process off.
- * @param {express.app} app Express App instance.
- * @param {?Array.<string>=} opt_dependencies Optional models required for this
- *     model to be tested.
- */
-Seed.prototype.init = function(app, model, opt_dependencies) {
-  /**
-   * Instance of Node MySQL.
-   * @type {Object}
-   * @private
-   */
-  this.db_ = app.db;
-
-  /**
-   * Models/tables that this model requires for testing.
-   * @type {?Array.<string>}
-   * @private
-   */
-  this.dependencies_ = opt_dependencies || [];
-
-  /**
-   * The model on which to operate.
-   * @type {string}
-   * @private
-   */
-  this.model_ = model;
-
-  /**
-   * Path to fixtures/SQL scripts.
-   * @type {string}
-   * @private
-   */
-  this.root_ = app.get('ROOT PATH') + 'test/fixtures/';
-
-  /**
-   * Path to tables/SQL scripts.
-   * @type {string}
-   * @private
-   */
-  this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
-
-
-  /**
-   * Locally-stored mapping of fixture and mapped SQL.
-   * @type {Object.<string, string>}
-   * @private
-   */
-  this.fixtures_ = this.getFixtures_();
-
-
-  // Create the model's table if it doesn't exist.
-  this.createTable();
-
-
-  // Create the table's dependencies.
-  this.dependencies_.forEach(function(dependency) {
-    this.createTable(dependency);
-  }, this);
 };
 
 

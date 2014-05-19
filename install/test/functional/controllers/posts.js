@@ -1,10 +1,10 @@
 var request = require('supertest'),
-    seed = require('../../util/seed');
+    Seed = require('../../util/seed'),
+    seed = new Seed(app, 'post', ['user']);
 
 
 describe('Posts Controller', function() {
   before(function(done) {
-    seed.init(app, 'post', ['user']);
     seed.setup();
     done();
   });
