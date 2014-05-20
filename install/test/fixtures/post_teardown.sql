@@ -1,1 +1,1 @@
-DROP TABLE `post`;
+TRUNCATE TABLE `post`;
