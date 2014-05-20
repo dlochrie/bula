@@ -33,13 +33,6 @@ function Seed(app, model, opt_dependencies) {
   this.dependencies_ = opt_dependencies || [];
 
   /**
-   * Locally-stored mapping of fixture and mapped SQL.
-   * @type {Object.<string, string>}
-   * @private
-   */
-  this.fixtures_ = this.getFixtures_();
-
-  /**
    * The model on which to operate.
    * @type {string}
    * @private
@@ -67,11 +60,21 @@ function Seed(app, model, opt_dependencies) {
    */
   this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
 
-  // Create the model's table if it doesn't exist.
+  /**
+   * Locally-stored mapping of fixture and mapped SQL.
+   * @type {Object.<string, string>}
+   * @private
+   */
+  this.fixtures_ = this.getFixtures_();
+
+  /**
+   * Create the model's table if it doesn't exist.
+   */
   this.createTable();
 
-
-  // Create the table's dependencies.
+  /**
+   * Create the table's dependencies.
+   */
   this.dependencies_.forEach(function(dependency) {
     this.createTable(dependency);
   }, this);
@@ -187,15 +190,19 @@ Seed.prototype.createTable = function(opt_model) {
 
 
 /**
- * Perform the `setup` operation - usually creating a populating a table.
+ * Perform the `setup` operation - usually creating and populating a table after
+ * truncating it first.
  */
 Seed.prototype.setup = function() {
+  this.teardown_();
   if (this.fixtures_ && this.fixtures_.setup_) {
+    this.createTable();
     this.executeSQL_(this.fixtures_.setup_);
   }
 
   // Populate fixtures for dependencies.
   this.dependencies_.forEach(function(dependency) {
+    this.createTable(dependency);
     var sql = this.getFixtures_(dependency).setup_;
     this.executeSQL_(sql);
   }, this);
@@ -205,7 +212,7 @@ Seed.prototype.setup = function() {
 /**
  * Perform the `teardown` operation - usually deleting a table.
  */
-Seed.prototype.teardown = function() {
+Seed.prototype.teardown_ = function() {
   if (this.fixtures_ && this.fixtures_.teardown_) {
     this.executeSQL_(this.fixtures_.teardown_);
   }

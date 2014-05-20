@@ -9,11 +9,6 @@ describe('Posts Controller', function() {
     done();
   });
 
-  after(function(done) {
-    seed.teardown();
-    done();
-  });
-
   describe('views', function() {
     it('should show the posts index', function(done) {
       request(app)
