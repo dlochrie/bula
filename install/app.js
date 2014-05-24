@@ -7,13 +7,13 @@ var express = require('express'),
     resource = require('express-resource'),
     app = express(),
     http = require('http'),
-    bula = require('bula');
+    Bula = require('bula');
 
 // Expose `app` for functional testing.
 module.exports = app;
 
 // Initialize the Application.
-bula(app, express);
+bula = new Bula(app, express);
 
 // Extract some of the previously defined globals.
 var port = app.get('NODE PORT'),
@@ -21,9 +21,11 @@ var port = app.get('NODE PORT'),
 
 // Start the application/server.
 http.createServer(app).listen(port, host, function() {
-  // TODO: Add checks for Site Variables....
-  console.log('Express server listening on port ' + port + ' in the `' +
-      app.get('NODE ENVIRONMENT') + '` environment on address ' + host + '.');
-  console.log('`APP ROOT`: ' + app.get('ROOT PATH'));
-  console.log('`URL ROOT`: ' + app.get('ROOT URL'));
+  // Verify that all components are available and working.
+  if (bula.sanityCheck()) {
+    console.log('Express server listening on port ' + port + ' in the `' +
+        app.get('NODE ENVIRONMENT') + '` environment on address ' + host + '.');
+    console.log('`APP ROOT`: ' + app.get('ROOT PATH'));
+    console.log('`URL ROOT`: ' + app.get('ROOT URL'));
+  }
 });
