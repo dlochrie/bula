@@ -1,0 +1,41 @@
+{
+  "properties": [
+    {
+      "name": "NODE PORT",
+      "systemName": "_NODE_PORT",
+      "default": 3000
+    }, {
+      "name": "NODE HOST",
+      "systemName": "_NODE_HOST",
+      "default": "0.0.0.0"
+    }, {
+      "name": "ROOT PATH",
+      "systemName": "_ROOT_PATH"
+    }, {
+      "name": "ROOT URL",
+      "systemName": "_ROOT_URL"
+    }, {
+      "name": "MYSQL DB",
+      "systemName": "_MYSQL_DB"
+    }, {
+      "name": "MYSQL HOST",
+      "systemName": "_MYSQL_HOST"
+    }, {
+      "name": "MYSQL USER",
+      "systemName": "_MYSQL_USER"
+    }, {
+      "name": "MYSQL PASS",
+      "systemName": "_MYSQL_PASS"
+    }, {
+      "name": "MYSQL MAX CONN",
+      "systemName": "_MYSQL_MAX_CONN",
+      "default": 10
+    }, {
+      "name": "COOKIE SECRET",
+      "systemName": "_COOKIE_SECRET"
+    }, {
+      "name": "REDIS SECRET",
+      "systemName": "_REDIS_SECRET"
+    }
+  ]
+}
