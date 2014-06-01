@@ -1,6 +1,6 @@
 {
   "name": "bula",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "author": "Daniel Lochrie <daniel.lochrie@congruentlabs.com>",
   "scripts": {
     "start": "node app"

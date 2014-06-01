@@ -1,5 +1,6 @@
 var fs = require('fs'),
-    path = require('path')
+    path = require('path'),
+    util = require('util'),
     Q = require('q');
 
 
@@ -60,129 +61,43 @@ function Seed(app, model, opt_dependencies) {
    * @private
    */
   this.tablesDir_ = app.get('ROOT PATH') + 'examples/sql/';
-
-  /**
-   * Locally-stored mapping of fixture and mapped SQL.
-   * @type {Object.<string, string>}
-   * @private
-   */
-  // this.fixtures_ = this.getFixtures_();
-
-  /**
-   * Create the model's table if it doesn't exist.
-   */
-  // this.createTable();
-
-  /**
-   * Create the table's dependencies.
-   */
-  // this.dependencies_.forEach(function(dependency) {
-  //   this.createTable(dependency);
-  // }, this);
 }
 
-Seed.prototype.setup = function() {
-  var queue = [],
-      self = this;
-  var models = [].concat(this.model_, this.dependencies_);
 
-  // Schedule the creation and seeding of each model/table, but defer
-  // execution.
-  models.forEach(function(model) {
-    queue.push(self.createTable_(model));
-    queue.push(self.populateFixtures_(model));
-  });
-
-  console.log('Executing', queue);
-  Q.allSettled(queue).done(function(queries) {
-    console.log('Done Executing.')
-    console.log('queries', queries);
-  });
-
-};
-
-
+/**
+ * Locates the sql for and creates the model's table (if it does not exist).
+ * @param {!string} model The model to create the table for.
+ * @private
+ * @return {Q.promise} Promise to be resolved by caller.
+ */
 Seed.prototype.createTable_ = function(model) {
   var file = this.tablesDir_ + model + '.sql',
       sql = this.readSqlFromFile_(file);
 
-  var deferred = Q.defer();
-  if (sql) {
-    this.db_.getConnection(function(err, connection) {
-      if (err) {
-        deferred.reject(new Error(
-            'This table (' + model + ') could not' + 'be created: ' + err));
-      } else {
-        connection.query(sql, function(err, result) {
-          connection.release(); // Return this connection to the pool.
-          console.log('DONE CREATING');
-          if (err) {
-            deferred.reject(new Error(
-                'This table (' + model + ') could not' + 'be created: ' + err));
-          } else {
-            deferred.resolve();
-          }
-        });
-      }
-    });
-  }
-  return deferred.promise;
-};
-
-// Returns a promise from another method.
-// Should this be renamed to setup, or populate???
-Seed.prototype.populateFixtures_ = function(model) {
-  var files = fs.readdirSync(this.root_),
-      self = this;
-
-  return files.some(function(fixture) {
-    if (self.getBaseName_(fixture) === model) {
-      fixture = self.root_ + fixture;
-      var data = self.readSqlFromFile_(fixture);
-      if (self.isSetup_(fixture)) {
-        return self.executeSQL_(data);
-      }
-    }
-  });
-};
-
-
-Seed.prototype.teardown = function(model) {
-  var files = fs.readdirSync(this.root_),
-      self = this;
-
-  return files.some(function(fixture) {
-    if (self.getBaseName_(fixture) === model) {
-      fixture = self.root_ + fixture;
-      var data = self.readSqlFromFile_(fixture);
-      if (!self.isSetup_(fixture)) {
-        return self.executeSQL_(data);
-      }
-    }
-  });
+  // TODO: Will `Q.all` throw a fix if the promise was null?
+  return sql ? this.executeSQL_(sql, Seed.DEFAULT_CREATE_TABLE_ERROR_) : null;
 };
 
 
 /**
  * Process the SQL Query.
  * @param {string} sql The raw SQL to process.
+ * @param {string=} opt_message Optional message to pass for displaying errors.
  * @private
+ * @return {Q.promise} Promise to be resolved by caller.
  */
-Seed.prototype.executeSQL_ = function(sql) {
+Seed.prototype.executeSQL_ = function(sql, opt_message) {
+  var message = opt_message || Seed.DEFAULT_QUERY_ERROR_;
   var deferred = Q.defer();
   this.db_.getConnection(function(err, connection) {
     if (err) {
-      deferred.reject(
-        new Error('Could not perform query: ' + sql + '\n' + err));
+      deferred.reject(new Error(util.format(message, sql, err)));
     } else {
       connection.query(sql, function(err, result) {
-        connection.release(); // Return this connection to the pool.
+        connection.release();
         if (err) {
-          console.log('ERROR:\t', err);
-          deferred.reject(
-            new Error('Could not perform query: ' + sql + '\n' + err));
+          deferred.reject(new Error(util.format(message, sql, err)));
         } else {
-          console.log('SUCCESS:\n\t', sql);
           deferred.resolve();
         }
       });
@@ -202,34 +117,6 @@ Seed.prototype.getBaseName_ = function(filename) {
   var basename = (filename || '').replace(Seed.BASE_FILENAME_REGEX_, '');
   return path.basename(basename, '.sql').toLowerCase();
 };
-
-
-/**
- * Gets the fixtures based on model. Reads and stores the sql for both setup and
- * teardown.
- * @param {string=} opt_model The model to get fixtures for.
- * @private
- * @return {Object.<string, string>}
- */
-// Seed.prototype.getFixtures_ = function(model) {
-//   var files = fs.readdirSync(this.root_),
-//       model = opt_model || this.model_,
-//       self = this;
-
-//   var fixtures = {};
-//   files.forEach(function(fixture) {
-//     if (self.getBaseName_(fixture) === model) {
-//       fixture = self.root_ + fixture;
-//       var data = self.readSqlFromFile_(fixture);
-//       if (self.isSetup_(fixture)) {
-//         fixtures.setup_ = data;
-//       } else {
-//         fixtures.teardown_ = data;
-//       }
-//     }
-//   });
-//   return fixtures;
-// };
 
 
 /**
@@ -257,65 +144,79 @@ Seed.prototype.readSqlFromFile_ = function(file) {
 
 
 /**
- * Creates a table given the optional model, or the model that that was
- * initialized in the init method.
- * @param {?string=} opt_model The optional model's name.
+ * Seeds or tears down the fixtures for a model.
+ * @param {!string} model Name of model to seed or truncate.
+ * @param {boolean} seed Whether to seed or truncate.
+ * @private
+ * @return {Q.promise} Promise to be resolved by caller.
  */
-// Seed.prototype.createTable = function(opt_model) {
-//   var model = opt_model || this.model_;
-//   var file = this.tablesDir_ + model + '.sql',
-//       sql = this.readSqlFromFile_(file);
+Seed.prototype.seedOrTearDown_ = function(model, seed) {
+  var files = fs.readdirSync(this.root_),
+      self = this;
 
-//   if (sql) {
-//     this.db_.getConnection(function(err, connection) {
-//       if (err) throw new Error(
-//           'This table (' + model + ') could not' + 'be created: ' + err);
-//       connection.query(sql, function(err, result) {
-//         connection.release(); // Return this connection to the pool.
-//         if (err) {
-//           throw new Error(
-//               'This table (' + model + ') could not be created: ' + err);
-//         }
-//       });
-//     });
-//   }
-// };
+  var deferred = Q.defer();
+  files.forEach(function(fixture) {
+    if (self.getBaseName_(fixture) === model) {
+      fixture = self.root_ + fixture;
+      var data = self.readSqlFromFile_(fixture);
+      // If seed is `true`, then seed, if not, teardown.
+      var isFixture = seed ? self.isSetup_(fixture) : !self.isSetup_(fixture);
+      if (isFixture) {
+        self.executeSQL_(data).then(function() {
+          deferred.resolve();
+        }, function(err) {
+          deferred.reject(new Error('There was an error:\t', err));
+        });
+      }
+    }
+  });
+  return deferred.promise;
+};
 
 
 /**
- * Perform the `setup` operation - usually creating and populating a table after
- * truncating it first.
+ * Sets up the tables and fixture data for each required model in a test.
+ * @param {Function} done Callback function to fire when done.
  */
-// Seed.prototype.setup = function() {
-//   this.teardown_();
-//   if (this.fixtures_ && this.fixtures_.setup_) {
-//     this.createTable();
-//     this.executeSQL_(this.fixtures_.setup_);
-//   }
+Seed.prototype.setup = function(done) {
+  var queue = [],
+      self = this;
+  var models = [].concat(this.model_, this.dependencies_);
 
-//   // Populate fixtures for dependencies.
-//   this.dependencies_.forEach(function(dependency) {
-//     this.createTable(dependency);
-//     var sql = this.getFixtures_(dependency).setup_;
-//     this.executeSQL_(sql);
-//   }, this);
-// };
+  // Schedule the creation and seeding of each model/table, but defer
+  // execution.
+  models.forEach(function(model) {
+    queue.push(self.createTable_(model));
+    queue.push(self.seedOrTearDown_(model, true));
+  });
+
+  // Execute in order.
+  Q.all(queue).then(function(queries) {
+    done();
+  });
+};
 
 
 /**
- * Perform the `teardown` operation - usually deleting a table.
-//  */
-// Seed.prototype.teardown_ = function() {
-//   if (this.fixtures_ && this.fixtures_.teardown_) {
-//     this.executeSQL_(this.fixtures_.teardown_);
-//   }
+ * Tears down (trucates) the tables for each required model in a test.
+ * @param {Function} done Callback function to fire when done.
+ */
+Seed.prototype.teardown = function(done) {
+  var queue = [],
+      self = this;
+  var models = [].concat(this.model_, this.dependencies_);
 
-//   // Delete tables for dependencies.
-//   this.dependencies_.forEach(function(dependency) {
-//     var sql = this.getFixtures_(dependency).teardown_;
-//     this.executeSQL_(sql);
-//   }, this);
-// };
+  // Schedule the teardown of each model/table, but defer
+  // execution.
+  models.forEach(function(model) {
+    queue.push(self.seedOrTearDown_(model, false));
+  });
+
+  // Execute in order.
+  Q.all(queue).then(function(queries) {
+    done();
+  });
+};
 
 
 /**
@@ -325,6 +226,24 @@ Seed.prototype.readSqlFromFile_ = function(file) {
  * @private
  */
 Seed.BASE_FILENAME_REGEX_ = /_+[a-zA-Z]+/;
+
+
+/**
+ * Default error message to display when a table failed to be created.
+ * @const
+ * @type {string}
+ * @private
+ */
+Seed.DEFAULT_CREATE_TABLE_ERROR_ = 'This table (%s) could not be created:\t%s';
+
+
+/**
+ * Default error message to display when a query failed to execute.
+ * @const
+ * @type {string}
+ * @private
+ */
+Seed.DEFAULT_QUERY_ERROR_ = 'Could not perform query:\n%s\nError:\t%s';
 
 
 /**
