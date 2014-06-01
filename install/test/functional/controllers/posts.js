@@ -4,17 +4,15 @@ var request = require('supertest'),
 
 
 describe('Posts Controller', function() {
-  before(function(done) {
-    seed.setup();
-    done();
-  });
-
-  after(function(done) {
-    seed.teardown();
-    done();
-  })
-
   describe('views', function() {
+    beforeEach(function(done) {
+      seed.setup(done);
+    });
+
+    afterEach(function(done) {
+      seed.teardown(done);
+    });
+
     it('should show the posts index', function(done) {
       request(app)
           .get('/posts')

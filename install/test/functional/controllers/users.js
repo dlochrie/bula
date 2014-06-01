@@ -4,17 +4,15 @@ var request = require('supertest'),
 
 
 describe('Users Controller', function() {
-  before(function(done) {
-    seed.setup();
-    done();
-  });
-
-  after(function(done) {
-    seed.teardown();
-    done();
-  })
-
   describe('when not logged in', function() {
+    beforeEach(function(done) {
+      seed.setup(done);
+    });
+
+    afterEach(function(done) {
+      seed.teardown(done);
+    });
+
     it('should show the users index', function(done) {
       request(app)
           .get('/users')

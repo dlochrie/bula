@@ -10,6 +10,7 @@
 module.exports = Bula;
 
 
+
 /**
  * Constructor for the Bula Initializer.
  * @param {function(Object, Object, Function)} app Express application instance.
@@ -62,20 +63,20 @@ function Bula(app, express) {
    * private
    */
   this.app_ = app;
-};
- 
- 
+}
+
+
 /**
  * Verifies that all core components are available and working.
  * @return {boolean} Whether this application has met all requirements.
  */
 Bula.prototype.sanityCheck = function() {
   var app = this.app_,
-  tests = {
-    globals: false,
-    mysql: false,
-    redis: false
-  };
+      tests = {
+        globals: false,
+        mysql: false,
+        redis: false
+      };
 
   /**
    * Test Globals and Environmental Vars.
@@ -102,7 +103,7 @@ Bula.prototype.sanityCheck = function() {
 
   // Return early if all tests passed.
   if (tests.globals && tests.mysql && tests.redis) return true;
-  
+
   // If there were any failures, report them to the user.
   for (var t in tests) {
     if (!tests[t]) {
