@@ -9,6 +9,11 @@ describe('Users Controller', function() {
     done();
   });
 
+  after(function(done) {
+    seed.teardown();
+    done();
+  })
+
   describe('when not logged in', function() {
     it('should show the users index', function(done) {
       request(app)

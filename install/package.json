@@ -20,6 +20,7 @@
     "optimist": "0.6.1"
   },
   "devDependencies": {
+    "q": "*",
     "mocha": "*",
     "should": "*",
     "supertest": "*"
