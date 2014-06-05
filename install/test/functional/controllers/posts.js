@@ -19,8 +19,8 @@ describe('Posts Controller', function() {
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
-            res.text.should.include('Description for First Post');
-            res.text.should.include('Description for Second Post');
+            res.text.should.containEql('Description for First Post');
+            res.text.should.containEql('Description for Second Post');
             done();
           });
     });
@@ -31,9 +31,9 @@ describe('Posts Controller', function() {
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
-            res.text.should.include('First Post');
-            res.text.should.include('joe tester');
-            res.text.should.include('Body for First Post');
+            res.text.should.containEql('First Post');
+            res.text.should.containEql('joe tester');
+            res.text.should.containEql('Body for First Post');
             done();
           });
     });
