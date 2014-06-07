@@ -48,7 +48,8 @@ describe('Main Controller', function() {
             if (err) return done(err);
             res.text.should.containEql('Contact');
             res.text.should.containEql(
-                'This page describes how our visitors can get in touch with us.');
+                'This page describes how our visitors can get in touch ' +
+                'with us.');
             done();
           });
     });

@@ -5,7 +5,7 @@
  * core modules.
  *
  * If any error is encountered, this module should terminate the application.
- * @exports
+ * @export
  */
 module.exports = Bula;
 
@@ -60,7 +60,7 @@ function Bula(app, express) {
   /**
    * Adds a reference to the main app to the Bula contructor.
    * @type {function(Object, Object, Function)}
-   * private
+   * @private
    */
   this.app_ = app;
 }

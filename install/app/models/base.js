@@ -32,6 +32,7 @@ Base.DEFAULT_MISSING_QUERY_MESSAGE_ =
 /**
  * Finds all records that match the given parameters.
  * @param {Function} cb Callback function to fire when done.
+ * @return {Function(string, Array)} Callback function.
  */
 Base.prototype.find = function(cb) {
   var query = this.getQuery('find');
@@ -41,7 +42,7 @@ Base.prototype.find = function(cb) {
   var columns = this.getColumns();
   var where = this.getQueryObject() || Base.DEFAULT_WHERE_VALUE_;
   this.select(query, columns, where, function(err, results) {
-    cb(err, results || []);
+    return cb(err, results || []);
   });
 };
 
@@ -49,6 +50,7 @@ Base.prototype.find = function(cb) {
 /**
  * Finds one record that matches the given parameters.
  * @param {Function} cb Callback function to fire when done.
+ * @return {Function(string, Array)} Callback function.
  */
 Base.prototype.findOne = function(cb) {
   var query = this.getQuery('findOne');
@@ -58,7 +60,7 @@ Base.prototype.findOne = function(cb) {
   var columns = this.getColumns();
   var where = this.getQueryObject(this.resource) || Base.DEFAULT_WHERE_VALUE_;
   this.select(query, columns, where, function(err, results) {
-    cb(err, results ? results[0] : null);
+    return cb(err, results ? results[0] : null);
   });
 };
 
@@ -66,6 +68,7 @@ Base.prototype.findOne = function(cb) {
 /**
  * Inserts a record with the given parameters.
  * @param {Function} cb Callback function to fire when done.
+ * @return {Function(string, Array)} Callback function.
  */
 Base.prototype.insert = function(cb) {
   var self = this;
@@ -84,7 +87,6 @@ Base.prototype.insert = function(cb) {
 
     this.db.getConnection(function(err, connection) {
       if (err) return cb(err, null);
-
       var q = connection.query(query, insertObject, function(err, result) {
         connection.release(); // Return this connection to the pool.
         if (err) {
@@ -106,6 +108,7 @@ Base.prototype.insert = function(cb) {
 /**
  * @param {Object} identifier The WHERE clause argument.
  * @param {Function} cb Callback function to fire when done.
+ * @return {Function(string, Array)} Callback function.
  */
 Base.prototype.update = function(identifier, cb) {
   var self = this;

@@ -1,2 +1,5 @@
-// Expose the initialization file.
+/**
+ * Expose the initialization file.
+ * @export
+ */
 module.exports = require('./init');

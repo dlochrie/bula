@@ -9,7 +9,10 @@ var express = require('express'),
     http = require('http'),
     Bula = require('bula');
 
-// Expose `app` for functional testing.
+
+/**
+ * Expose `app` for functional testing.
+ */
 module.exports = app;
 
 // Initialize the Application.
