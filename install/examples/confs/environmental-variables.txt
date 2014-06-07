@@ -22,4 +22,6 @@ environmental variables on your system):
   TEST_MYSQL_MAX_CONN=10
   TEST_REDIS_SECRET=myRedisSecret
   TEST_COOKIE_SECRET=abcd1234
+  TEST_GOOGLE_CLIENT_ID=<Google Client ID>
+  TEST_GOOGLE_CLIENT_SECRET=<Google Client Secret>
   TEST_SITE_OWNERS=testerperson@gdmail.com,tester.test@somelabs.com
