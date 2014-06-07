@@ -29,21 +29,20 @@ module.exports = function(app, express) {
   // Express logger. Logs to console.
   app.use(express.logger());
 
+  // Logs DB Queries to Console.
+  app.set('LOG QUERIES', true);
 
   // Compress Pages and Assets for speed/performance.
   app.use(express.compress());
   app.use(express.static(path.join(rootPath, 'public')));
-
 
   // Set up  Body Parsing, omitting the Multipart middleware.
   // For more information, see: http://expressjs.com/api.html#bodyParser.
   app.use(express.json());
   app.use(express.urlencoded());
 
-
   // Allows us to use "Put", "Delete", and misc request verbs.
   app.use(express.methodOverride());
-
 
   // Setup Cookies and Session.
   app.use(express.cookieParser(app.get('COOKIE SECRET')));
@@ -52,11 +51,9 @@ module.exports = function(app, express) {
     secret: app.get('REDIS SECRET')
   }));
 
-
   // Setup Passport Configuration.
   app.use(passport.initialize());
   app.use(passport.session());
-
 
   // Exposes the Flash Middleware to Views.
   app.use(flash());
@@ -65,7 +62,6 @@ module.exports = function(app, express) {
     next();
   });
 
-
   // Makes the User's Name available to Views.
   app.use(function loadUser(req, res, next) {
     if (req.session.logged_in) {
@@ -73,7 +69,6 @@ module.exports = function(app, express) {
     }
     next();
   });
-
 
   // Exposes the router. This should ALWAYS BE LOADED LAST to prevent issues
   // with flash messages, and session storage/retrieval, in addition to other

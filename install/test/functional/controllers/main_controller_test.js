@@ -34,8 +34,8 @@ describe('Main Controller', function() {
             if (err) return done(err);
             res.text.should.containEql('About');
             res.text.should.containEql(
-              'This page describes what our website and/or organization is ' +
-              'about.');
+                'This page describes what our website and/or organization is ' +
+                'about.');
             done();
           });
     });
@@ -48,24 +48,24 @@ describe('Main Controller', function() {
             if (err) return done(err);
             res.text.should.containEql('Contact');
             res.text.should.containEql(
-              'This page describes how our visitors can get in touch with us.');
+                'This page describes how our visitors can get in touch with us.');
             done();
           });
     });
 
     it('should show a login page with a link to login with a google account',
-      function(done) {
-        request(app)
+       function(done) {
+         request(app)
             .get('/login')
             .expect(200)
             .end(function(err, res) {
-              if (err) return done(err);
-              res.text.should.containEql('Login');
-              res.text.should.containEql(
-                'Click <a href="/auth/google">here</a> to login using your '+
-                'Google Account.');
-              done();
-            });
-      });
+           if (err) return done(err);
+           res.text.should.containEql('Login');
+           res.text.should.containEql(
+           'Click <a href="/auth/google">here</a> to login using your ' +
+           'Google Account.');
+           done();
+         });
+       });
   });
 });

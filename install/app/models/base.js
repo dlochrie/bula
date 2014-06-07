@@ -97,7 +97,7 @@ Base.prototype.insert = function(cb) {
           cb(err, resource);
         }
       });
-      Base.logQuery(q);
+      self.logQuery_(q);
     });
   });
 };
@@ -135,7 +135,7 @@ Base.prototype.update = function(identifier, cb) {
               cb(err, resource);
             }
           });
-      Base.logQuery(q);
+      self.logQuery_(q);
     });
   });
 };
@@ -172,7 +172,7 @@ Base.prototype.remove = function(cb) {
         cb(err);
       }
     });
-    Base.logQuery(q);
+    self.logQuery_(q);
   });
 };
 
@@ -187,23 +187,21 @@ Base.prototype.remove = function(cb) {
  *     done.
  */
 Base.prototype.select = function(query, columns, where, cb) {
+  var self = this;
   this.db.getConnection(function(err, connection) {
     if (err) return cb(err, null);
-
-    /**
-     * Nesting tables allows for results like:
-     * {
-     *   post: {id: '...', title: '...'},
-     *   user: {id: '...', displayName: '...'}
-     * }
-     */
+    // Nesting tables allows for results like:
+    //   {
+    //     post: {id: '...', title: '...'},
+    //     user: {id: '...', displayName: '...'}
+    //   }
     var options = {sql: query, nestTables: true};
     var q = connection.query(options, [columns, where], function(err, results) {
       if (err) return cb(err, null);
       connection.release();
       cb(err, results || []);
     });
-    Base.logQuery(q);
+    self.logQuery_(q);
   });
 };
 
@@ -262,9 +260,13 @@ Base.prototype.getQueryObject = function() {
 
 /**
  * Logs the assembled and escaped query after it has run.
+ * Application must set `LOG QUERIES` for the logs to be displayed.
  * @param {Object} query Node-Mysql query result.
+ * @private
  */
-Base.logQuery = function(query) {
-  query = query || {};
-  console.log('MySQL Query:\t', query.sql || 'N/A');
+Base.prototype.logQuery_ = function(query) {
+  if (this.app.get('LOG QUERIES')) {
+    query = query || {};
+    console.log('MySQL Query:\t', query.sql || 'N/A');
+  }
 };
