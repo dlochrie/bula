@@ -44,8 +44,10 @@ require('../../config/environment/dev')(app);
 
 
 // Enable the test middleware - required to access the `req` request objects.
-// app.use(testConnectFlash);
-// app.use(testLoadUserLocal);
+// This middleware needs to be registered in order for the test suite below
+// to have access to the middleware.
+app.use(testConnectFlash);
+app.use(testLoadUserLocal);
 
 
 describe('Core middleware module', function() {
