@@ -36,6 +36,12 @@
     }, {
       "name": "REDIS SECRET",
       "systemName": "_REDIS_SECRET"
+    }, {
+      "name": "GOOGLE CLIENT ID",
+      "systemName": "_GOOGLE_CLIENT_ID"
+    }, {
+      "name": "GOOGLE CLIENT SECRET",
+      "systemName": "_GOOGLE_CLIENT_SECRET"
     }
   ]
 }

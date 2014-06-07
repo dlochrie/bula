@@ -1,6 +1,6 @@
 {
   "name": "bula",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Daniel Lochrie <daniel.lochrie@congruentlabs.com>",
   "scripts": {
     "start": "node app"
@@ -12,8 +12,6 @@
     "express": "3.4.8",
     "express-resource": "1.0.0",
     "jade": "1.1.5",
-    "passport": "0.1.18",
-    "passport-google": "0.3.0",
     "connect-flash": "0.1.1",
     "connect-redis": "1.4.6",
     "mysql": "2.0.1",

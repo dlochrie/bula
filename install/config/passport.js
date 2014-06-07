@@ -4,7 +4,9 @@
  */
 module.exports = function(app) {
   var passport = require('passport'),
-      GoogleStrategy = require('passport-google').Strategy,
+      GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+      googleClientId = app.get('GOOGLE CLIENT ID'),
+      googleClientSecret = app.get('GOOGLE CLIENT SECRET'),
       rootPath = app.get('ROOT PATH'),
       rootUrl = app.get('ROOT URL'),
       User = require(rootPath + 'app/models/user');
@@ -21,18 +23,18 @@ module.exports = function(app) {
     }
   }
 
-  // Passport session setup.
-  // To support persistent login sessions, Passport needs to be able to
-  // serialize users into and deserialize users out of the session.  Typically,
-  // this will be as simple as storing the user ID when serializing, and finding
-  // the user by ID when deserializing.  However, since this example does not
-  // have a database of user records, the complete Google profile is serialized
-  // and deserialized.
+
+  /**
+   * Serialize the user into the session.
+   */
   passport.serializeUser(function(user, done) {
     done(null, user);
   });
 
 
+  /**
+   * Deserialize the user out of the session.
+   */
   passport.deserializeUser(function(obj, done) {
     done(null, obj);
   });
@@ -42,19 +44,22 @@ module.exports = function(app) {
    * Use the Google OpenId Strategy within Passport.
    */
   passport.use(new GoogleStrategy({
-    returnURL: rootUrl + 'auth/google/return',
-    realm: rootUrl
+    clientID: googleClientId,
+    clientSecret: googleClientSecret,
+    callbackURL: rootUrl + 'auth/google/callback'
   },
-  function(identifier, profile, done) {
+  function(accessToken, refreshToken, profile, done) {
     var resource = {
       displayName: profile.displayName,
-      google_id: identifier,
+      google_id: profile.id,
       email: profile.emails[0].value
     };
 
     var user = new User(app, {email: resource.email});
     user.findOne(function(err, result) {
-      if (err || result) return handleResponse(err, result.user, done);
+      if (err || result) {
+        return handleResponse(err, result.user, done);
+      }
       user.resource = resource;
       return user.insert(function(err, result) {
         err = err ? 'There was an error creating the User: ' + err : false;
@@ -68,13 +73,17 @@ module.exports = function(app) {
   /**
    * Authenticate the User against the Google OpenId API.
    */
-  app.get('/auth/google', passport.authenticate('google'));
+  app.get('/auth/google', passport.authenticate('google', {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'
+    ]}));
 
 
   /**
    * Handle the Response from the Google OpenId API.
    */
-  app.get('/auth/google/return', passport.authenticate('google', {
+  app.get('/auth/google/callback', passport.authenticate('google', {
     failureFlash: true,
     failureRedirect: '/login'
   }), function(req, res) {
