@@ -16,9 +16,7 @@ module.exports = function(app) {
     if (!err) {
       done(null, result);
     } else {
-      /**
-       * First argument MUST be null/false or `failureFlash` won't fire.
-       */
+      // First argument MUST be null/false or `failureFlash` won't fire.
       done(null, result, {message: err});
     }
   }
@@ -41,7 +39,7 @@ module.exports = function(app) {
 
 
   /**
-   * Use the Google OpenId Strategy within Passport.
+   * Use the Google OAuth2 Strategy within Passport.
    */
   passport.use(new GoogleStrategy({
     clientID: googleClientId,
@@ -71,7 +69,7 @@ module.exports = function(app) {
 
 
   /**
-   * Authenticate the User against the Google OpenId API.
+   * Authenticate the User against the Google OAuth2 API.
    */
   app.get('/auth/google', passport.authenticate('google', {
     scope: [
@@ -81,7 +79,7 @@ module.exports = function(app) {
 
 
   /**
-   * Handle the Response from the Google OpenId API.
+   * Handle the Response from the Google OAuth2 API.
    */
   app.get('/auth/google/callback', passport.authenticate('google', {
     failureFlash: true,
