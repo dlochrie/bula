@@ -54,40 +54,6 @@ function Routes(app) {
   app.resource('admin/users', adminUsers);
   app.get('/admin/users/:user/delete', adminUsers.delete);
 
-  // TODO: Move this logic to a controller!!!!
-  // Authenticate the User against the Google OAuth2 API.
-  app.get('/auth/google', passport.authenticate('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ]}));
-
-  // TODO: Move this logic to a controller!!!!
-  // Handle the Response from the Google OAuth2 API.
-  app.get('/auth/google/callback', passport.authenticate('google', {
-    failureFlash: true,
-    failureRedirect: '/login'
-  }), function(req, res) {
-    var session = req.session;
-    if (session.passport.user) {
-      session.logged_in = true;
-    }
-    res.redirect('/');
-  });
-
-  // TODO: Move this logic to a controller!!!!
-  // Log the user completely out.
-  // Regenerate a new session and set `logged_in` to false.
-  app.get('/logout', function(req, res) {
-    var session = req.session;
-    session.logged_in = false;
-    req.logOut();
-    if (!session || !session.regenerate) return res.redirect('/');
-    session.regenerate(function(err) {
-      res.redirect('/');
-    });
-  });
-
   // Define the static routes that Express Resource does NOT provide us
   // automatically.
   app.set('STATIC_ROUTES', staticRoutes);

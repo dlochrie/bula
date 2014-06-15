@@ -1,39 +1,43 @@
-module.exports = function(app) {
-  var auth = require('bula-auth'),
-    passport = require('passport'),
-    GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
-    // TODO: Should these be registered elsewhere???
-    googleClientId = app.get('GOOGLE CLIENT ID'),
-    googleClientSecret = app.get('GOOGLE CLIENT SECRET'),
-    rootPath = app.get('ROOT PATH'),
-    rootUrl = app.get('ROOT URL'),
-    User = require(rootPath + 'app/models/user');
+/**
+ * Expose the Authenticate configuration.
+ * @export
+ */
+module.exports = Authenticate;
+
+
+
+/**
+ * Registers configuration for Passport providers. If you want to add additional
+ * providers, restister them here with the `passport.use` middleware, and add
+ * the handling logic to the authentication module.
+ * @param {function(Object, Object, Function)} app Express application instance.
+ * @constructor
+ */
+function Authenticate(app) {
+  var Auth = require('bula-auth'),
+      auth = new Auth(app),
+      passport = require('passport'),
+      GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+      rootPath = app.get('ROOT PATH'),
+      rootUrl = app.get('ROOT URL'),
+      User = require(rootPath + 'app/models/user'),
+      authentication = require(rootPath + 'app/controllers/authentication');
 
   /**
-   * Serialize the user into the session.
+   * Register Serialization and Deserialization logic for all passport
+   * providers.
    */
-  passport.serializeUser(function(user, done) {
-    done(null, user);
-  });
-
+  passport.serializeUser(auth.serializeUser);
+  passport.deserializeUser(auth.deserializeUser);
 
   /**
-   * Deserialize the user out of the session.
-   */
-  passport.deserializeUser(function(obj, done) {
-    done(null, obj);
-  });
-
-
-  /**
-   * Use the Google OAuth2 Strategy within Passport.
+   * Use the Google OAuth2 Strategy within Passport for Google Authentication.
    */
   passport.use(new GoogleStrategy({
-    clientID: googleClientId,
-    clientSecret: googleClientSecret,
+    clientID: app.get('GOOGLE CLIENT ID'),
+    clientSecret: app.get('GOOGLE CLIENT SECRET'),
     callbackURL: rootUrl + 'auth/google/callback'
-  },
-  function(accessToken, refreshToken, profile, done) {
+  }, function(accessToken, refreshToken, profile, done) {
     var resource = {
       displayName: profile.displayName,
       google_id: profile.id,
@@ -41,17 +45,33 @@ module.exports = function(app) {
     };
 
     var user = new User(app, {email: resource.email});
-    user.findOne(function(err, result) {
-      if (err || result) {
-        auth.handleResponse(err, result.user, done);
-      } else {
-        user.resource = resource;
-        user.insert(function(err, result) {
-          err = err ? 'There was an error creating the User: ' + err : false;
-          result = result || null;
-          auth.handleResponse(err, result, done);
-        });
-      }
+    user.findOrCreate(resource, function(err, result) {
+      auth.handleResponse(err, result.user, done);
     });
   }));
-};
+
+  /**
+   * Authentication Routes.
+   *
+   * If you want to add additional Passport authentication providers, add
+   * those routes here.
+   */
+  app.get('/auth/google', passport.authenticate('google', {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'
+    ]}));
+
+  app.get('/auth/google/callback', passport.authenticate('google', {
+    failureFlash: true,
+    failureRedirect: '/login'
+  }), function(req, res) {
+    var session = req.session;
+    if (session.passport.user) {
+      session.logged_in = true;
+    }
+    res.redirect('/');
+  });
+
+  app.get('/logout', authentication.logout);
+}

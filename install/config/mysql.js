@@ -9,8 +9,9 @@ module.exports = MySQL;
 
 
 /**
- * @constructor
+ * Configuration for the node-mysql adapter.
  * @param {function(Object, Object, Function)} app Express application instance.
+ * @constructor
  */
 function MySQL(app) {
   this.db = app.db = MySQLClient.createPool({
@@ -22,5 +23,3 @@ function MySQL(app) {
     nestTables: true
   });
 }
-
-
