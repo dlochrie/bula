@@ -1,3 +1,6 @@
+var util = require('util');
+
+
 /**
  * Base model class. Provides common methods for models.
  */
@@ -50,7 +53,7 @@ Base.prototype.find = function(cb) {
 /**
  * Finds one record that matches the given parameters.
  * @param {Function} cb Callback function to fire when done.
- * @return {Function(string, Array)} Callback function.
+ * @return {Function(string, Object)} Callback function.
  */
 Base.prototype.findOne = function(cb) {
   var query = this.getQuery('findOne');
@@ -62,6 +65,32 @@ Base.prototype.findOne = function(cb) {
   this.select(query, columns, where, function(err, results) {
     return cb(err, results ? results[0] : null);
   });
+};
+
+
+/**
+ * Checks to see if a record exists, and attempts to create one if it does not.
+ * The initial resource (used for `find` query) should be initialized before
+ * invoking this method, and the supplied resource should be passed as the first
+ * param.
+ * @param {Object} resource The resource/record to create if one does not exist.
+ * @param {Function(string, Object)} cb Callback function to fire when done.
+ */
+Base.prototype.findOrCreate = function(resource, cb) {
+  this.findOne(function(err, result) {
+    if (err || result) {
+      cb(err, result);
+    } else {
+      this.resource = resource;
+      this.insert(function(err, result) {
+        err = err ? util.format(
+            'There was an error creating the %s: %s',
+            this.getTable() || 'record', err) : false;
+        result = result || null;
+        cb(err, result);
+      });
+    }
+  }.bind(this));
 };
 
 
@@ -90,7 +119,9 @@ Base.prototype.insert = function(cb) {
       var q = connection.query(query, insertObject, function(err, result) {
         connection.release(); // Return this connection to the pool.
         if (err) {
-          cb('This ' + self.getTable() + ' could not be added: ' + err, null);
+          err = util.format('This %s could not be added: %s',
+              self.getTable(), err);
+          cb(err, null);
         } else {
           /**
            * During an insert the resource MUST be returned manually since the
