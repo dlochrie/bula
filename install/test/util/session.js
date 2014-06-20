@@ -9,18 +9,20 @@ module.exports = Session;
  */
 function Session() {
   this.logged_in = true;
-  this.passport = {
-    user: {
-      user_displayName: 'Testing Tester'
-    }
-  };
+  this.passport = app.response.locals = {user: Session.DEFAULT_TESTING_USER_};
 }
 
 
 /**
- * Provide a mock logout method for functional testing.
+ * Default User for Tests.
+ * @enum
+ * @private
  */
-Session.prototype.logout = function() {
-  this.logged_in = false;
-  this.passport = {};
+Session.DEFAULT_TESTING_USER_ = {
+  id: 1,
+  displayName: 'Testing Tester',
+  slug: 'testing-tester',
+  email: 'testing.tester@email.com',
+  created: '2014-06-15T20:47:59.000Z',
+  updated: '2014-06-15T20:47:59.000Z'
 };
