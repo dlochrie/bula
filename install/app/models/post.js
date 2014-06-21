@@ -124,11 +124,10 @@ Post.prototype.getQuery = function(action) {
 
 
 /**
- * Gets the columns to be displayed in a result, or returns them all.
- * @param {?string} action Type of query to get/perform.
- * @return {string|Object} query or queries.
+ * Gets the columns to be displayed in a result.
+ * @return {!Object} Columns for this model.
  */
-Post.prototype.getColumns = function(action) {
+Post.prototype.getColumns = function() {
   return Post.SELECT_COLUMNS_;
 };
 
