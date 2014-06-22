@@ -241,15 +241,13 @@ Base.prototype.validate = function(cb) {
   var structure = this.getStructure();
   var errors = [];
 
-  // TODO: Could be a MAP...
   if (structure) {
     for (var property in structure) {
       var rules = structure[property];
 
-      // Validate Required Properties...
+      // Validate required properties.
       if (rules['required'] && !resource[property]) {
-        errors.push('The following required field is missing: ' +
-            property);
+        errors.push('The following required field is missing: ' + property);
       }
 
       // TODO: Validate Length (MIN and MAX)
