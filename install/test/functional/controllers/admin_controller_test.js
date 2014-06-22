@@ -1,7 +1,7 @@
 var request = require('supertest'),
     Seed = require('../../util/seed'),
-    seed = new Seed(app, 'user');
-sinon = require('sinon');
+    seed = new Seed(app, 'user'),
+    sinon = require('sinon');
 
 
 describe('Admin Controller', function() {
