@@ -263,7 +263,7 @@ Base.prototype.validate = function(cb) {
 
 /**
  * Converts the model resource into a query object with key:value pairs.
- * return {?Object || null} The formatted resource.
+ * @return {?Object || null} The formatted resource.
  */
 Base.prototype.getQueryObject = function() {
   if (!this.resource || !Object.keys(this.resource).length) {
