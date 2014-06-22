@@ -14,6 +14,7 @@ describe('User Model', function() {
     user.should.have.property('app');
     user.should.have.property('db');
     user.should.have.property('resource');
+    user.app.should.be.a.function;
     done();
   });
 
@@ -22,6 +23,14 @@ describe('User Model', function() {
     user.find.should.be.a.function;
     user.should.have.property('findOne');
     user.findOne.should.be.a.function;
+    done();
+  });
+
+  it('should have getter methods', function(done) {
+    user.should.have.property('getColumns');
+    user.should.have.property('getQuery');
+    user.should.have.property('getStructure');
+    user.should.have.property('getTable');
     done();
   });
 
