@@ -176,14 +176,6 @@ Base.prototype.update = function(identifier, cb) {
 
 
 /**
- * Wrapper for Inserts and Updates.
- */
-Base.prototype.save = function() {
-  throw 'Please supply a database adapter.';
-};
-
-
-/**
  * Removes the resource identified by the parameters.
  * @param {Functon(<string>, <Array>)} cb Callback function to perform when
  *     done.
@@ -250,26 +242,28 @@ Base.prototype.validate = function(cb) {
   var errors = [];
 
   // TODO: Could be a MAP...
-  for (property in structure) {
-    var rules = structure[property];
+  if (structure) {
+    for (var property in structure) {
+      var rules = structure[property];
 
-    // Validate Required Properties...
-    if (rules['required'] && !resource[property]) {
-      errors.push('The following required field is missing: ' +
-          property);
+      // Validate Required Properties...
+      if (rules['required'] && !resource[property]) {
+        errors.push('The following required field is missing: ' +
+            property);
+      }
+
+      // TODO: Validate Length (MIN and MAX)
+      // TODO: Validate Types... (String, Number, Date, etc)...
     }
-
-    // TODO: Validate Length (MIN and MAX)
-    // TODO: Validate Types... (String, Number, Date, etc)...
   }
 
-  cb(errors.length ? errors : false);
+  cb(errors.length ? errors : []);
 };
 
 
 /**
  * Converts the model resource into a query object with key:value pairs.
- * @return {?Object || null} The formatted resource.
+ * return {?Object || null} The formatted resource.
  */
 Base.prototype.getQueryObject = function() {
   if (!this.resource || !Object.keys(this.resource).length) {
@@ -301,6 +295,7 @@ Base.prototype.getQueryObject = function() {
 Base.prototype.logQuery_ = function(query) {
   if (this.app.get('LOG QUERIES')) {
     query = query || {};
-    console.log('MySQL Query:\t', query.sql || 'N/A');
+    var message = util.format('MySQL Query:\t %s', query.sql || 'N/A');
+    console.log(message);
   }
 };
