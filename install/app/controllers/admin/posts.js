@@ -94,18 +94,13 @@ AdminPosts.prototype.new = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.create = function(req, res) {
-  var params = req.body || {}; // ????
+  var params = req.body || {};
   var post = new Post(req.app, params);
   post.insert(function(errors, post) {
     if (errors || !post) {
-      req.flash('error', 'There was an error creating the post: ');
-      // TODO: WE might have to redirect... and then bind these vars...
-      res.render(AdminPosts.CREATE_VIEW_, {
-        title: 'Create Post',
-        errors: errors,
-        result: {post: params, user: {}},
-        token: res.locals.token
-      });
+      var action = 'creating the post';
+      req.flash('error', Util.createErrorGroup(action, errors));
+      res.redirect(AdminPosts.CREATE_VIEW_);
     } else {
       req.flash('success', 'Post Successfully Created');
       res.redirect(AdminPosts.INDEX_VIEW_);

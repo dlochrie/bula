@@ -107,10 +107,10 @@ Base.prototype.insert = function(cb) {
   }
 
   this.validate(function(err) {
-    if (err) return cb(err, null);
+    if (err && err.length) return cb(err, null);
 
-    // Prepare the resource, adding any system generated values, like slug's.
-    // The format it for inserting in DB.
+    // Prepare the resource, adding any system generated values, like slug's,
+    // and then format it for inserting in DB.
     var resource = self.prepare();
     var insertObject = self.getQueryObject(resource) || {};
 
@@ -123,10 +123,8 @@ Base.prototype.insert = function(cb) {
               self.getTable(), err);
           cb(err, null);
         } else {
-          /**
-           * During an insert the resource MUST be returned manually since the
-           * Node-MySQL module does not return the inserted resource.
-           */
+          // During an insert the resource MUST be returned manually since the
+          // node-mysql module does not return the inserted resource.
           cb(err, resource);
         }
       });

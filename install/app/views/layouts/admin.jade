@@ -21,14 +21,13 @@ html(lang="en")
           block breadcrumbs
             li: a(href="/admin") Admin Home
 
-        <!--Begin Alerts-->
-        include ../partials/alerts
-
         <!--Begin Main Content-->
         .row
           .col-md-12
             <!--Begin Body Content-->
             h1#title= title
+            <!--Begin Alerts-->
+            include ../partials/alerts
             block body
 
       <!--Begin Footer-->
