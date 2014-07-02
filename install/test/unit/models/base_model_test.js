@@ -1,7 +1,7 @@
 var Base = require('../../../app/models/base'),
     Post = require('../../../app/models/post'),
     base,
-    bulaTest = app.test_,
+    bulaTest = app.test,
     seed = new bulaTest.seed(app, 'post', ['user']),
     sinon = require('sinon');
 
