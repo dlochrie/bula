@@ -8,6 +8,7 @@
   "dependencies": {
     "bula": "*",
     "bula-auth": "*",
+    "bula-test": "*",
     "express": "3.4.8",
     "express-resource": "1.0.0",
     "jade": "1.1.5",
@@ -22,7 +23,6 @@
   },
   "devDependencies": {
     "mocha": "1.20.1",
-    "q": "1.0.1",
     "should": "4.0.1",
     "sinon": "1.10.2",
     "supertest": "0.13.0"

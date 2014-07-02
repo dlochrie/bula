@@ -1,6 +1,6 @@
 var request = require('supertest'),
-    Seed = require('../../util/seed'),
-    seed = new Seed(app, 'post', ['user']);
+    bulaTest = app.test,
+    seed = new bulaTest.seed(app, 'post', ['user']);
 
 
 describe('Posts Controller', function() {

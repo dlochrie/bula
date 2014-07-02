@@ -1,6 +1,6 @@
 var request = require('supertest'),
-    Seed = require('../../util/seed'),
-    seed = new Seed(app, 'user');
+    bulaTest = app.test,
+    seed = new bulaTest.seed(app, 'user');
 
 
 describe('Users Controller', function() {
@@ -41,7 +41,7 @@ describe('Users Controller', function() {
 
   describe('when logged in as the user', function() {
     beforeEach(function(done) {
-      var session = app.request.session = new app.session();
+      var session = app.request.session = new bulaTest.authenticate();
       session.logged_in.should.be.true;
       session.passport.should.be.an.Object;
       done();

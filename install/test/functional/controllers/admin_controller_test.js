@@ -1,6 +1,6 @@
 var request = require('supertest'),
-    Seed = require('../../util/seed'),
-    seed = new Seed(app, 'user'),
+    bulaTest = app.test,
+    seed = new bulaTest.seed(app, 'user'),
     sinon = require('sinon');
 
 
@@ -20,7 +20,7 @@ describe('Admin Controller', function() {
 
     it('should show the admin page if the user is logged-in', function(done) {
       app.set('SITE OWNERS', ['testing.tester@email.com']);
-      var session = app.request.session = new app.session();
+      var session = app.request.session = new bulaTest.authenticate();
       session.logged_in.should.be.true;
       session.passport.should.be.an.Object;
       session.passport.should.have.property('user');

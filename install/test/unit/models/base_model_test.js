@@ -1,8 +1,8 @@
 var Base = require('../../../app/models/base'),
     Post = require('../../../app/models/post'),
     base,
-    Seed = require('../../util/seed'),
-    seed = new Seed(app, 'post', ['user']),
+    bulaTest = app.test_,
+    seed = new bulaTest.seed(app, 'post', ['user']),
     sinon = require('sinon');
 
 describe('Base Model defaults and initialization', function() {
