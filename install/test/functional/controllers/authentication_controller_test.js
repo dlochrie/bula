@@ -14,10 +14,10 @@ describe('Authentication Controller', function() {
 
   describe('when not logged in', function() {
     it('should show a login link have no session', function(done) {
-      request(app)
-          .get('/')
-          .expect(200)
-          .end(function(err, res) {
+      request(app).
+          get('/').
+          expect(200).
+          end(function(err, res) {
             if (err) return done(err);
             res.text.should.containEql('login');
             res.text.should.not.containEql('Testing Tester');
@@ -50,10 +50,10 @@ describe('Authentication Controller', function() {
 
     it('should show the user\s name and a logout link', function(done) {
       app.response.locals.should.have.property('user');
-      request(app)
-          .get('/')
-          .expect(200)
-          .end(function(err, res) {
+      request(app).
+          get('/').
+          expect(200).
+          end(function(err, res) {
             if (err) return done(err);
             res.text.should.containEql('Testing Tester');
             res.text.should.containEql('logout');
@@ -66,15 +66,14 @@ describe('Authentication Controller', function() {
       app.response.locals.should.have.property('user');
       session.passport.should.have.property('user');
       session.logged_in.should.be.true;
-      request(app)
-        .get('/logout')
-        .expect(302) // Logging out redirects.
-        .end(function(err, res) {
+      request(app).
+          get('/logout').
+          expect(302). // Logging out redirects.
+          end(function(err, res) {
             if (err) return done(err);
-            request(app)
-            .get('/')
-            .expect(200)
-            .end(function(err, res) {
+            request(app).get('/').
+                expect(200).
+                end(function(err, res) {
                   if (err) return done(err);
                   res.text.should.not.containEql('Testing Tester');
                   res.text.should.not.containEql('logout');

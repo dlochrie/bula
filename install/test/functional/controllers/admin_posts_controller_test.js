@@ -118,6 +118,7 @@ describe('Admin Posts Controller', function() {
 
         it('should notify the user when there\'s empty content',
             function(done) {
+              // TODO: Pls implement.
               done();
             });
       });
