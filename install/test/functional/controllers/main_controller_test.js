@@ -14,10 +14,10 @@ describe('Main Controller', function() {
     });
 
     it('should show the home page with posts', function(done) {
-      request(app)
-          .get('/')
-          .expect(200)
-          .end(function(err, res) {
+      request(app).
+          get('/').
+          expect(200).
+          end(function(err, res) {
             if (err) return done(err);
             res.text.should.containEql('Next Steps');
             res.text.should.containEql('Description for First Post');
@@ -27,10 +27,10 @@ describe('Main Controller', function() {
     });
 
     it('should show an about page', function(done) {
-      request(app)
-          .get('/about')
-          .expect(200)
-          .end(function(err, res) {
+      request(app).
+          get('/about').
+          expect(200).
+          end(function(err, res) {
             if (err) return done(err);
             res.text.should.containEql('About');
             res.text.should.containEql(
@@ -41,10 +41,10 @@ describe('Main Controller', function() {
     });
 
     it('should show a contact page', function(done) {
-      request(app)
-          .get('/contact')
-          .expect(200)
-          .end(function(err, res) {
+      request(app).
+          get('/contact').
+          expect(200).
+          end(function(err, res) {
             if (err) return done(err);
             res.text.should.containEql('Contact');
             res.text.should.containEql(
@@ -56,10 +56,10 @@ describe('Main Controller', function() {
 
     it('should show a login page with a link to login with a google account',
        function(done) {
-         request(app)
-            .get('/login')
-            .expect(200)
-            .end(function(err, res) {
+         request(app).
+         get('/login').
+         expect(200).
+         end(function(err, res) {
            if (err) return done(err);
            res.text.should.containEql('Login');
            res.text.should.containEql(

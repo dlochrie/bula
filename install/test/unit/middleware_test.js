@@ -4,7 +4,8 @@
  */
 var express = require('express'),
     request = require('supertest'),
-    should = require('should');
+    should = require('should'),
+    app = express();
 
 
 /**
@@ -36,13 +37,8 @@ function testLoadUserLocal(req, res, next) {
 }
 
 // Set up the tests.
-var app = express();
-app.session = {
-  logged_in: true,
-  passport: {
-    user: null
-  }
-};
+require('bula-test')(app);
+var bulaTest = app.test;
 app.set('ROOT PATH', '/test/path');
 app.set('REDIS SECRET', 'test-secret');
 require('../../config/environment/dev')(app);
@@ -54,13 +50,11 @@ app.use(testConnectFlash);
 app.use(testLoadUserLocal);
 
 describe('Core middleware module', function() {
-  // TODO: This before hook feels really awkward. Should revisit establishing
-  // sessions like this.
   beforeEach(function(done) {
-    app.request.session = app.session;
-    var session = app.request.session;
+    var session = app.request.session = new bulaTest.authenticate();
     session.logged_in.should.be.true;
     session.passport.should.be.an.Object;
+    session.passport.should.have.property.user;
     done();
   });
 
