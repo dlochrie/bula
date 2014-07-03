@@ -12,7 +12,12 @@ module.exports = Base;
  * Base model constructor.
  * @constructor
  */
-function Base() {}
+function Base() {
+  // For unit testing, only the global `app` is avaiable, thus this particular
+  // declaration.
+  var bula = this.app ? this.app.bula : app.bula;
+  this.utils = bula.utils;
+}
 
 
 /**

@@ -1,5 +1,4 @@
 var Base = require('./base');
-var Util = require('../controllers/util');
 
 
 /**
@@ -130,11 +129,12 @@ User.prototype.getTable = function() {
  * @return {Object.<string, string>} The updated User resource.
  */
 User.prototype.prepare = function() {
+  var Utils = this.utils;
   var resource = this.resource;
-  var date = Util.getDate();
+  var date = Utils.getDate();
   // TODO: 'created' shouldn't update on edit, only on insert.
   resource.created = date;
   resource.updated = date;
-  resource.slug = Util.convertToSlug(resource.displayName);
+  resource.slug = Utils.convertToSlug(resource.displayName);
   return resource;
 };

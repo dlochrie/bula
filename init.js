@@ -19,9 +19,7 @@ module.exports = Bula;
  */
 function Bula(app, express) {
   var dir = __dirname + '/core/',
-      fs = require('fs'),
-      root = app.get('ROOT PATH'),
-      env = app.get('NODE ENVIRONMENT');
+      fs = require('fs');
 
   // Load all required core files. Order is important.
   var modules = [
@@ -36,7 +34,9 @@ function Bula(app, express) {
   // For example, if you are adding a custom logger to Dev, but you don't want
   // to use it in Prod, then you can create a `dev` file for dev-specific
   // settings.
-  var conf = root + 'config/environment/' + env.toLowerCase() + '.js';
+  var root = app.get('ROOT PATH'),
+      env = app.get('NODE ENVIRONMENT'),
+      conf = root + 'config/environment/' + env.toLowerCase() + '.js';
   if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
     require(conf)(app, express);
   }
@@ -61,7 +61,20 @@ function Bula(app, express) {
    * @private
    */
   this.app_ = app;
+
+  // Initialize Bula properties and append them to the express app.
+  this.init();
 }
+
+
+/**
+ * Initializes the Bula object, and appends it to the express app.
+ */
+Bula.prototype.init = function() {
+  // Add a Bula reference to the express app.
+  var bula = this.app_.bula = {};
+  bula.utils = require('./core/utils');
+};
 
 
 /**
