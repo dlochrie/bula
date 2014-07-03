@@ -50,7 +50,9 @@ DateHelper.getDate = function() {
  * @return {!string} A human-readable date string.
  */
 DateHelper.getHumanDate = function(date) {
-  date = date || DateHelper.getDate();
+  // Check if this is date object, or a number (for timestamps).
+  var isDate = date && (date instanceof Date || !isNaN(date));
+  date = isDate ? date : DateHelper.getDate();
   return require('moment')(date).format('MMMM Do YYYY, h:mm:ss A');
 };
 
