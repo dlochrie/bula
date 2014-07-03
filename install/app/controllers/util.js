@@ -51,7 +51,6 @@ Util.getDate = function() {
 
 /**
  * Returns a trimmed version of the string.
-
  * TODO: See this link for some crazy awesome HTML sanitization:
  * https://code.google.com/p/google-caja/source/browse/trunk/src/com/
  * --> google/caja/plugin/html-sanitizer.js

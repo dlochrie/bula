@@ -25,14 +25,6 @@ AdminUsers.INDEX_VIEW_ = 'admin/users/';
 
 
 /**
- * Path to users create view.
- * @const
- * @private {string}
- */
-AdminUsers.CREATE_VIEW_ = 'admin/users/new';
-
-
-/**
  * Path to users edit view.
  * @const
  * @private {string}
