@@ -13,6 +13,11 @@ describe('String Helper', function() {
     StringHelper.convertMarkdown(testString3).should.eql(
         '<p><code>code</code></p>\n<pre><code>var foo = &quot;bar&quot;;\n' +
         '</code></pre>');
+
+    // Assert that non-strings don't break the application.
+    StringHelper.convertMarkdown({}).should.eql('');
+    StringHelper.convertMarkdown(['one', 'two', 'three']).should.eql('');
+    StringHelper.convertMarkdown(9876543210).should.eql('');
     done();
   });
 });

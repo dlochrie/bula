@@ -22,7 +22,9 @@ function StringHelper() {}
  * @return {!string} Converted text.
  */
 StringHelper.convertMarkdown = function(text) {
-  return require('marked')(text || '');
+  var str = (Object.prototype.toString.call(text) === '[object String]') ?
+      text : ''
+  return require('marked')(str);
 };
 
 
