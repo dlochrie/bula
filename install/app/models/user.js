@@ -129,12 +129,13 @@ User.prototype.getTable = function() {
  * @return {Object.<string, string>} The updated User resource.
  */
 User.prototype.prepare = function() {
-  var Utils = this.utils;
   var resource = this.resource;
-  var date = Utils.getDate();
+  var stringHelper = this.locals.StringHelper;
+  var dateHelper = this.locals.DateHelper;
+  var date = dateHelper.getDate();
   // TODO: 'created' shouldn't update on edit, only on insert.
   resource.created = date;
   resource.updated = date;
-  resource.slug = Utils.convertToSlug(resource.displayName);
+  resource.slug = stringHelper.convertToSlug(resource.displayName);
   return resource;
 };

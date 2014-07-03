@@ -8,6 +8,8 @@ module.exports = function(app) {
       helpers = fs.readdirSync(dir);
 
   helpers.forEach(function(helper) {
-    require(dir + '/' + helper)(app);
+    var Helper = require(dir + '/' + helper);
+    console.log('name', Helper.name);
+    app.locals[Helper.name] = require(dir + '/' + helper);
   });
 };

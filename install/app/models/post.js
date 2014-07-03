@@ -155,16 +155,17 @@ Post.prototype.getTable = function() {
  * @return {Object.<string, string>} The updated Post resource.
  */
 Post.prototype.prepare = function() {
-  var Utils = this.utils;
   var resource = this.resource;
-  var date = Utils.getDate();
+  var stringHelper = this.locals.StringHelper;
+  var dateHelper = this.locals.DateHelper;
+  var date = dateHelper.getDate();
   // TODO: 'created' shouldn't update on edit, only on insert.
   resource.created = date;
   resource.updated = date;
-  resource.slug = Utils.convertToSlug(resource.title);
-  resource.body_md = Utils.sanitize(resource.body_md);
-  resource.body = Utils.convertMarkdown(resource.body_md);
-  resource.description_md = Utils.sanitize(resource.description_md);
-  resource.description = Utils.convertMarkdown(resource.description_md);
+  resource.slug = stringHelper.convertToSlug(resource.title);
+  resource.body_md = stringHelper.sanitize(resource.body_md);
+  resource.body = stringHelper.convertMarkdown(resource.body_md);
+  resource.description_md = stringHelper.sanitize(resource.description_md);
+  resource.description = stringHelper.convertMarkdown(resource.description_md);
   return resource;
 };

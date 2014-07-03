@@ -61,20 +61,7 @@ function Bula(app, express) {
    * @private
    */
   this.app_ = app;
-
-  // Initialize Bula properties and append them to the express app.
-  this.init();
 }
-
-
-/**
- * Initializes the Bula object, and appends it to the express app.
- */
-Bula.prototype.init = function() {
-  // Add a Bula reference to the express app.
-  var bula = this.app_.bula = {};
-  bula.utils = require('./core/utils');
-};
 
 
 /**

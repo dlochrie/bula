@@ -15,8 +15,7 @@ module.exports = Base;
 function Base() {
   // For unit testing, only the global `app` is avaiable, thus this particular
   // declaration.
-  var bula = this.app ? this.app.bula : app.bula;
-  this.utils = bula.utils;
+  this.locals = this.app ? this.app.locals : app.locals;
 }
 
 
