@@ -2,7 +2,7 @@ var MySQLClient = require('mysql');
 
 
 /**
- * Expose MySQL
+ * Expose the MySQL Conf Module.
  */
 module.exports = MySQL;
 

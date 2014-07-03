@@ -1,8 +1,15 @@
 /**
- * Loads all helper files.
- * @param {Function} app Instance of Express App.
+ * Expose the Helpers Conf Module.
  */
-module.exports = function(app) {
+module.exports = Helpers;
+
+
+/**
+ * Loads all helper files, and attaches them to the global `app.locals`.
+ * @param {function(Object, Object, Function)} app Express application instance.
+ * @construtor
+ */
+function Helpers(app) {
   var dir = app.get('ROOT PATH') + 'app/helpers',
       fs = require('fs'),
       helpers = fs.readdirSync(dir);
@@ -12,4 +19,4 @@ module.exports = function(app) {
     console.log('name', Helper.name);
     app.locals[Helper.name] = require(dir + '/' + helper);
   });
-};
+}
