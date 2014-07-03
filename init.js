@@ -19,7 +19,9 @@ module.exports = Bula;
  */
 function Bula(app, express) {
   var dir = __dirname + '/core/',
-      fs = require('fs');
+      fs = require('fs'),
+      root = app.get('ROOT PATH'),
+      env = app.get('NODE ENVIRONMENT');
 
   // Load all required core files. Order is important.
   var modules = [
@@ -29,10 +31,6 @@ function Bula(app, express) {
   modules.forEach(function(module) {
     require(dir + '/' + module)(app);
   });
-
-  // Extract environmental variables.
-  var root = app.get('ROOT PATH'),
-      env = app.get('NODE ENVIRONMENT');
 
   // Setup environment-specific settings.
   // For example, if you are adding a custom logger to Dev, but you don't want
@@ -58,7 +56,7 @@ function Bula(app, express) {
   require(root + 'config/routes.js')(app);
 
   /**
-   * Adds a reference to the main app to the Bula contructor.
+   * Adds a reference to the main express app to the Bula contructor.
    * @type {function(Object, Object, Function)}
    * @private
    */
@@ -78,9 +76,7 @@ Bula.prototype.sanityCheck = function() {
         redis: false
       };
 
-  /**
-   * Test Globals and Environmental Vars.
-   */
+  // Test Globals and Environmental Vars.
   var globals = require('./core/globals.json').properties;
   if (globals && globals.length) {
     tests.globals = globals.every(function(global) {
@@ -90,15 +86,11 @@ Bula.prototype.sanityCheck = function() {
     tests.globals = false;
   }
 
-  /**
-   * Test MySQL Connection.
-   */
+  // Test MySQL Connection.
   tests.mysql = app.db && app.db.config;
 
-  /**
-   * Test Redis connection.
-   * TODO: Write this check.
-   */
+  // Test Redis connection.
+  // TODO: Write this check.
   tests.redis = true;
 
   // Return early if all tests passed.

@@ -23,7 +23,8 @@ module.exports = function(app) {
   });
   app.set('SITE OWNERS', siteOwners);
 
-  // Sets the default view engine as "jade".
+  // Sets the default view engine as "jade". This can be overridden in the
+  // application's environment confs.
   var rootPath = app.get('ROOT PATH');
   app.set('views', rootPath + '/app/views');
   app.set('view engine', 'jade');
