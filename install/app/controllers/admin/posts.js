@@ -1,4 +1,3 @@
-var Util = require('../util');
 var Post = require('../../models/post');
 
 
@@ -94,12 +93,16 @@ AdminPosts.prototype.new = function(req, res) {
  * @param {Object} res Express response object.
  */
 AdminPosts.prototype.create = function(req, res) {
+  // TODO: Calling the `utils` helper here should really be initialized in the
+  // constructor, or from a shared controller.
+  var bula = req.app.bula;
+  var Utils = bula.utils;
   var params = req.body || {};
   var post = new Post(req.app, params);
   post.insert(function(errors, post) {
     if (errors || !post) {
       var action = 'creating the post';
-      req.flash('error', Util.createErrorGroup(action, errors));
+      req.flash('error', Utils.createErrorGroup(action, errors));
       res.redirect(AdminPosts.CREATE_VIEW_);
     } else {
       req.flash('success', 'Post Successfully Created');

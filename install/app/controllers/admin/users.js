@@ -1,4 +1,3 @@
-var Util = require('../util');
 var User = require('../../models/user');
 
 
