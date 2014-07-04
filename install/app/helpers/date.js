@@ -58,6 +58,15 @@ DateHelper.getHumanDate = function(date) {
 
 
 /**
+ * Gets a Unix Timestamp.
+ * @return {!number} The Unix timestamp.
+ */
+DateHelper.getUnixTimeStamp = function() {
+  return parseInt(new Date().getTime() / 1000);
+};
+
+
+/**
  * Returns an array of the last 3 months.
  * @return {!Array} Last 3 months.
  */

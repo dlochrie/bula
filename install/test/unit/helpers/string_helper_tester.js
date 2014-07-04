@@ -20,4 +20,31 @@ describe('String Helper', function() {
     StringHelper.convertMarkdown(9876543210).should.eql('');
     done();
   });
+
+  it('should convert strings to slugs for links', function(done) {
+    var testCases = [
+      'ALLCAPS',
+      'all!@#$%^&*()-chars',
+      null,
+      undefined,
+      'alllower',
+      'lots-of-hyphens-in-here',
+      'CamelCaseString',
+      'snake_case_string',
+      'i,have,commas,in,here',
+      ''
+    ];
+    StringHelper.convertToSlug(testCases[0]).should.eql('allcaps');
+    StringHelper.convertToSlug(testCases[1]).should.eql('all-chars');
+    StringHelper.convertToSlug(testCases[2]).should.match(/^\d+$/);
+    StringHelper.convertToSlug(testCases[3]).should.match(/^\d+$/);
+    StringHelper.convertToSlug(testCases[4]).should.eql('alllower');
+    StringHelper.convertToSlug(testCases[5]).should.eql(
+        'lots-of-hyphens-in-here');
+    StringHelper.convertToSlug(testCases[6]).should.eql('camelcasestring');
+    StringHelper.convertToSlug(testCases[7]).should.eql('snakecasestring');
+    StringHelper.convertToSlug(testCases[8]).should.eql('ihavecommasinhere');
+    StringHelper.convertToSlug(testCases[9]).should.match(/^\d+$/);
+    done();
+  });
 });

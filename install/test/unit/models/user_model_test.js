@@ -69,7 +69,7 @@ describe('User Model', function() {
     var obj = user.prepare();
     obj.should.be.an.Object;
     obj.should.have.properties('created', 'updated', 'slug');
-    obj.slug.should.be.empty;
+    obj.slug.should.match(/^\d+$/);
 
     user.resource = {displayName: 'Testing Tester'};
     obj = user.prepare();

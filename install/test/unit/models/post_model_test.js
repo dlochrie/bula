@@ -62,7 +62,7 @@ describe('Post Model', function() {
     obj.should.be.an.Object;
     obj.should.have.properties('created', 'updated', 'slug', 'body');
     obj.body.should.be.empty;
-    obj.slug.should.be.empty;
+    obj.slug.should.match(/^\d+$/);
 
     post.resource = {
       body_md: '# Header\n## SubHeading',

@@ -1,4 +1,5 @@
-var util = require('util');
+var util = require('util'),
+    DateHelper = require('./date');
 
 
 /**
@@ -23,7 +24,7 @@ function StringHelper() {}
  */
 StringHelper.convertMarkdown = function(text) {
   var str = (Object.prototype.toString.call(text) === '[object String]') ?
-      text : ''
+      text : '';
   return require('marked')(str);
 };
 
@@ -34,10 +35,10 @@ StringHelper.convertMarkdown = function(text) {
  * @return {!string} The converted string.
  */
 StringHelper.convertToSlug = function(text) {
-  return (text || '').
+  return (text || DateHelper.getUnixTimeStamp()).
       toString().
       toLowerCase().
-      replace(/[^\w ]+/g, '').
+      replace(/[^a-zA-Z0-9- ]+/g, '').
       replace(/ +/g, '-');
 };
 
