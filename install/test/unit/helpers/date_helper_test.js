@@ -1,8 +1,9 @@
 var DateHelper = require('../../../app/helpers/date');
 
 describe('Date Helper', function() {
+  var now = new Date;
+
   it('should get a new date', function(done) {
-    var now = new Date;
     var date = DateHelper.getDate();
     date.should.be.an.Object;
     date.should.be.a.Date;
@@ -12,21 +13,20 @@ describe('Date Helper', function() {
   });
 
   it('should get a Human-Readable date', function(done) {
-    var now = new Date;
     var date = DateHelper.getHumanDate(now);
     date.should.be.a.string;
-    date.should.containEql(now.getDay());
+    date.should.containEql(now.getDate());
     date.should.containEql(now.getFullYear());
     var historicalDate = DateHelper.getHumanDate(-6106017600000);
     historicalDate.should.be.a.string;
     historicalDate.should.containEql('July 4th 1776');
     var noDate = DateHelper.getHumanDate();
     noDate.should.be.a.string;
-    noDate.should.containEql(now.getDay());
+    noDate.should.containEql(now.getDate());
     noDate.should.containEql(now.getFullYear());
     var invalid = DateHelper.getHumanDate('a string');
     invalid.should.be.a.string;
-    invalid.should.containEql(now.getDay());
+    invalid.should.containEql(now.getDate());
     invalid.should.containEql(now.getFullYear());
     done();
   });

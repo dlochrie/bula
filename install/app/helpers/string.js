@@ -56,9 +56,8 @@ StringHelper.createErrorGroup = function(action, errors) {
   var list = '';
   if (errors.length) {
     errors.forEach(function(error) {
-      if (error) {
-        list += util.format(StringHelper.ERROR_GROUP_MSG_STRING_, error);
-      }
+      error = error || 'N/A';
+      list += util.format(StringHelper.ERROR_GROUP_MSG_STRING_, error || 'N/A');
     });
   } else {
     list += util.format(StringHelper.ERROR_GROUP_MSG_STRING_,

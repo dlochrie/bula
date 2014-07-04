@@ -16,7 +16,6 @@ function Helpers(app) {
 
   helpers.forEach(function(helper) {
     var Helper = require(dir + '/' + helper);
-    console.log('name', Helper.name);
     app.locals[Helper.name] = require(dir + '/' + helper);
   });
 }
