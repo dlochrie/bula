@@ -10,31 +10,31 @@ var express = require('express'),
 
 /**
  * Tests that `flash` is available to the session.
- * @param {http.IncomingMessage} req Node/Express request object.
- * @param {http.ServerResponse} res Node/Express response object.
- * @param {Function} next Callback function.
+ * @param {!http.IncomingMessage} req Node/Express request object.
+ * @param {!http.ServerResponse} res Node/Express response object.
+ * @param {Function} next Callback function.}
  */
-function testConnectFlash(req, res, next) {
+var testConnectFlash = function(req, res, next) {
   res.locals.messages.should.be.an.Object;
   req.session.flash.should.be.an.Object;
   res.locals.messages.should.eql(req.session.flash);
   next();
-}
+};
 
 
 /**
  * Tests that the `user` locals var is set, which requires custom middleware.
  * This DOES NOT test authentication -- ONLY that if the `logged_in` property is
  * set to true on the session, that the local `user` var will be set.
- * @param {http.IncomingMessage} req Node/Express request object.
- * @param {http.ServerResponse} res Node/Express response object.
+ * @param {!http.IncomingMessage} req Node/Express request object.
+ * @param {!http.ServerResponse} res Node/Express response object.
  * @param {Function} next Callback function.
  */
-function testLoadUserLocal(req, res, next) {
+var testLoadUserLocal = function(req, res, next) {
   req.session.passport.should.be.an.Object;
   (res.locals.user === req.session.passport.user).should.be.true;
   next();
-}
+};
 
 // Set up the tests.
 require('bula-test')(app);
