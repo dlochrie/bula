@@ -13,15 +13,17 @@ environmental variables on your system):
 
 (You should also create entries for PROD and DEV by replacing TEST down below)
 
-  TEST_ROOT_PATH=/path/to/application/
-  TEST_ROOT_URL=http://localhost:3000/
-  TEST_MYSQL_DB=bulatest
-  TEST_MYSQL_HOST=localhost
-  TEST_MYSQL_USER=bula
-  TEST_MYSQL_PASS=bulapass
-  TEST_MYSQL_MAX_CONN=10
-  TEST_REDIS_SECRET=myRedisSecret
   TEST_COOKIE_SECRET=abcd1234
   TEST_GOOGLE_CLIENT_ID=<Google Client ID>
   TEST_GOOGLE_CLIENT_SECRET=<Google Client Secret>
+  TEST_MYSQL_DB=bulatest
+  TEST_MYSQL_HOST=localhost
+  TEST_MYSQL_MAX_CONN=10
+  TEST_MYSQL_PASS=bulapass
+  TEST_MYSQL_USER=bula
+  TEST_NODE_HOST=0.0.0.0
+  TEST_NODE_PORT=3000
+  TEST_REDIS_SECRET=myRedisSecret
+  TEST_ROOT_PATH=/path/to/application/
+  TEST_ROOT_URL=http://localhost:3000/
   TEST_SITE_OWNERS=testerperson@gdmail.com,tester.test@somelabs.com

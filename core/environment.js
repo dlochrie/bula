@@ -16,7 +16,7 @@ module.exports = function(app) {
   var conf = (fs.existsSync(custom) && fs.lstatSync(custom).isFile()) ? custom :
       './globals.json';
   var globals = require(conf).properties || [];
-  globals.properties.forEach(function(global) {
+  globals.forEach(function(global) {
     var defaultValue = global.default || null,
         value = process.env[env + global.systemName] || defaultValue;
     app.set(global.name, value);
