@@ -4,11 +4,19 @@
  * @param {function(Object, Object, Function)} app Express application instance.
  */
 module.exports = function(app) {
+  var fs = require('fs');
+
   // Set up site globals - these are based off of Environmental variables.
   var env = (process.env.NODE_ENV || 'dev').toUpperCase();
   app.set('NODE ENVIRONMENT', env);
-  var globals = require('./globals.json').properties;
-  globals.forEach(function(global) {
+
+  // Check to see if the application has defined its own custom global property
+  // names. This is useful for environments hosting multiple applications.
+  var custom = process.cwd() + '/config/globals.json';
+  var conf = (fs.existsSync(custom) && fs.lstatSync(custom).isFile()) ? custom :
+      './globals.json';
+  var globals = require(conf).properties || [];
+  globals.properties.forEach(function(global) {
     var defaultValue = global.default || null,
         value = process.env[env + global.systemName] || defaultValue;
     app.set(global.name, value);

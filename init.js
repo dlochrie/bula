@@ -47,7 +47,8 @@ function Bula(app, express) {
   var confs = fs.readdirSync(root + 'config');
   confs.forEach(function(conf) {
     var path = root + 'config/' + conf;
-    if (fs.lstatSync(path).isFile() && conf !== 'routes.js') {
+    if (fs.lstatSync(path).isFile() &&
+        !Bula.SKIPPED_CONFIGURATION_FILES_RE_.test(path)) {
       require(path)(app);
     }
   });
@@ -106,3 +107,12 @@ Bula.prototype.sanityCheck = function() {
   throw new Error('Could not initialize all required dependencies.');
 };
 
+
+/**
+ * Regular expression pattern to match against files that should be skipped in
+ * in the autoload, and handled separately.
+ * @const
+ * @private
+ * @type {!RegExp}
+ */
+Bula.SKIPPED_CONFIGURATION_FILES_RE_ = /^.*(json|routes.js)$/i;
