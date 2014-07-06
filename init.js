@@ -78,6 +78,7 @@ Bula.prototype.sanityCheck = function() {
       };
 
   // Test Globals and Environmental Vars.
+  // TODO: This DOES NOT test cases where there are CUSTOM properties.
   var globals = require('./core/globals.json').properties;
   if (globals && globals.length) {
     tests.globals = globals.every(function(global) {
