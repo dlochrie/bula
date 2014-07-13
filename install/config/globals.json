@@ -1,0 +1,50 @@
+{
+  "properties": [
+    {
+      "name": "COOKIE SECRET",
+      "systemName": "_MY_APP_COOKIE_SECRET"
+    }, {
+      "name": "GOOGLE CLIENT ID",
+      "systemName": "_MY_APP_GOOGLE_CLIENT_ID"
+    }, {
+      "name": "GOOGLE CLIENT SECRET",
+      "systemName": "_MY_APP_GOOGLE_CLIENT_SECRET"
+    }, {
+      "name": "MYSQL DB",
+      "systemName": "_MY_APP_MYSQL_DB"
+    }, {
+      "name": "MYSQL HOST",
+      "systemName": "_MY_APP_MYSQL_HOST"
+    }, {
+      "name": "MYSQL MAX CONN",
+      "systemName": "_MY_APP_MYSQL_MAX_CONN",
+      "default": 10
+    }, {
+      "name": "MYSQL PASS",
+      "systemName": "_MY_APP_MYSQL_PASS"
+    }, {
+      "name": "MYSQL USER",
+      "systemName": "_MY_APP_MYSQL_USER"
+    }, {
+      "name": "NODE HOST",
+      "systemName": "_MY_APP_NODE_HOST",
+      "default": "0.0.0.0"
+    }, {
+      "name": "NODE PORT",
+      "systemName": "_MY_APP_NODE_PORT",
+      "default": 3000
+    }, {
+      "name": "REDIS SECRET",
+      "systemName": "_MY_APP_REDIS_SECRET"
+    }, {
+      "name": "ROOT PATH",
+      "systemName": "_MY_APP_ROOT_PATH"
+    }, {
+      "name": "ROOT URL",
+      "systemName": "_MY_APP_ROOT_URL"
+    }, {
+      "name": "SITE OWNERS",
+      "systemName": "_MY_APP_SITE_OWNERS"
+    }
+  ]
+}
