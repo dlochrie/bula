@@ -116,4 +116,4 @@ Bula.prototype.sanityCheck = function() {
  * @private
  * @type {!RegExp}
  */
-Bula.SKIPPED_CONFIGURATION_FILES_RE_ = /^.*(json|routes.js)$/i;
+Bula.SKIPPED_CONFIGURATION_FILES_RE_ = /^.*(json|conf|routes.js)$/i;
