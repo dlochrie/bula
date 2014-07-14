@@ -23,7 +23,7 @@ module.exports = function(app) {
   });
 
   // Extract the Site Owners and store as global.
-  var owners = process.env[env + '_SITE_OWNERS'];
+  var owners = app.get('SITE OWNERS');
   var ownersList = owners ? owners.split(',') : [];
   var siteOwners = ownersList.map(function(owner) {
     // TODO: Maybe also verify if this is an email address or not.
