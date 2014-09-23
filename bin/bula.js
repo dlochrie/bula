@@ -70,7 +70,7 @@ function Install() {
    * @type {string}
    * @private
    */
-  this.systemName_ = this.appName_.toLowerCase().replace(/\s/, '-');
+  this.systemName_ = this.appName_.toUpperCase().replace(/\s/, '_');
 
   // Start the install process.
   this.initialize_();
@@ -286,21 +286,23 @@ Install.addSlash = function(str) {
 
 
 /**
- * Pattern to match when looking for appName replacements.
+ * Pattern to match when looking for appName replacements. The appName is the
+ * name provided to the install command `-a 'application-name` argument.
  * @const
  * @type {RegExp}
  * @private
  */
-Install.appNameRegex_ = /{+\s*appName\s*}+/;
+Install.appNameRegex_ = /{+\s*appName\s*}+/g;
 
 
 /**
- * Pattern to match when looking for appName replacements.
+ * Pattern to match when looking for systemName replacements. The systemName is
+ * used for customizing environmental variables.
  * @const
  * @type {RegExp}
  * @private
  */
-Install.systemNameRegex_ = /{+\s*systemName\s*}+/;
+Install.systemNameRegex_ = /{+\s*systemName\s*}+/g;
 
 
 /**

@@ -2,49 +2,49 @@
   "properties": [
     {
       "name": "COOKIE SECRET",
-      "systemName": "_MY_APP_COOKIE_SECRET"
+      "systemName": "_{{ systemName }}_COOKIE_SECRET"
     }, {
       "name": "GOOGLE CLIENT ID",
-      "systemName": "_MY_APP_GOOGLE_CLIENT_ID"
+      "systemName": "_{{ systemName }}_GOOGLE_CLIENT_ID"
     }, {
       "name": "GOOGLE CLIENT SECRET",
-      "systemName": "_MY_APP_GOOGLE_CLIENT_SECRET"
+      "systemName": "_{{ systemName }}_GOOGLE_CLIENT_SECRET"
     }, {
       "name": "MYSQL DB",
-      "systemName": "_MY_APP_MYSQL_DB"
+      "systemName": "_{{ systemName }}_MYSQL_DB"
     }, {
       "name": "MYSQL HOST",
-      "systemName": "_MY_APP_MYSQL_HOST"
+      "systemName": "_{{ systemName }}_MYSQL_HOST"
     }, {
       "name": "MYSQL MAX CONN",
-      "systemName": "_MY_APP_MYSQL_MAX_CONN",
+      "systemName": "_{{ systemName }}_MYSQL_MAX_CONN",
       "default": 10
     }, {
       "name": "MYSQL PASS",
-      "systemName": "_MY_APP_MYSQL_PASS"
+      "systemName": "_{{ systemName }}_MYSQL_PASS"
     }, {
       "name": "MYSQL USER",
-      "systemName": "_MY_APP_MYSQL_USER"
+      "systemName": "_{{ systemName }}_MYSQL_USER"
     }, {
       "name": "NODE HOST",
-      "systemName": "_MY_APP_NODE_HOST",
+      "systemName": "_{{ systemName }}_NODE_HOST",
       "default": "0.0.0.0"
     }, {
       "name": "NODE PORT",
-      "systemName": "_MY_APP_NODE_PORT",
+      "systemName": "_{{ systemName }}_NODE_PORT",
       "default": 3000
     }, {
       "name": "REDIS SECRET",
-      "systemName": "_MY_APP_REDIS_SECRET"
+      "systemName": "_{{ systemName }}_REDIS_SECRET"
     }, {
       "name": "ROOT PATH",
-      "systemName": "_MY_APP_ROOT_PATH"
+      "systemName": "_{{ systemName }}_ROOT_PATH"
     }, {
       "name": "ROOT URL",
-      "systemName": "_MY_APP_ROOT_URL"
+      "systemName": "_{{ systemName }}_ROOT_URL"
     }, {
       "name": "SITE OWNERS",
-      "systemName": "_MY_APP_SITE_OWNERS"
+      "systemName": "_{{ systemName }}_SITE_OWNERS"
     }
   ]
 }
