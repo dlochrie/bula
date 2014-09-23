@@ -26,9 +26,24 @@ So:
     node bin/bula.js -a 'My Application' -p ~/Desktop
     cd ~/Desktop/my-application
     npm install
+    source ./config/variables.txt*
     node app
 
 ...installs the app, its dependencies, and starts it.
+
+*Make sure that you set up the environmental variables. See below for more
+information.
+
+
+### Environmental Variables
+
+Bula assumes 3 different environments:
+'dev', 'test', and 'prod', but you can name them whatever you want. During this
+step, you will want to check out `config/variables.txt`. This file contains a
+basic setup for your environmental variables. Replace the configuration with
+those that suit your preferences. You can either source them now, or store them
+wherever your OS stores its environmental variables.
+
 
 ### DB
 
