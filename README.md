@@ -38,11 +38,17 @@ information.
 ### Environmental Variables
 
 Bula assumes 3 different environments:
-'dev', 'test', and 'prod', but you can name them whatever you want. During this
-step, you will want to check out `config/variables.txt`. This file contains a
-basic setup for your environmental variables. Replace the configuration with
-those that suit your preferences. You can either source them now, or store them
-wherever your OS stores its environmental variables.
+
+`dev`, `test`, and `prod`, but you can name them whatever you want. During installation,
+the installer provides a basic template for your enviromental vars: 
+
+    config/variables.txt  
+
+This file contains a basic setup for your environmental variables. Replace the 
+configuration with those that suit your preferences. You can either source them from 
+the file directly,or store them wherever your OS stores its environmental variables. See 
+[this link](http://daniellochrie.com/blog/fun-with-environmental-variables) for more 
+info concerning Environmental Variables.
 
 
 ### DB
