@@ -1,3 +1,5 @@
+var util = require('util');
+
 /**
  * Base Initialization Module
  *
@@ -30,13 +32,22 @@ function Bula(app, express) {
     require(dir + '/' + module)(app);
   });
 
+  var root = app.get('ROOT PATH'),
+    env = app.get('NODE ENVIRONMENT'),
+    conf = root + 'config/environment/' + env.toLowerCase() + '.js';
+
+  // Abort if the ROOT_PATH does not exist.
+  if (!fs.existsSync(root)) {
+    throw new Error([
+      'The root directory does not exist. Please make sure you have set',
+      'the "ROOT_PATH" environmental variable.'
+      ].join(' '));
+  }
+
   // Setup environment-specific settings.
   // For example, if you are adding a custom logger to Dev, but you don't want
   // to use it in Prod, then you can create a `dev` file for dev-specific
   // settings.
-  var root = app.get('ROOT PATH'),
-      env = app.get('NODE ENVIRONMENT'),
-      conf = root + 'config/environment/' + env.toLowerCase() + '.js';
   if (fs.existsSync(conf) && fs.lstatSync(conf).isFile()) {
     require(conf)(app, express);
   }
