@@ -1,5 +1,6 @@
 var util = require('util');
 
+
 /**
  * Base Initialization Module
  *
@@ -33,15 +34,15 @@ function Bula(app, express) {
   });
 
   var root = app.get('ROOT PATH'),
-    env = app.get('NODE ENVIRONMENT'),
-    conf = root + 'config/environment/' + env.toLowerCase() + '.js';
+      env = app.get('NODE ENVIRONMENT'),
+      conf = root + 'config/environment/' + env.toLowerCase() + '.js';
 
   // Abort if the ROOT_PATH does not exist.
   if (!fs.existsSync(root)) {
     throw new Error([
       'The root directory does not exist. Please make sure you have set',
       'the "ROOT_PATH" environmental variable.'
-      ].join(' '));
+    ].join(' '));
   }
 
   // Setup environment-specific settings.
