@@ -17,7 +17,8 @@
     "moment": "2.5.1",
     "mysql": "2.0.1",
     "passport": "0.1.18",
-    "passport-google-oauth": "0.1.5"
+    "passport-google-oauth": "0.1.5",
+    "marked": "0.3.2"
   },
   "devDependencies": {
     "mocha": "1.20.1",
